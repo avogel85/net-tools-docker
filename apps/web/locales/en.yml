@@ -162,6 +162,15 @@ about:
   noServerTools: No server tools are registered yet.
   attributions: License & attributions
   license: NET-TOOLS is free software under the GNU GPL v3.0 or later. Its user experience is inspired by it-tools.
+dnsFilter:
+  title: Blocked by a DNS filter
+  ede: '{resolver} says this name is blocked (extended DNS error {code}{text}).'
+  nullAddress: '{resolver} answered 0.0.0.0 or ::, which is how DNS filters such as Pi-hole block a name.'
+  missing: '{resolver} has no such record, but {reference} does.'
+  reference: '{reference} answers: {data}'
+  referenceNone: '{reference} answers {rcode} without records.'
+  some: '{count} answer(s) in this report look blocked by a DNS filter ({names}). Checks that use them may be wrong.'
+  hint: The server's resolver filters DNS. Set DNS_RESOLVER to an unfiltered resolver for accurate results (see the README).
 dns:
   resolver: Resolver
   flags: Flags
@@ -1021,6 +1030,7 @@ tools:
       google: Google (8.8.8.8)
       quad9: Quad9 (9.9.9.9)
       opendns: OpenDNS
+      local: Local resolver (container)
       custom: Custom…
     transports:
       udp: UDP
@@ -4010,6 +4020,7 @@ tools:
     status:
       ok: OK
       empty: No answer
+      filtered: Blocked by DNS filter
       error: Error
     columns:
       target: Target

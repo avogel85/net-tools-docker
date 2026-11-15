@@ -156,7 +156,7 @@ paths:
       parameters:
         - { name: name, in: query, required: true, schema: { type: string, maxLength: 253 } }
         - { name: type, in: query, schema: { $ref: "#/components/schemas/DnsRecordType" } }
-        - { name: resolver, in: query, description: "system, a preset id (cloudflare, google, quad9, opendns), ip[:port], host[:port] or an https DoH URL", schema: { type: string, default: system } }
+        - { name: resolver, in: query, description: "system (DNS_RESOLVER, else the container resolver), local (always the container resolver), a preset id (cloudflare, google, quad9, opendns), ip[:port], host[:port] or an https DoH URL", schema: { type: string, default: system } }
         - { name: transport, in: query, schema: { type: string, enum: [udp, tcp, dot, doh], default: udp } }
         - { name: dnssec, in: query, schema: { type: boolean, default: false } }
         - { $ref: "#/components/parameters/Family" }
@@ -2377,6 +2377,7 @@ components:
             profile: { type: string, enum: [public, internal, homelab] }
             allowPrivateTargets: { type: boolean }
             lan: { type: boolean }
+            dnsUpstream: { type: boolean, description: "DNS_RESOLVER is set; the container resolver is then also offered as \"local\"" }
         tools:
           type: object
           additionalProperties: { $ref: "#/components/schemas/Capability" }
@@ -2455,6 +2456,18 @@ components:
         authority: { type: array, items: { $ref: "#/components/schemas/DnsRecord" } }
         additional: { type: array, items: { $ref: "#/components/schemas/DnsRecord" } }
         rttMs: { type: number }
+        filtered: { $ref: "#/components/schemas/DnsFiltered" }
+    DnsFiltered:
+      type: object
+      description: Present when the answer looks blocked by a DNS filter (Pi-hole, AdGuard Home, RPZ).
+      required: [reason, ede, edeText, reference, referenceRcode, referenceData]
+      properties:
+        reason: { type: string, enum: [ede, null-address, missing] }
+        ede: { type: integer, description: "RFC 8914 code (15 Blocked, 16 Censored, 17 Filtered), 0 if none" }
+        edeText: { type: string }
+        reference: { type: string, description: Resolver the answer was compared with; empty when not compared }
+        referenceRcode: { type: string }
+        referenceData: { type: array, items: { type: string } }
     DnsReverse:
       type: object
       required: [ip, ptrName, resolver, rcode, names, rttMs]

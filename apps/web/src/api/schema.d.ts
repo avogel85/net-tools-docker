@@ -1977,6 +1977,8 @@ export interface components {
                 profile: "public" | "internal" | "homelab";
                 allowPrivateTargets: boolean;
                 lan: boolean;
+                /** @description DNS_RESOLVER is set; the container resolver is then also offered as "local" */
+                dnsUpstream?: boolean;
             };
             tools: {
                 [key: string]: components["schemas"]["Capability"];
@@ -2048,6 +2050,19 @@ export interface components {
             authority: components["schemas"]["DnsRecord"][];
             additional: components["schemas"]["DnsRecord"][];
             rttMs: number;
+            filtered?: components["schemas"]["DnsFiltered"];
+        };
+        /** @description Present when the answer looks blocked by a DNS filter (Pi-hole, AdGuard Home, RPZ). */
+        DnsFiltered: {
+            /** @enum {string} */
+            reason: "ede" | "null-address" | "missing";
+            /** @description RFC 8914 code (15 Blocked, 16 Censored, 17 Filtered), 0 if none */
+            ede: number;
+            edeText: string;
+            /** @description Resolver the answer was compared with; empty when not compared */
+            reference: string;
+            referenceRcode: string;
+            referenceData: string[];
         };
         DnsReverse: {
             ip: string;
@@ -4122,7 +4137,7 @@ export interface operations {
             query: {
                 name: string;
                 type?: components["schemas"]["DnsRecordType"];
-                /** @description system, a preset id (cloudflare, google, quad9, opendns), ip[:port], host[:port] or an https DoH URL */
+                /** @description system (DNS_RESOLVER, else the container resolver), local (always the container resolver), a preset id (cloudflare, google, quad9, opendns), ip[:port], host[:port] or an https DoH URL */
                 resolver?: string;
                 transport?: "udp" | "tcp" | "dot" | "doh";
                 dnssec?: boolean;

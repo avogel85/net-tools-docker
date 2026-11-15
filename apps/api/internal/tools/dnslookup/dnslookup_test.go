@@ -6,6 +6,7 @@ import (
 
 	"github.com/miekg/dns"
 
+	"github.com/digibaro/net-tools-docker/apps/api/internal/dnsx"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/dnsx/dnstest"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/tooltest"
 )
@@ -91,5 +92,36 @@ func TestUnreachableResolver(t *testing.T) {
 	r := env.Get("/api/v1/dns/lookup?name=example.com&transport=tcp&resolver=127.0.0.1:1")
 	if r.Error.Code != "PROVIDER_ERROR" && r.Error.Code != "TIMEOUT" {
 		t.Fatalf("got %d %s", r.Status, r.Error.Code)
+	}
+}
+
+// A Pi-hole in NULL mode answers 0.0.0.0; the result says so and shows the unfiltered answer.
+func TestFilteredAnswer(t *testing.T) {
+	pihole := dnstest.Start(t, func(w dns.ResponseWriter, r *dns.Msg) {
+		m := new(dns.Msg)
+		m.SetReply(r)
+		if r.Question[0].Qtype == dns.TypeA {
+			rr, _ := dns.NewRR(r.Question[0].Name + " 2 IN A 0.0.0.0")
+			m.Answer = append(m.Answer, rr)
+		}
+		_ = w.WriteMsg(m)
+	})
+	reference := dnstest.Start(t, handler)
+	dnsx.SystemOverride = &pihole
+	oldRef := dnsx.Reference
+	dnsx.Reference = func() dnsx.Server { return dnsx.Server{Label: "Reference", Addr: reference, Transport: dnsx.UDP} }
+	t.Cleanup(func() { dnsx.SystemOverride, dnsx.Reference = nil, oldRef })
+
+	env := tooltest.New(t, &Tool{}, tooltest.Options{})
+	var res Result
+	env.Get("/api/v1/dns/lookup?name=ads.example&type=A").Must(t).Decode(t, &res)
+	f := res.Filtered
+	if f == nil || f.Reason != "null-address" || f.Reference != "Reference" || len(f.ReferenceData) != 1 || f.ReferenceData[0] != "192.0.2.10" {
+		t.Fatalf("filtered = %+v", f)
+	}
+	// NODATA from the local resolver while the reference has the record.
+	env.Get("/api/v1/dns/lookup?name=ads.example&type=PTR&resolver=local").Must(t).Decode(t, &res)
+	if res.Filtered == nil || res.Filtered.Reason != "missing" {
+		t.Errorf("nodata = %+v", res.Filtered)
 	}
 }

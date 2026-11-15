@@ -162,6 +162,15 @@ about:
   noServerTools: Er zijn nog geen servertools geregistreerd.
   attributions: Licentie & bronvermelding
   license: NET-TOOLS is vrije software onder de GNU GPL v3.0 of later. De gebruikerservaring is geïnspireerd op it-tools.
+dnsFilter:
+  title: Geblokkeerd door een DNS-filter
+  ede: '{resolver} meldt dat deze naam geblokkeerd is (extended DNS error {code}{text}).'
+  nullAddress: '{resolver} antwoordde 0.0.0.0 of ::, zo blokkeren DNS-filters zoals Pi-hole een naam.'
+  missing: '{resolver} heeft dit record niet, maar {reference} wel.'
+  reference: '{reference} antwoordt: {data}'
+  referenceNone: '{reference} antwoordt {rcode} zonder records.'
+  some: '{count} antwoord(en) in dit rapport lijken geblokkeerd door een DNS-filter ({names}). Controles die ze gebruiken kunnen fout zijn.'
+  hint: De resolver van de server filtert DNS. Stel DNS_RESOLVER in op een ongefilterde resolver voor juiste resultaten (zie de README).
 dns:
   resolver: Resolver
   flags: Flags
@@ -1021,6 +1030,7 @@ tools:
       google: Google (8.8.8.8)
       quad9: Quad9 (9.9.9.9)
       opendns: OpenDNS
+      local: Lokale resolver (container)
       custom: Eigen…
     transports:
       udp: UDP
@@ -4010,6 +4020,7 @@ tools:
     status:
       ok: OK
       empty: Geen antwoord
+      filtered: Geblokkeerd door DNS-filter
       error: Fout
     columns:
       target: Doel

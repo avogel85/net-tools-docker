@@ -6,6 +6,14 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
 
 ## [Unreleased]
 
+### Added
+- `DNS_RESOLVER`: an unfiltered resolver for every server-side lookup, for hosts whose DNS filters
+  (Pi-hole, AdGuard Home). Names it doesn't know still go to the container resolver (LAN hosts),
+  which stays selectable as "Local resolver" in DNS lookup, reverse DNS and the benchmark.
+- DNS lookup, bulk lookup, the DNS health report and the domain scorecard warn when an answer
+  looks blocked by a DNS filter (extended DNS error, `0.0.0.0` / `::`, or a record the reference
+  resolver has) and show the unfiltered answer.
+
 ## [0.8.0] - 2026-11-13
 
 ### Added

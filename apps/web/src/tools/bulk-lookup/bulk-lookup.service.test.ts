@@ -31,6 +31,12 @@ describe('bulk-lookup', () => {
     expect(rows[2]!.detail).toBe('invalid')
   })
 
+  it('shows the unfiltered answer when a DNS filter answered', async () => {
+    const res = { name: 'ads.example', type: 'A', resolver: 'System (127.0.0.11)', transport: 'udp', rcode: 'NOERROR', flags: {}, answer: [{ name: 'ads.example.', type: 'A', ttl: 2, class: 'IN', data: '0.0.0.0' }], authority: [], additional: [], rttMs: 1, filtered: { reason: 'null-address', ede: 0, edeText: '', reference: 'Cloudflare (1.1.1.1)', referenceRcode: 'NOERROR', referenceData: ['192.0.2.7'] } }
+    const row = await op('dns').run('ads.example', { type: 'A', ports: '' }, (async () => res) as Get)
+    expect(row).toEqual({ status: 'filtered', result: '192.0.2.7', detail: '0.0.0.0 · Cloudflare (1.1.1.1)' })
+  })
+
   it('maps ASN and port results', async () => {
     const asn = await op('asn').run('192.0.2.1', { type: 'A', ports: '' }, (async () => ({ ip: '192.0.2.1', announced: true, origins: [{ asn: 64500, asName: 'EXAMPLE', prefix: '192.0.2.0/24', country: 'NL', registry: 'ripencc', allocated: '' }] })) as Get)
     expect(asn.result).toBe('AS64500 EXAMPLE')

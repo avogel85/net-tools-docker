@@ -40,8 +40,10 @@ const REMOTE_DNS_TYPES = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SOA', 'CAA',
 
 const validation = useValidation({ source: name, rules: [{ validator: isValidQueryName, message: t('tools.dns-lookup.invalidName') }] })
 const typeOptions = RECORD_TYPES.map(v => ({ label: v, value: v }))
-const resolverOptions = computed(() => [...RESOLVER_PRESETS, 'custom'].map(v => ({ label: t(`tools.dns-lookup.resolvers.${v}`), value: v })))
-const transportOptions = computed(() => TRANSPORTS.filter(tr => resolver.value !== 'system' || tr === 'udp' || tr === 'tcp').map(v => ({ label: t(`tools.dns-lookup.transports.${v}`), value: v })))
+const isLocal = computed(() => resolver.value === 'system' || resolver.value === 'local')
+// "local" (the container resolver, e.g. Pi-hole) differs from "system" only when DNS_RESOLVER is set.
+const resolverOptions = computed(() => [...RESOLVER_PRESETS, ...(caps.capabilities?.mode.dnsUpstream ? ['local'] : []), 'custom'].map(v => ({ label: t(`tools.dns-lookup.resolvers.${v}`), value: v })))
+const transportOptions = computed(() => TRANSPORTS.filter(tr => !isLocal.value || tr === 'udp' || tr === 'tcp').map(v => ({ label: t(`tools.dns-lookup.transports.${v}`), value: v })))
 const dohOptions = [{ label: 'Cloudflare', value: 'cloudflare' }, { label: 'Google', value: 'google' }]
 
 const loading = ref(false)
@@ -63,7 +65,7 @@ async function run() {
           name: name.value,
           type: type.value,
           resolver: resolver.value === 'custom' ? custom.value : resolver.value,
-          transport: resolver.value === 'system' && !['udp', 'tcp'].includes(transport.value) ? 'udp' : transport.value,
+          transport: isLocal.value && !['udp', 'tcp'].includes(transport.value) ? 'udp' : transport.value,
           dnssec: dnssec.value || undefined,
         })}`)
       : await lookupInBrowser(name.value, type.value, doh.value as DohProvider)

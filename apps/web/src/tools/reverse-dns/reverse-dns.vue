@@ -8,6 +8,7 @@ import ResultTable from '@/components/ResultTable.vue'
 import { useApi } from '@/composables/useApi'
 import { useQueryParam } from '@/composables/useQueryParam'
 import { useValidation } from '@/composables/useValidation'
+import { useCapabilitiesStore } from '@/stores/capabilities.store'
 import CCard from '@/ui/c-card.vue'
 import CInputText from '@/ui/c-input-text.vue'
 import CKeyValueList from '@/ui/c-key-value-list.vue'
@@ -15,10 +16,11 @@ import CSelect from '@/ui/c-select.vue'
 import { isIpAddress, verdict } from './reverse-dns.service'
 
 const { t } = useI18n()
+const caps = useCapabilitiesStore()
 const ip = useQueryParam({ name: 'ip', defaultValue: '' })
 const resolver = useQueryParam({ name: 'resolver', defaultValue: 'system' })
 const validation = useValidation({ source: ip, rules: [{ validator: isIpAddress, message: t('tools.reverse-dns.invalid') }] })
-const resolverOptions = computed(() => ['system', 'cloudflare', 'google', 'quad9'].map(v => ({ label: t(`tools.dns-lookup.resolvers.${v}`), value: v })))
+const resolverOptions = computed(() => ['system', ...(caps.capabilities?.mode.dnsUpstream ? ['local'] : []), 'cloudflare', 'google', 'quad9', 'opendns'].map(v => ({ label: t(`tools.dns-lookup.resolvers.${v}`), value: v })))
 const { data, error, loading, run } = useApi<DnsReverse>('/v1/dns/reverse')
 const submit = () => ip.value && validation.value.isValid && run({ ip: ip.value, resolver: resolver.value })
 onMounted(() => {

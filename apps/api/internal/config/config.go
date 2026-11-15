@@ -72,6 +72,11 @@ type Features struct {
 	// quick links (DASH-02) tools; empty means the built-in defaults.
 	StatusFeedsFile string
 	LinksFile       string
+	// DNSResolver (DNS_RESOLVER) replaces the container resolver (resolv.conf) for every server-side
+	// lookup: tool queries and the names of dial targets. Unset keeps resolv.conf. Useful when the
+	// host's resolver filters (Pi-hole, AdGuard Home); the container resolver stays reachable as
+	// the "local" resolver.
+	DNSResolver     netip.AddrPort
 	ProviderSecrets map[string]string
 }
 
@@ -197,6 +202,7 @@ func LoadFrom(lookup LookupFunc, readFile ReadFileFunc) (Config, error) {
 			RIPEstatSrcApp:  p.str("RIPESTAT_SOURCEAPP", "nettools"),
 			StatusFeedsFile: p.str("STATUS_FEEDS_FILE", ""),
 			LinksFile:       p.str("LINKS_FILE", ""),
+			DNSResolver:     p.addrPort("DNS_RESOLVER", 53),
 		},
 	}
 
@@ -306,6 +312,24 @@ func (p *parser) str(name, def string) string {
 		return v
 	}
 	return def
+}
+
+// addrPort parses an IP with an optional port ("9.9.9.9", "9.9.9.9:5353", "[2620:fe::fe]:53").
+// Host names are refused: the resolver itself must not need a lookup.
+func (p *parser) addrPort(name string, defPort uint16) netip.AddrPort {
+	v, ok := p.raw(name)
+	if !ok {
+		return netip.AddrPort{}
+	}
+	if ip, err := netip.ParseAddr(strings.Trim(v, "[]")); err == nil {
+		return netip.AddrPortFrom(ip.Unmap(), defPort)
+	}
+	ap, err := netip.ParseAddrPort(v)
+	if err != nil || ap.Port() == 0 || ap.Addr().Zone() != "" {
+		p.errs = append(p.errs, fmt.Errorf("%s: %q is not an IP address or IP:port", name, v))
+		return netip.AddrPort{}
+	}
+	return netip.AddrPortFrom(ap.Addr().Unmap(), ap.Port())
 }
 
 func (p *parser) posInt(name string, def int) int {

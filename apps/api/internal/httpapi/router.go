@@ -249,6 +249,9 @@ type ModeInfo struct {
 	Profile             config.Profile `json:"profile"`
 	AllowPrivateTargets bool           `json:"allowPrivateTargets"`
 	LAN                 bool           `json:"lan"`
+	// DNSUpstream is true when DNS_RESOLVER replaces the container resolver; the UI then also
+	// offers the container resolver as "local".
+	DNSUpstream bool `json:"dnsUpstream"`
 }
 
 // LimitsInfo exposes the limits the UI needs to bound its inputs.
@@ -270,6 +273,7 @@ func handleCapabilities(deps tools.Deps, all []tools.Tool, authz *auth.Service) 
 			Profile:             cfg.Profile,
 			AllowPrivateTargets: cfg.Features.AllowPrivate,
 			LAN:                 cfg.Features.LAN,
+			DNSUpstream:         cfg.Features.DNSResolver.IsValid(),
 		},
 		Tools: tools.Capabilities(deps, all),
 		Limits: LimitsInfo{

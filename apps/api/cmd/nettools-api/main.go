@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/digibaro/net-tools-docker/apps/api/internal/config"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/dnsx"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/geoip"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/httpapi"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/target"
@@ -71,6 +72,13 @@ func serve() error {
 		Allow:        cfg.Features.AllowCIDRs,
 		Self:         selfAddrs(logger),
 	})
+	// DNS_RESOLVER replaces the container resolver (e.g. a filtering Pi-hole) for tool queries and
+	// dial-target names; names it does not know (LAN hosts) still go to the container resolver.
+	dnsx.Configure(cfg.Features.DNSResolver)
+	resolver.Lookup = dnsx.HostLookup(net.DefaultResolver.LookupNetIP)
+	if dnsx.HasUpstream() {
+		logger.Info("server DNS resolver", slog.String("dns_resolver", cfg.Features.DNSResolver.String()))
+	}
 
 	handler := httpapi.NewRouter(httpapi.Options{
 		Config: cfg,

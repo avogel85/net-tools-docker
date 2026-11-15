@@ -55,6 +55,8 @@ type Server struct {
 	DoHURL string
 	// RootCAs overrides the system trust store for DoT/DoH (tests).
 	RootCAs *x509.CertPool
+	// Local marks the container resolver (resolv.conf), which may filter (Pi-hole).
+	Local bool
 }
 
 // tlsServerName is the name verified on the certificate (the IP itself for IP endpoints).
@@ -104,16 +106,43 @@ func defaultPort(t Transport) uint16 {
 // private-target policy: inside Docker it is usually 127.0.0.11).
 var ResolvConf = "/etc/resolv.conf"
 
-// SystemOverride, when set, replaces the resolv.conf server (tests only).
+// SystemOverride, when set, replaces the resolv.conf server (tests only; DNS_RESOLVER still wins).
 var SystemOverride *netip.AddrPort
 
-// SystemServer returns the first nameserver from resolv.conf.
+// upstream is DNS_RESOLVER: when valid it replaces resolv.conf as the "system" resolver. Set once
+// at startup by Configure (admin configuration, like ResolvConf).
+var upstream netip.AddrPort
+
+// Configure sets the server resolver from DNS_RESOLVER; an invalid AddrPort keeps resolv.conf.
+func Configure(up netip.AddrPort) { upstream = up }
+
+// HasUpstream reports whether DNS_RESOLVER is in use.
+func HasUpstream() bool { return upstream.IsValid() }
+
+// SystemServer returns the server resolver: DNS_RESOLVER when set, else the first nameserver
+// from resolv.conf.
 func SystemServer(t Transport) (Server, error) {
 	if t == DoT || t == DoH {
 		return Server{}, &target.Error{Code: target.CodeInvalid, Message: "the system resolver supports only UDP and TCP", Field: "transport"}
 	}
+	if upstream.IsValid() {
+		return Server{Label: "Server resolver (" + upstream.Addr().String() + ")", Addr: upstream, Transport: t}, nil
+	}
+	return LocalServer(t)
+}
+
+// LocalServer returns the container resolver from resolv.conf, ignoring DNS_RESOLVER. Inside
+// Docker it forwards to the host's resolver (which may be a filtering one such as Pi-hole).
+func LocalServer(t Transport) (Server, error) {
+	if t == DoT || t == DoH {
+		return Server{}, &target.Error{Code: target.CodeInvalid, Message: "the local resolver supports only UDP and TCP", Field: "transport"}
+	}
+	label := "System ("
+	if upstream.IsValid() {
+		label = "Local resolver ("
+	}
 	if SystemOverride != nil {
-		return Server{Label: "System (" + SystemOverride.String() + ")", Addr: *SystemOverride, Transport: t}, nil
+		return Server{Label: label + SystemOverride.String() + ")", Addr: *SystemOverride, Transport: t, Local: true}, nil
 	}
 	cfg, err := dns.ClientConfigFromFile(ResolvConf)
 	if err != nil || len(cfg.Servers) == 0 {
@@ -127,7 +156,7 @@ func SystemServer(t Transport) (Server, error) {
 	if port == 0 {
 		port = 53
 	}
-	return Server{Label: "System (" + ip.String() + ")", Addr: netip.AddrPortFrom(ip, uint16(port)), Transport: t}, nil //nolint:gosec // port from resolv.conf, 1-65535
+	return Server{Label: label + ip.String() + ")", Addr: netip.AddrPortFrom(ip, uint16(port)), Transport: t, Local: true}, nil //nolint:gosec // port from resolv.conf, 1-65535
 }
 
 // ResolveServer turns user input into a Server. spec is "system", a preset id, "ip[:port]",
@@ -136,6 +165,9 @@ func ResolveServer(ctx context.Context, r *target.Resolver, spec string, t Trans
 	spec = strings.TrimSpace(spec)
 	if spec == "" || spec == "system" {
 		return SystemServer(t)
+	}
+	if spec == "local" {
+		return LocalServer(t)
 	}
 	if p, ok := FindPreset(spec); ok {
 		ip := p.V4

@@ -5,6 +5,7 @@ import { NButton } from 'naive-ui'
 import { computed, onMounted, ref, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { apiGet } from '@/api/client'
+import DnsFilterAlert from '@/components/DnsFilterAlert.vue'
 import HealthReport from '@/components/HealthReport.vue'
 import { buildQuery } from '@/composables/useApi'
 import { useQueryParam } from '@/composables/useQueryParam'
@@ -65,6 +66,7 @@ const checks = computed(() => (inputs.value ? dnsHealth(inputs.value) : []))
     </form>
   </CCard>
   <CCard v-if="inputs" :title="t('tools.dns-health-report.result', { zone: ran })" data-testid="result">
+    <DnsFilterAlert :results="[inputs.soa, inputs.caa, inputs.mx]" />
     <HealthReport :checks="checks" prefix="tools.dns-health-report" :title="t('tools.dns-health-report.result', { zone: ran })" filename="dns-health.json" />
   </CCard>
 </template>
