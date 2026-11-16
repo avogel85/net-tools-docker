@@ -582,6 +582,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/email/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Check e-mail address syntax and whether the domains accept mail (no mail is sent) */
+        get: operations["emailValidate"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/email/dmarc": {
         parameters: {
             query?: never;
@@ -2527,6 +2544,25 @@ export interface components {
                 /** @enum {string} */
                 role: "inbound" | "gateway" | "sending" | "verification" | "reporting";
                 evidence: string;
+            }[];
+        };
+        EmailValidate: {
+            results: {
+                input: string;
+                local: string;
+                domain: string;
+                ascii: string;
+                /** @enum {string} */
+                verdict: "valid" | "risky" | "invalid";
+                problems: string[];
+                warnings: string[];
+                mx: string[];
+                implicitMx: boolean;
+                disposable: boolean;
+                role: boolean;
+                free: boolean;
+                smtputf8: boolean;
+                suggestion: string;
             }[];
         };
         EmailSpfFlatten: {
@@ -4919,6 +4955,32 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["EmailProviders"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    emailValidate: {
+        parameters: {
+            query: {
+                /** @description Up to 50 addresses, separated by newlines, commas or semicolons */
+                addresses: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["EmailValidate"];
                     };
                 };
             };

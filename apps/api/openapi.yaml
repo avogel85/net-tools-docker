@@ -704,6 +704,31 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/EmailProviders" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/email/validate:
+    get:
+      operationId: emailValidate
+      summary: Check e-mail address syntax and whether the domains accept mail (no mail is sent)
+      tags: [email]
+      x-capability: email.validate
+      parameters:
+        - name: addresses
+          in: query
+          required: true
+          description: Up to 50 addresses, separated by newlines, commas or semicolons
+          schema: { type: string, maxLength: 16384 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/EmailValidate" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/email/dmarc:
     get:
       operationId: emailDmarc
@@ -3079,6 +3104,30 @@ components:
               provider: { type: string }
               role: { type: string, enum: [inbound, gateway, sending, verification, reporting] }
               evidence: { type: string }
+    EmailValidate:
+      type: object
+      required: [results]
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            required: [input, local, domain, ascii, verdict, problems, warnings, mx, implicitMx, disposable, role, free, smtputf8, suggestion]
+            properties:
+              input: { type: string }
+              local: { type: string }
+              domain: { type: string }
+              ascii: { type: string }
+              verdict: { type: string, enum: [valid, risky, invalid] }
+              problems: { type: array, items: { type: string } }
+              warnings: { type: array, items: { type: string } }
+              mx: { type: array, items: { type: string } }
+              implicitMx: { type: boolean }
+              disposable: { type: boolean }
+              role: { type: boolean }
+              free: { type: boolean }
+              smtputf8: { type: boolean }
+              suggestion: { type: string }
     EmailSpfFlatten:
       type: object
       required: [domain, original, originalLookups, lookups, records, sources, ip4, ip6, queries, problems, warnings]

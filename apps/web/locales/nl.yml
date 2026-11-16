@@ -1478,6 +1478,37 @@ tools:
       verification: Tokens voor domeineigendom in TXT-records.
     records: Gelezen records
     limits: De detectie gebruikt lijsten van bekende hostnamen en tokenprefixen; alleen SPF-includes op het hoogste niveau en een vaste set DKIM-selectors worden gecontroleerd.
+  email-validator:
+    title: E-mailadresvalidator
+    description: Controleer tot 50 e-mailadressen — syntax, of het domein mail accepteert (MX, null MX), wegwerp- en rol-adressen en waarschijnlijke typfouten. Er wordt geen mail verstuurd.
+    addresses: Adressen (één per regel)
+    hint: De DNS van het domein wordt gecontroleerd; de mailbox zelf is niet te verifiëren zonder mail te sturen, dus "geldig" betekent dat het adres mail kan ontvangen, niet dat het bestaat. Adressen worden niet opgeslagen en niet in de URL gezet.
+    tooMany: Maximaal {max} adressen per controle.
+    run: '{n} adres(sen) controleren'
+    address: Adres
+    verdict: Oordeel
+    notes: Opmerkingen
+    implicit: geen (gebruikt A/AAAA)
+    verdicts:
+      valid: Geldig
+      risky: Riskant
+      invalid: Ongeldig
+    findings:
+      syntax: Geen e-mailadres.
+      local-too-long: Het deel vóór de {'@'} is langer dan 64 tekens.
+      local-syntax: Het deel vóór de {'@'} bevat tekens die aanhalingstekens nodig hebben of een verkeerd geplaatste punt.
+      address-literal: Een IP-adres in plaats van een domein — bijna geen provider accepteert dit.
+      domain-syntax: Het domein is geen geldige domeinnaam.
+      too-long: Het adres is langer dan 254 tekens.
+      smtputf8: Het adres bevat niet-ASCII-tekens; de verzendende en ontvangende server moeten SMTPUTF8 ondersteunen.
+      no-mail-domain: Het domein bestaat niet of heeft geen mailserver.
+      null-mx: Het domein publiceert een null MX — het accepteert geen mail.
+      implicit-mx: Geen MX-record; mail gaat naar het eigen adres van het domein (werkt, maar is ongebruikelijk).
+      dns-error: De DNS-lookup is mislukt; probeer het opnieuw.
+      not-checked: Meer dan 25 verschillende domeinen; dit domein is niet opgezocht.
+      disposable: Een wegwerp-maildienst.
+      role: Een rol-adres (gedeelde mailbox) in plaats van een persoon.
+      typo: Bedoelde je {suggestion}?
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

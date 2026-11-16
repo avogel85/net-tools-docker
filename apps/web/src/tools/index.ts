@@ -62,6 +62,7 @@ import { tool as ednsCompliance } from './edns-compliance'
 import { tool as emailDeliverabilityReport } from './email-deliverability-report'
 import { tool as emailHeaderAnalyzer } from './email-header-analyzer'
 import { tool as emailProviderDetector } from './email-provider-detector'
+import { tool as emailValidator } from './email-validator'
 import { tool as encryptedDnsTester } from './encrypted-dns-tester'
 import { tool as eui64Calculator } from './eui64-calculator'
 import { tool as gatewayInfo } from './gateway-info'
@@ -192,7 +193,7 @@ const categories: { id: string, components: Tool[] }[] = [
   { id: 'connectivity', components: [ping, tcpPing, traceroute, mtr, portCheck, ntpCheck, serverNetworkInfo, isItDown, latencyMatrix, pathMtu, ipv6Readiness, portScanner, iperf, snmp, latencyMonitor] },
   { id: 'web', components: [urlParser, userAgentParser, httpStatusCodes, httpRequest, redirectTracer, httpTiming, securityHeaders, corsTester, hstsPreload, compressionCheck, cookieInspector, wellKnownFiles, httpProtocols, curlBuilder, websocketTester, cdnWafDetector, cacheHeaderAnalyzer, mixedContentChecker, cspBuilder, domainScorecard] },
   { id: 'tls', components: [certificateDecoder, tlsInspector, tlsExpiry, csrTool, certKeyMatcher, ctSearch, starttlsCheck, revocationCheck, tlsScanner, sshAudit, sshKeyTool, keyConverter, daneChecker, certChainValidator, pkcs12Inspector, labCaGenerator] },
-  { id: 'email', components: [mxLookup, spfChecker, spfFlattener, dmarcChecker, dmarcGenerator, dkimChecker, dkimGenerator, emailHeaderAnalyzer, blacklistCheck, mtaStsChecker, mtaStsGenerator, openRelayTest, dmarcReportViewer, smtpBannerCheck, tlsRptViewer, emailDeliverabilityReport, m365DomainCheck, emailProviderDetector] },
+  { id: 'email', components: [mxLookup, spfChecker, spfFlattener, dmarcChecker, dmarcGenerator, dkimChecker, dkimGenerator, emailHeaderAnalyzer, blacklistCheck, mtaStsChecker, mtaStsGenerator, openRelayTest, dmarcReportViewer, smtpBannerCheck, tlsRptViewer, emailDeliverabilityReport, m365DomainCheck, emailProviderDetector, emailValidator] },
   { id: 'bgp', components: [ipToAsn, whoisLookup, rdapLookup, domainExpiry, asnInfo, prefixStatus, rpkiValidator, lookingGlass, peeringdbLookup, cloudIpLookup, irrExpansion, asPathVisualizer, bgpRouteHistory, asnNeighbourGraph, commonIxps, roaCoverage, prefixListTester, bgpCommunityDecoder] },
   { id: 'reputation', components: [ipGeolocation, passiveExposure, ipReputation, torExitCheck, urlReputation] },
   { id: 'lan', components: [wakeOnLan, arpScan, mdnsBrowser, ssdpDiscovery, dhcpProbe, gatewayInfo, lldpNeighbors, ipv6Neighbors, dhcpv6Probe] },

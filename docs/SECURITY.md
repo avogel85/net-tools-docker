@@ -88,6 +88,7 @@ Fixed limits for tools that follow data from third parties (not configurable):
 | SPF flattener (EM-14) | At most 100 DNS queries per request (plus the EM-02 walk for the "before" count), include depth 12, 10 MX hosts per mx term, 2000 prefixes, record size 100–2048 bytes; 45 s timeout |
 | AD DC locator (DNS-29) | 14 SRV queries, at most 20 targets resolved (A + AAAA), custom resolver through the target policy; 30 s timeout |
 | Email provider detector (EM-20) | 19 DNS queries (MX, TXT, `_dmarc`, 16 DKIM selectors) through the system resolver; no connections to the providers; 30 s timeout |
+| Email address validator (EM-19) | 50 addresses, 25 distinct domains (MX, then A + AAAA when there is no MX); no SMTP connection and no mail sent; addresses are not logged; 30 s timeout |
 | DMARC (EM-03) | 10 report URIs per tag checked for external authorization |
 | MX / SMTP (EM-01) | 10 MX hosts, 64 KiB and 100 lines per reply read before STARTTLS, 15 s per probe |
 | IRR expansion (BGP-10) | `bgpq4` via execx against the fixed default IRR host (rr.ntt.net); sources from an allow-list; 30 s, 1 MiB output |

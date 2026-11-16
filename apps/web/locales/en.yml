@@ -1478,6 +1478,37 @@ tools:
       verification: Domain-ownership tokens in TXT records.
     records: Records read
     limits: Detection uses lists of known host names and token prefixes; only top-level SPF includes and a fixed set of DKIM selectors are checked.
+  email-validator:
+    title: Email address validator
+    description: Check up to 50 e-mail addresses — syntax, whether the domain accepts mail (MX, null MX), disposable and role addresses, and likely typos. No mail is sent.
+    addresses: Addresses (one per line)
+    hint: The domain's DNS is checked; the mailbox itself cannot be verified without sending mail, so "valid" means the address can receive mail, not that it exists. Addresses are not stored or put in the URL.
+    tooMany: At most {max} addresses per check.
+    run: Check {n} address(es)
+    address: Address
+    verdict: Verdict
+    notes: Notes
+    implicit: none (uses A/AAAA)
+    verdicts:
+      valid: Valid
+      risky: Risky
+      invalid: Invalid
+    findings:
+      syntax: Not an e-mail address.
+      local-too-long: The part before the {'@'} is longer than 64 characters.
+      local-syntax: The part before the {'@'} contains characters that need quoting or a misplaced dot.
+      address-literal: An IP address literal instead of a domain — almost no provider accepts this.
+      domain-syntax: The domain is not a valid domain name.
+      too-long: The address is longer than 254 characters.
+      smtputf8: The address uses non-ASCII characters; the sending and receiving servers must support SMTPUTF8.
+      no-mail-domain: The domain does not exist or has no mail server.
+      null-mx: The domain publishes a null MX — it does not accept mail.
+      implicit-mx: No MX record; mail goes to the domain's own address (works, but unusual).
+      dns-error: The DNS lookup failed; try again.
+      not-checked: More than 25 different domains; this one was not looked up.
+      disposable: A disposable (throw-away) mail service.
+      role: A role address (shared mailbox) rather than a person.
+      typo: Did you mean {suggestion}?
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.
