@@ -1752,6 +1752,36 @@ tools:
       no-reply: No reply
       refused: Refused
       error: Error
+  reverse-proxy-config:
+    title: Reverse proxy config generator
+    description: Generate the same reverse proxy setup for nginx, Caddy, Traefik (file or Docker labels) and HAProxy — TLS, HTTP to HTTPS redirect, HSTS, WebSockets, compression and security headers.
+    hosts: Host names
+    invalidHosts: Enter host names such as app.example.com, separated by commas.
+    upstream: Upstream (backend)
+    invalidUpstream: Enter a URL such as http://127.0.0.1:3000 (no path).
+    tls: TLS
+    tlsModes:
+      acme: Let's Encrypt
+      files: Certificate files
+      none: No TLS
+    cert: Certificate file
+    key: Key file
+    invalidPath: Enter an absolute path.
+    redirect: HTTP → HTTPS redirect
+    compression: Compression
+    securityHeaders: Security headers
+    maxBody: Max upload (MB)
+    timeout: Read timeout (seconds)
+    serverDefault: server default
+    config: Configuration
+    targets:
+      nginx: nginx
+      caddy: Caddy
+      traefik: Traefik (file)
+      traefik-labels: Traefik (Docker labels)
+      haproxy: HAProxy
+    download: Download {file}
+    hint: Review before use — certificate paths, entry point names (Traefik) and the certbot setup (nginx, HAProxy) depend on your installation. Caddy obtains certificates and redirects to HTTPS by itself.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

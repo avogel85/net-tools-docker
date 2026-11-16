@@ -1752,6 +1752,36 @@ tools:
       no-reply: Geen antwoord
       refused: Geweigerd
       error: Fout
+  reverse-proxy-config:
+    title: Reverse-proxyconfiggenerator
+    description: Genereer dezelfde reverse-proxy-opzet voor nginx, Caddy, Traefik (bestand of Docker-labels) en HAProxy — TLS, doorsturen van HTTP naar HTTPS, HSTS, WebSockets, compressie en security-headers.
+    hosts: Hostnamen
+    invalidHosts: Vul hostnamen in zoals app.example.com, gescheiden door komma's.
+    upstream: Upstream (backend)
+    invalidUpstream: Vul een URL in zoals http://127.0.0.1:3000 (zonder pad).
+    tls: TLS
+    tlsModes:
+      acme: Let's Encrypt
+      files: Certificaatbestanden
+      none: Geen TLS
+    cert: Certificaatbestand
+    key: Sleutelbestand
+    invalidPath: Vul een absoluut pad in.
+    redirect: HTTP → HTTPS doorsturen
+    compression: Compressie
+    securityHeaders: Security-headers
+    maxBody: Max. upload (MB)
+    timeout: Leestime-out (seconden)
+    serverDefault: standaard van de server
+    config: Configuratie
+    targets:
+      nginx: nginx
+      caddy: Caddy
+      traefik: Traefik (bestand)
+      traefik-labels: Traefik (Docker-labels)
+      haproxy: HAProxy
+    download: '{file} downloaden'
+    hint: Controleer voor gebruik — certificaatpaden, entry-pointnamen (Traefik) en de certbot-opzet (nginx, HAProxy) hangen af van je installatie. Caddy haalt zelf certificaten op en stuurt zelf door naar HTTPS.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
