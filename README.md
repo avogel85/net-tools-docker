@@ -1,5 +1,13 @@
 # NET-TOOLS
 
+> **This is a fork.** NET-TOOLS was created by [digibaro](https://github.com/digibaro) — original project:
+> [digibaro/net-tools-docker](https://github.com/digibaro/net-tools-docker). This fork (branch `homelab`) is based on
+> upstream v0.9.0 and adds eight tools for homelabs and network engineers (Proxmox/UniFi inventory, VLAN reachability,
+> certificate and DNS checks, ARP conflicts, a UPS calculator and a switch CLI troubleshooting helper for Junos,
+> Cisco and Arista). See [docs/HOMELAB.md](docs/HOMELAB.md). Everything else is upstream's work; the fork only registers the new tools (tool list, translations, `openapi.yaml`).
+> The published Docker images belong to the original project and do not include the fork's tools — build from source
+> (see Quick start).
+
 Self-hosted network tools and troubleshooting utilities in one web app — 215 tools for IP
 addressing, DNS, connectivity, HTTP, TLS, email, BGP, reputation and your LAN. The UX follows
 [it-tools](https://github.com/CorentinTh/it-tools): a searchable grid of tools, each on its own
@@ -44,14 +52,14 @@ Every tool shows where it runs:
 Requirements: Docker with Compose v2. LAN mode needs a Linux host.
 
 ```bash
-git clone https://github.com/digibaro/net-tools-docker.git
+git clone -b homelab https://github.com/avogel85/net-tools-docker.git   # this fork; original: github.com/digibaro/net-tools-docker
 cd net-tools-docker
 cp .env.example .env          # optional: settings and API keys (see Configuration)
 docker compose up -d --build  # build from source
 ```
 
-Open <http://localhost:8080>. To use the published images instead of building, pull them for a
-release (`NETTOOLS_VERSION` selects the image tag, e.g. `0.4.0`; default `latest`):
+Open <http://localhost:8080>. To use the original project's published images instead of building (they do not
+include this fork's additional tools), pull them for a release (`NETTOOLS_VERSION` selects the image tag, e.g. `0.4.0`; default `latest`):
 
 ```bash
 docker compose pull && docker compose up -d
@@ -304,9 +312,10 @@ Frontend: Vue 3, Vite, TypeScript, Naive UI, UnoCSS (`apps/web`). Backend: Go, c
 | [docs/SECURITY.md](docs/SECURITY.md) | Target policy, exec rules, limits, container hardening |
 | [docs/THEMING.md](docs/THEMING.md) | Theme modes, accent colours, contrast rules |
 | [docs/TOOL_AUTHORING.md](docs/TOOL_AUTHORING.md) | Adding a tool, frontend and backend |
+| [docs/HOMELAB.md](docs/HOMELAB.md) | Fork additions: homelab tools, config file, building and syncing the fork |
 | [docs/PRD.md](docs/PRD.md) · [docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md) | Requirements and phases |
 
 ## License
 
-GPL-3.0-or-later — © 2026 digibaro. See [LICENSE](LICENSE) and [NOTICE](NOTICE). UX inspired by
+GPL-3.0-or-later — © 2026 digibaro; fork additions © 2026 avogel85. See [LICENSE](LICENSE) and [NOTICE](NOTICE). UX inspired by
 [it-tools](https://github.com/CorentinTh/it-tools).

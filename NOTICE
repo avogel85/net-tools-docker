@@ -1,6 +1,10 @@
 NetTools
 Copyright (C) 2026 digibaro
 
+This is a modified version (fork) of NetTools by digibaro, https://github.com/digibaro/net-tools-docker .
+Modifications Copyright (C) 2026 avogel85: the Homelab tool category, ARP conflict detection, UPS runtime
+calculator and switch CLI troubleshooting helper (see docs/HOMELAB.md). Changed on 2026-11-16.
+
 This program is free software: you can redistribute it and/or modify it under the terms of the
 GNU General Public License as published by the Free Software Foundation, either version 3 of the
 License, or (at your option) any later version. See LICENSE for the full text.

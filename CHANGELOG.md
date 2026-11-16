@@ -6,6 +6,11 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
 
 ## [Unreleased]
 
+### Added (fork avogel85/net-tools-docker, branch `homelab`)
+- Homelab category (inventory, VLAN reachability, certificate monitor, DNS comparison, public hostname check), ARP conflict
+  detection, UPS runtime calculator and a switch CLI troubleshooting helper (Junos, Cisco IOS/NX-OS, Arista EOS). See
+  `docs/HOMELAB.md`. Not part of the original project.
+
 ## [0.9.0] - 2026-11-16
 
 ### Added
