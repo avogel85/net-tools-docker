@@ -162,6 +162,8 @@ about:
   noServerTools: No server tools are registered yet.
   attributions: License & attributions
   license: NET-TOOLS is free software under the GNU GPL v3.0 or later. Its user experience is inspired by it-tools.
+recordList:
+  zone: Zone file
 dnsFilter:
   title: Blocked by a DNS filter
   ede: '{resolver} says this name is blocked (extended DNS error {code}{text}).'
@@ -1421,6 +1423,42 @@ tools:
     stale: The addresses are a snapshot of what the providers publish now. When a provider changes its IP ranges, mail from the new addresses fails SPF until you flatten again. Re-run this regularly or automate it, and keep the original record somewhere for reference.
     sources: Where the addresses come from
     kept: kept as-is
+  dmarc-generator:
+    title: DMARC record generator
+    description: Build a DMARC record step by step — policy, alignment, percentage and report addresses — with the authorization records external report addresses need.
+    policy: Policy for the domain
+    policies:
+      none: Monitor (none)
+      quarantine: Quarantine
+      reject: Reject
+    sp: Subdomain policy (sp)
+    inherit: Same as the domain
+    adkim: DKIM alignment
+    aspf: SPF alignment
+    relaxed: Relaxed
+    strict: Strict
+    pct: Apply to (pct)
+    ri: Aggregate report interval
+    interval:
+      '3600': Every hour
+      '14400': Every 4 hours
+      '86400': Daily (default)
+    rua: Aggregate report addresses (rua)
+    ruf: Failure report addresses (ruf, optional)
+    invalidAddress: Enter e-mail addresses separated by commas, for example dmarc{'@'}example.com.
+    fo: Send failure reports when
+    foOptions:
+      '0': SPF and DKIM both fail
+      '1': SPF or DKIM fails
+      d: DKIM fails
+      s: SPF fails
+    authorizationHint: The report addresses are in another domain. That domain must publish the authorization record(s) above, or receivers will not send it reports.
+    findings:
+      ruf-privacy: Failure reports can contain parts of messages (personal data), and many receivers do not send them.
+      sp-none: Subdomains are only monitored while the domain itself is protected.
+    import: Start from an existing record
+    load: Load
+    importError: This is not a DMARC record (it must start with v=DMARC1).
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

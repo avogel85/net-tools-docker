@@ -162,6 +162,8 @@ about:
   noServerTools: Er zijn nog geen servertools geregistreerd.
   attributions: Licentie & bronvermelding
   license: NET-TOOLS is vrije software onder de GNU GPL v3.0 of later. De gebruikerservaring is geïnspireerd op it-tools.
+recordList:
+  zone: Zonebestand
 dnsFilter:
   title: Geblokkeerd door een DNS-filter
   ede: '{resolver} meldt dat deze naam geblokkeerd is (extended DNS error {code}{text}).'
@@ -1421,6 +1423,42 @@ tools:
     stale: De adressen zijn een momentopname van wat de providers nu publiceren. Wijzigt een provider zijn IP-bereiken, dan faalt SPF voor mail vanaf de nieuwe adressen tot je opnieuw platslaat. Voer dit regelmatig uit of automatiseer het, en bewaar het originele record ter referentie.
     sources: Waar de adressen vandaan komen
     kept: ongewijzigd
+  dmarc-generator:
+    title: DMARC-recordgenerator
+    description: Stel stap voor stap een DMARC-record samen — beleid, alignment, percentage en rapportadressen — met de autorisatierecords die externe rapportadressen nodig hebben.
+    policy: Beleid voor het domein
+    policies:
+      none: Monitoren (none)
+      quarantine: Quarantaine
+      reject: Weigeren
+    sp: Beleid voor subdomeinen (sp)
+    inherit: Gelijk aan het domein
+    adkim: DKIM-alignment
+    aspf: SPF-alignment
+    relaxed: Ruim (relaxed)
+    strict: Strikt
+    pct: Toepassen op (pct)
+    ri: Interval van geaggregeerde rapporten
+    interval:
+      '3600': Elk uur
+      '14400': Elke 4 uur
+      '86400': Dagelijks (standaard)
+    rua: Adressen voor geaggregeerde rapporten (rua)
+    ruf: Adressen voor foutrapporten (ruf, optioneel)
+    invalidAddress: Vul e-mailadressen in, gescheiden door komma's, bijvoorbeeld dmarc{'@'}example.com.
+    fo: Stuur foutrapporten als
+    foOptions:
+      '0': SPF en DKIM allebei falen
+      '1': SPF of DKIM faalt
+      d: DKIM faalt
+      s: SPF faalt
+    authorizationHint: De rapportadressen staan in een ander domein. Dat domein moet de autorisatierecord(s) hierboven publiceren, anders sturen ontvangers geen rapporten.
+    findings:
+      ruf-privacy: Foutrapporten kunnen delen van berichten bevatten (persoonsgegevens), en veel ontvangers sturen ze niet.
+      sp-none: Subdomeinen worden alleen gemonitord terwijl het domein zelf beschermd is.
+    import: Begin met een bestaand record
+    load: Laden
+    importError: Dit is geen DMARC-record (het moet beginnen met v=DMARC1).
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
