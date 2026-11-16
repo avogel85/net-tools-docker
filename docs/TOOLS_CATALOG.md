@@ -182,7 +182,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | EM-13 | Microsoft 365 domain check | Records Microsoft 365 needs (MX, SPF, MS= verification, Autodiscover, DKIM selector1/2, DMARC, Intune, Teams/SIP) vs what DNS returns; tenant ID, region, managed or federated sign-in | S+P | `miekg/dns` lookups | Microsoft Entra OpenID discovery + `getuserrealm.srf` (keyless) | 8 | ✅ |
 | EM-14 | SPF flattener | Replace include/a/mx/redirect with the ip4/ip6 ranges they resolve to (aggregated), keep exists/ptr/macros, split over chained `<label>N.<domain>` records above a size limit; lookups before/after, zone-file output | S | custom on `miekg/dns` | — | 9 | ✅ |
 | EM-15 | DMARC record generator | Wizard for policy, subdomain policy, alignment, pct, rua/ruf; outputs the TXT record with explanations | B | custom | — | 9 | ✅ |
-| EM-16 | DKIM key & record generator | RSA-2048 or Ed25519 key pair generated in the browser plus the selector TXT record | B | WebCrypto | — | 9 | ⬜ |
+| EM-16 | DKIM key & record generator | RSA-2048 or Ed25519 key pair generated in the browser plus the selector TXT record | B | WebCrypto | — | 9 | ✅ |
 | EM-17 | MTA-STS policy generator | Policy file, `_mta-sts` and `_smtp._tls` records and an nginx hosting snippet from the MX hosts | B | custom | — | 9 | ⬜ |
 | EM-18 | DKIM signature verifier | Paste a raw message; verify each DKIM-Signature (body hash, signature) against the published key, and the ARC chain | S | custom on `crypto` + `miekg/dns` | — | 10 | ⬜ |
 | EM-19 | Email address validator | Syntax (RFC 5322 / SMTPUTF8), MX or null MX, disposable and role-address detection; no mail is sent | S | `miekg/dns` + bundled lists | — | 10 | ⬜ |

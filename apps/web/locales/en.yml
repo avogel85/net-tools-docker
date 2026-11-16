@@ -1487,6 +1487,28 @@ tools:
       name: Record
       key: Key
       flags: Tags
+  dkim-generator:
+    title: DKIM key & record generator
+    description: Generate a DKIM key pair in your browser and the selector record to publish. The private key never leaves your browser.
+    selector: Selector
+    keyType: Key type
+    kinds:
+      rsa-2048: RSA 2048 (recommended)
+      rsa-1024: RSA 1024
+      rsa-4096: RSA 4096
+      ed25519: Ed25519
+    testing: Test mode (t=y)
+    strict: No subdomains in i= (t=s)
+    generate: Generate key pair
+    regenerate: Generate a new key pair
+    unsupported: This browser cannot generate this key type. Try another browser or choose RSA.
+    ed25519Hint: Not every receiver checks Ed25519 signatures (RFC 8463). Sign with an RSA key as well, under a second selector.
+    shortKey: 1024-bit keys still work, but 2048 bits is the recommended minimum.
+    publish: Record to publish
+    splitHint: A 2048-bit key is longer than 255 characters. Zone files split it into several quoted strings (as shown); most DNS dashboards accept the whole value in one field.
+    privateKey: Private key (PKCS#8)
+    privateHint: Install this key on your mail server or signing service. It is not stored anywhere — once you leave or reload this page it is gone.
+    download: Download .key
   ip-to-asn:
     title: IP → ASN
     description: Find the autonomous system (ASN), announced prefix, AS name, country and registry for an IP address.

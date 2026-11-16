@@ -1487,6 +1487,28 @@ tools:
       name: Record
       key: Sleutel
       flags: Tags
+  dkim-generator:
+    title: DKIM-sleutel- en recordgenerator
+    description: Genereer een DKIM-sleutelpaar in je browser en het selectorrecord om te publiceren. De privésleutel verlaat je browser nooit.
+    selector: Selector
+    keyType: Sleuteltype
+    kinds:
+      rsa-2048: RSA 2048 (aanbevolen)
+      rsa-1024: RSA 1024
+      rsa-4096: RSA 4096
+      ed25519: Ed25519
+    testing: Testmodus (t=y)
+    strict: Geen subdomeinen in i= (t=s)
+    generate: Sleutelpaar genereren
+    regenerate: Nieuw sleutelpaar genereren
+    unsupported: Deze browser kan dit sleuteltype niet genereren. Probeer een andere browser of kies RSA.
+    ed25519Hint: Niet elke ontvanger controleert Ed25519-handtekeningen (RFC 8463). Onderteken ook met een RSA-sleutel, onder een tweede selector.
+    shortKey: 1024-bitsleutels werken nog, maar 2048 bits is het aanbevolen minimum.
+    publish: Te publiceren record
+    splitHint: Een 2048-bitsleutel is langer dan 255 tekens. Zonebestanden splitsen hem in meerdere strings tussen aanhalingstekens (zoals getoond); de meeste DNS-dashboards accepteren de hele waarde in één veld.
+    privateKey: Privésleutel (PKCS#8)
+    privateHint: Installeer deze sleutel op je mailserver of ondertekeningsdienst. Hij wordt nergens opgeslagen — verlaat of herlaad je deze pagina, dan is hij weg.
+    download: .key downloaden
   ip-to-asn:
     title: IP → ASN
     description: Vind het autonome systeem (ASN), de aangekondigde prefix, AS-naam, land en register bij een IP-adres.
