@@ -1939,6 +1939,38 @@ tools:
       timeout: De verbinding verliep.
       refused: De poort weigerde de verbinding.
       handshake-failed: De TLS-handshake is mislukt (geen TLS op deze poort, of geen gemeenschappelijke instellingen).
+  expiry-watchlist:
+    title: Verloopoverzicht
+    description: Houd een lijst van hosts en domeinen bij in je browser en zie in één oogopslag welke certificaten en domeinregistraties binnenkort verlopen. Wordt gecontroleerd zodra je de pagina opent.
+    add: Hosts en domeinen toevoegen (maximaal {max} in totaal)
+    invalid: 'Niet toegevoegd: {list}'
+    hint: '"example.com" bewaakt zowel het certificaat als de registratie; een subdomein, "host:poort" of "cert:host" alleen het certificaat; "domain:example.org" alleen de registratie.'
+    addButton: Toevoegen
+    check: Nu controleren
+    warnDays: Waarschuwen dagen vooraf
+    storageFailed: De lijst kon niet in deze browser worden opgeslagen (privévenster of opslag vol). Exporteer hem om hem te bewaren.
+    domainsPending: '{n} domeinregistratie(s) controleren… Registraties worden hoogstens elke 12 uur en 8 per controle ververst, omdat RDAP-servers het aantal lookups beperken.'
+    results: Verloopoverzicht
+    status: Status
+    target: Host of domein
+    kind: Wat
+    expires: Verloopt
+    days: Dagen over
+    by: Uitgever / registrar
+    checked: Gecontroleerd
+    levels:
+      expired: Verlopen
+      soon: Verloopt binnenkort
+      ok: OK
+      unknown: Onbekend
+    kinds:
+      cert: Certificaat
+      domain: Registratie
+    entries: Bewaakt ({n})
+    remove: Verwijderen
+    export: Lijst exporteren
+    import: Lijst importeren
+    storageHint: De lijst staat alleen in deze browser — geen opslag op de server en geen e-mailmeldingen. Exporteer hem om hem naar een ander apparaat te verplaatsen.
   ip-to-asn:
     title: IP → ASN
     description: Vind het autonome systeem (ASN), de aangekondigde prefix, AS-naam, land en register bij een IP-adres.

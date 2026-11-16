@@ -68,6 +68,7 @@ import { tool as emailProviderDetector } from './email-provider-detector'
 import { tool as emailValidator } from './email-validator'
 import { tool as encryptedDnsTester } from './encrypted-dns-tester'
 import { tool as eui64Calculator } from './eui64-calculator'
+import { tool as expiryWatchlist } from './expiry-watchlist'
 import { tool as gatewayInfo } from './gateway-info'
 import { tool as hstsPreload } from './hsts-preload'
 import { tool as httpProtocols } from './http-protocols'
@@ -206,7 +207,7 @@ const categories: { id: string, components: Tool[] }[] = [
   { id: 'dns', components: [punycodeConverter, domainParser, dnsLookup, reverseDns, caaChecker, dnsConsistency, dnsPropagation, dnsTrace, encryptedDnsTester, zoneBuilder, zoneLinter, nsupdateBuilder, zoneTransferTest, wildcardDetector, dnsBenchmark, dnssecValidator, dsDnskey, nsec3Hash, openResolverTest, ptrCoverage, svcbHttpsViewer, ednsCompliance, dnsTtlPlanner, dnsHealthReport, bulkLookup, dcLocator, dnsSnapshot, takeoverCheck, lookalikeFinder] },
   { id: 'connectivity', components: [ping, tcpPing, traceroute, mtr, portCheck, ntpCheck, serverNetworkInfo, isItDown, latencyMatrix, pathMtu, ipv6Readiness, portScanner, iperf, snmp, latencyMonitor, sipCheck, ldapCheck, remoteAccessCheck, ikeProbe, udpProbe, reverseTraceroute] },
   { id: 'web', components: [urlParser, userAgentParser, httpStatusCodes, httpRequest, redirectTracer, httpTiming, securityHeaders, corsTester, hstsPreload, compressionCheck, cookieInspector, wellKnownFiles, httpProtocols, curlBuilder, websocketTester, cdnWafDetector, cacheHeaderAnalyzer, mixedContentChecker, cspBuilder, domainScorecard, reverseProxyConfig] },
-  { id: 'tls', components: [certificateDecoder, tlsInspector, tlsExpiry, csrTool, certKeyMatcher, ctSearch, starttlsCheck, revocationCheck, tlsScanner, sshAudit, sshKeyTool, keyConverter, daneChecker, certChainValidator, pkcs12Inspector, labCaGenerator, acmeCheck, pqTlsCheck] },
+  { id: 'tls', components: [certificateDecoder, tlsInspector, tlsExpiry, csrTool, certKeyMatcher, ctSearch, starttlsCheck, revocationCheck, tlsScanner, sshAudit, sshKeyTool, keyConverter, daneChecker, certChainValidator, pkcs12Inspector, labCaGenerator, acmeCheck, pqTlsCheck, expiryWatchlist] },
   { id: 'email', components: [mxLookup, spfChecker, spfFlattener, dmarcChecker, dmarcGenerator, dkimChecker, dkimGenerator, dkimVerifier, emailHeaderAnalyzer, blacklistCheck, mtaStsChecker, mtaStsGenerator, openRelayTest, dmarcReportViewer, smtpBannerCheck, tlsRptViewer, emailDeliverabilityReport, m365DomainCheck, emailProviderDetector, emailValidator] },
   { id: 'bgp', components: [ipToAsn, whoisLookup, rdapLookup, domainExpiry, asnInfo, prefixStatus, rpkiValidator, lookingGlass, peeringdbLookup, cloudIpLookup, irrExpansion, asPathVisualizer, bgpRouteHistory, asnNeighbourGraph, commonIxps, roaCoverage, prefixListTester, bgpCommunityDecoder] },
   { id: 'reputation', components: [ipGeolocation, passiveExposure, ipReputation, torExitCheck, urlReputation] },

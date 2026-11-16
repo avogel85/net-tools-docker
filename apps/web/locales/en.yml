@@ -1939,6 +1939,38 @@ tools:
       timeout: The connection timed out.
       refused: The port refused the connection.
       handshake-failed: The TLS handshake failed (no TLS on this port, or no common settings).
+  expiry-watchlist:
+    title: Expiry watchlist
+    description: Keep a list of hosts and domains in your browser and see at a glance which certificates and domain registrations expire soon. Checked every time you open the page.
+    add: Add hosts and domains (up to {max} in total)
+    invalid: 'Not added: {list}'
+    hint: '"example.com" watches both its certificate and its registration; a subdomain, "host:port" or "cert:host" only the certificate; "domain:example.org" only the registration.'
+    addButton: Add
+    check: Check now
+    warnDays: Warn days ahead
+    storageFailed: The list could not be saved in this browser (private window or storage full). Export it to keep it.
+    domainsPending: 'Checking {n} domain registration(s)… Registrations are refreshed at most every 12 hours and 8 per check, because RDAP servers limit lookups.'
+    results: Expiry overview
+    status: Status
+    target: Host or domain
+    kind: What
+    expires: Expires
+    days: Days left
+    by: Issuer / registrar
+    checked: Checked
+    levels:
+      expired: Expired
+      soon: Expires soon
+      ok: OK
+      unknown: Unknown
+    kinds:
+      cert: Certificate
+      domain: Registration
+    entries: Watched ({n})
+    remove: Remove
+    export: Export list
+    import: Import list
+    storageHint: The list is stored in this browser only — no server storage and no e-mail alerts. Export it to move it to another device.
   ip-to-asn:
     title: IP → ASN
     description: Find the autonomous system (ASN), announced prefix, AS name, country and registry for an IP address.
