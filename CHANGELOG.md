@@ -6,6 +6,8 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-11-16
+
 ### Added
 - SPF flattener (Email): replaces include, a, mx and redirect with the IP ranges they resolve to,
   merges adjacent ranges, keeps what cannot be flattened (exists, ptr, macros) and splits long
@@ -211,7 +213,8 @@ Phases 0–3 (foundations, 32 browser tools, DNS / connectivity / HTTP / TLS / e
 tools, providers and Worldwide measurements) were developed before the first release; see the git
 history and `docs/IMPLEMENTATION_PLAN.md`.
 
-[Unreleased]: https://github.com/digibaro/net-tools-docker/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/digibaro/net-tools-docker/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/digibaro/net-tools-docker/compare/v0.8.1...v0.9.0
 [0.8.1]: https://github.com/digibaro/net-tools-docker/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/digibaro/net-tools-docker/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/digibaro/net-tools-docker/compare/v0.6.0...v0.7.0
