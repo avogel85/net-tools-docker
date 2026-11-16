@@ -2141,6 +2141,42 @@ tools:
       avg: Avg ms
       success: Answered
       errors: Errors
+  ds-dnskey:
+    title: DS / DNSKEY tool
+    description: Compute DS records from a zone's DNSKEYs and check which published DS records still match a key — handy for linking DNSSEC at the registrar and during key rollovers.
+    modes:
+      domain: Check a domain
+      paste: Compute from a DNSKEY
+    check: Check DS and DNSKEY
+    owner: Zone (owner name)
+    dnskeys: DNSKEY records
+    parseError: Paste DNSKEY records such as "example.com. 3600 IN DNSKEY 257 3 13 …" or "257 3 13 …".
+    compute: Compute DS
+    published: DS records at the parent
+    keys: Keys in the zone
+    keysHint: Give your registrar the DS record of the key-signing key (KSK); SHA-256 is accepted everywhere.
+    keyTag: Key tag
+    role: Role
+    roles:
+      ksk: KSK
+      zsk: ZSK
+      revoked: Revoked
+    algorithm: Algorithm
+    digestType: Digest
+    digest: Digest value
+    statusTitle: Status
+    status:
+      match: Matches a key
+      mismatch: Digest does not match
+      orphan: No key with this tag
+    resolverError: '{resolver} answered {rcode} to the {type} query, so the result would be unreliable. Try again or set DNS_RESOLVER to another resolver.'
+    verdict:
+      ok: Every DS record at the parent matches a key-signing key in the zone.
+      rollover: At least one DS record matches, so validation works. Some DS records or KSKs are not paired — expected during a key rollover, otherwise clean them up.
+      broken: No DS record matches a key in the zone. Validating resolvers will fail this domain (SERVFAIL).
+      noDs: The zone is signed, but the parent has no DS record, so DNSSEC is not active. Submit a DS record below to your registrar.
+      noKeys: The parent has DS records but the zone publishes no DNSKEY. Validating resolvers will fail this domain.
+      unsigned: The domain does not use DNSSEC (no DNSKEY and no DS).
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.

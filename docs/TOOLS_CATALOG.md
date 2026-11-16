@@ -73,7 +73,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | DNS-19 | DNS migration / TTL planner | Lower / change / restore timeline from the current TTL, iCalendar export | H | `/api/v1/dns/lookup` (optional) | — | 7 | ✅ |
 | DNS-20 | DNS health report | NS count / spread / lameness, serials, SOA timers, DNSSEC, EDNS, CAA, MX — graded | S | composed from DNS tools | — | 7 | ✅ |
 | DNS-21 | Bulk lookup | DNS / reverse DNS / IP-to-ASN / TCP port check for up to 100 targets, paced to the rate limit (waits on `retryAfter`) | S | existing lookup endpoints | — | 7 | ✅ |
-| DNS-22 | DS / DNSKEY tool | Compute DS records from a DNSKEY (SHA-256/384), fetch the parent DS and child DNSKEY and show which match (key rollover) | B+S | WebCrypto digest; DNSKEY/DS via `/dns/lookup` | — | 9 | ⬜ |
+| DNS-22 | DS / DNSKEY tool | Compute DS records from a DNSKEY (SHA-256/384), fetch the parent DS and child DNSKEY and show which match (key rollover) | B+S | WebCrypto digest; DNSKEY/DS via `/dns/lookup` | — | 9 | ✅ |
 | DNS-23 | NSEC3 hash calculator | NSEC3 owner hash (base32hex) for a name, salt and iteration count (RFC 5155) | B | WebCrypto SHA-1 | — | 9 | ⬜ |
 | DNS-24 | nsupdate / TSIG builder | Build `nsupdate` scripts (add/delete/replace) and generate TSIG keys in BIND, Knot and PowerDNS formats | B | custom | — | 9 | ⬜ |
 | DNS-25 | Zone file linter | Parse a pasted BIND zone: CNAME conflicts, missing glue, out-of-zone data, TTL and SOA sanity, duplicate records | B | custom parser | — | 9 | ⬜ |

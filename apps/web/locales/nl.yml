@@ -2141,6 +2141,42 @@ tools:
       avg: Gem. ms
       success: Beantwoord
       errors: Fouten
+  ds-dnskey:
+    title: DS/DNSKEY-tool
+    description: Bereken DS-records uit de DNSKEY's van een zone en controleer welke gepubliceerde DS-records nog bij een sleutel horen — handig om DNSSEC bij de registrar te koppelen en tijdens een sleutelwissel.
+    modes:
+      domain: Domein controleren
+      paste: Berekenen uit een DNSKEY
+    check: DS en DNSKEY controleren
+    owner: Zone (eigenaarsnaam)
+    dnskeys: DNSKEY-records
+    parseError: Plak DNSKEY-records zoals "example.com. 3600 IN DNSKEY 257 3 13 …" of "257 3 13 …".
+    compute: DS berekenen
+    published: DS-records bij de bovenliggende zone
+    keys: Sleutels in de zone
+    keysHint: Geef je registrar het DS-record van de key-signing key (KSK); SHA-256 wordt overal geaccepteerd.
+    keyTag: Key tag
+    role: Rol
+    roles:
+      ksk: KSK
+      zsk: ZSK
+      revoked: Ingetrokken
+    algorithm: Algoritme
+    digestType: Digest
+    digest: Digestwaarde
+    statusTitle: Status
+    status:
+      match: Hoort bij een sleutel
+      mismatch: Digest klopt niet
+      orphan: Geen sleutel met deze tag
+    resolverError: '{resolver} antwoordde {rcode} op de {type}-query, dus het resultaat zou onbetrouwbaar zijn. Probeer het opnieuw of stel DNS_RESOLVER in op een andere resolver.'
+    verdict:
+      ok: Elk DS-record bij de bovenliggende zone hoort bij een key-signing key in de zone.
+      rollover: Minstens één DS-record klopt, dus validatie werkt. Sommige DS-records of KSK's horen niet bij elkaar — normaal tijdens een sleutelwissel, ruim ze anders op.
+      broken: Geen enkel DS-record hoort bij een sleutel in de zone. Validerende resolvers geven voor dit domein een fout (SERVFAIL).
+      noDs: De zone is ondertekend, maar de bovenliggende zone heeft geen DS-record, dus DNSSEC is niet actief. Geef een DS-record hieronder door aan je registrar.
+      noKeys: De bovenliggende zone heeft DS-records, maar de zone publiceert geen DNSKEY. Validerende resolvers geven voor dit domein een fout.
+      unsigned: Het domein gebruikt geen DNSSEC (geen DNSKEY en geen DS).
   dnssec-validator:
     title: DNSSEC-validator
     description: Valideer de DNSSEC-vertrouwensketen van de root tot een naam, en zie precies waar die breekt — ontbrekende DS, niet-passende sleutels, verlopen of ongeldige handtekeningen.
