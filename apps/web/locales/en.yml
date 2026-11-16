@@ -2056,6 +2056,25 @@ tools:
       reach: Reach
       type: Kind
       use: Used for
+  prefix-list-generator:
+    title: Prefix-list generator
+    description: Expand an AS or AS-SET from the IRR (bgpq4) and get ready-to-paste prefix filters for Cisco IOS/IOS-XR, Juniper, Arista, FRR, MikroTik, BIRD and OpenBGPD.
+    set: AS or AS-SET
+    name: List name (optional)
+    invalidName: Start with a letter; letters, digits, _ and - only.
+    run: Generate
+    config: Prefix filters
+    download: Download
+    platforms:
+      ios: Cisco IOS / IOS-XE
+      iosxr: Cisco IOS-XR
+      junos: Juniper Junos
+      eos: Arista EOS
+      frr: FRR
+      routeros: MikroTik RouterOS 7
+      bird: BIRD 2
+      openbgpd: OpenBGPD
+    hint: Prefixes are aggregated, with more-specifics allowed up to the registered lengths. IRR data is only as good as what the network registered — compare with RPKI (ROA coverage) before you rely on it, and regenerate regularly.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.
