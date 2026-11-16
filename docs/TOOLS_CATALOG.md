@@ -12,6 +12,7 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 - **L** Requires `lan` profile (host networking).
 
 **Phase**: 1 = MVP shell + browser tools, 2 = core server tools, 3 = public APIs, 4 = advanced/LAN.
+Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 
 > Public-API notes reflect what was known when this kit was written. Before implementing a provider,
 > check its current docs, terms and rate limits; mark keyed ones with `requiresKey` in capabilities.
@@ -72,6 +73,14 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | DNS-19 | DNS migration / TTL planner | Lower / change / restore timeline from the current TTL, iCalendar export | H | `/api/v1/dns/lookup` (optional) | — | 7 | ✅ |
 | DNS-20 | DNS health report | NS count / spread / lameness, serials, SOA timers, DNSSEC, EDNS, CAA, MX — graded | S | composed from DNS tools | — | 7 | ✅ |
 | DNS-21 | Bulk lookup | DNS / reverse DNS / IP-to-ASN / TCP port check for up to 100 targets, paced to the rate limit (waits on `retryAfter`) | S | existing lookup endpoints | — | 7 | ✅ |
+| DNS-22 | DS / DNSKEY tool | Compute DS records from a DNSKEY (SHA-256/384), fetch the parent DS and child DNSKEY and show which match (key rollover) | B+S | WebCrypto digest; DNSKEY/DS via `/dns/lookup` | — | 9 | ⬜ |
+| DNS-23 | NSEC3 hash calculator | NSEC3 owner hash (base32hex) for a name, salt and iteration count (RFC 5155) | B | WebCrypto SHA-1 | — | 9 | ⬜ |
+| DNS-24 | nsupdate / TSIG builder | Build `nsupdate` scripts (add/delete/replace) and generate TSIG keys in BIND, Knot and PowerDNS formats | B | custom | — | 9 | ⬜ |
+| DNS-25 | Zone file linter | Parse a pasted BIND zone: CNAME conflicts, missing glue, out-of-zone data, TTL and SOA sanity, duplicate records | B | custom parser | — | 9 | ⬜ |
+| DNS-26 | DNS snapshot & diff | Save the common records of a domain in the browser and diff a later snapshot against it (migrations) | S | `/dns/lookup` per type; snapshots in browser storage | — | 10 | ⬜ |
+| DNS-27 | Subdomain takeover check | Flag CNAMEs (of given names or common ones) that point to unclaimed SaaS endpoints (S3, Azure, Heroku, GitHub Pages…) | S | `miekg/dns` + fingerprint list | — | 10 | ⬜ |
+| DNS-28 | Lookalike domain finder | Typo, homoglyph, bit-flip and TLD variants of a domain and whether they resolve or have MX (defensive) | S | custom generator + `miekg/dns`, capped | — | 10 | ⬜ |
+| DNS-29 | AD / Kerberos DC locator | Check the SRV records Active Directory needs (`_ldap._tcp.dc._msdcs`, `_kerberos`, `_gc`, `_kpasswd`) and their targets | S | `miekg/dns` | — | 10 | ⬜ |
 
 ## 3. Connectivity & Diagnostics
 
@@ -93,6 +102,12 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | CON-14 | IPv6 readiness | Does target have AAAA, is it reachable over v6 from server | S | DNS + dial | Globalping | 3 | ✅ |
 | CON-15 | Latency matrix | Ping multiple targets in parallel, compare | S | `pro-bing` fan-out | Globalping | 3 | ✅ |
 | CON-18 | Latency monitor | Smokeping-style ping up to MONITOR_MAX_MINUTES, per-minute loss / latency / jitter | S | `pro-bing` | — | 7 | ✅ |
+| CON-19 | UDP service probe | Service-aware UDP probes (DNS, NTP, SNMP, SIP, STUN, IKE, …) that tell open from open|filtered | S | per-protocol probe packets via `target.Resolve` | — | 11 | ⬜ |
+| CON-20 | IPsec / IKE probe | IKEv2 (and IKEv1) SA_INIT: accepted proposals, vendor IDs, NAT-T, fragmentation support | S | custom IKE packets | — | 11 | ⬜ |
+| CON-21 | SIP server check | SIP OPTIONS over UDP/TCP/TLS, NAPTR/SRV discovery, response code and server header | S | custom SIP over `target.Resolve` | — | 11 | ⬜ |
+| CON-22 | LDAP / LDAPS check | Anonymous rootDSE read, StartTLS/LDAPS certificate, naming contexts and SASL mechanisms | S | minimal LDAP BER client | — | 11 | ⬜ |
+| CON-23 | Remote access check | RDP (TLS certificate, NLA/CredSSP), VNC (RFB version, security types) and SSH summary with warnings | S | custom handshakes | — | 11 | ⬜ |
+| CON-24 | Reverse traceroute | Traceroute from Globalping probes back to the visitor, next to the outbound path (asymmetry) | P | — | Globalping (keyless) | 11 | ⬜ |
 
 ## 4. HTTP & Web
 
@@ -118,6 +133,11 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | WEB-18 | Mixed content checker | http:// scripts, styles, frames, media and forms on an https page | S | `x/net/html` | — | 6 | ✅ |
 | WEB-19 | CSP builder & evaluator | Presets, nonce, evaluation (unsafe-inline, bypass hosts, object-src, base-uri…), header/nginx/Apache/meta | B | custom | — | 6 | ✅ |
 | WEB-20 | Domain scorecard | internet.nl-style score for a domain in three sections: website (IPv6, HTTPS + cert, TLS 1.3, http→https, security headers, HSTS, HTTP/2/3), email (SPF, DMARC, MTA-STS, STARTTLS, DANE) and DNS (NS, DNSSEC, SOA, CAA) | S | composed in the browser from existing endpoints, 3 at a time | — | 8 | ✅ |
+| WEB-21 | Webhook / request inspector | Temporary URL that captures incoming requests (method, headers, body) for a short time | S | in-memory bins with TTL and size caps | — | 12 | ⬜ |
+| WEB-22 | Social preview checker | Open Graph / Twitter card preview, favicon, web manifest and missing-tag warnings | S | `httpcore` fetch + HTML parse | — | 12 | ⬜ |
+| WEB-23 | Broken link checker | Small crawl of one site (depth and page cap) reporting 4xx/5xx, redirect loops and broken assets | S | `httpcore`, same-host only, capped | — | 12 | ⬜ |
+| WEB-24 | Origin vs CDN compare | The same request through the CDN and directly to an origin IP; diff of status, headers, cache and TLS | S | `httpcore` with pinned IP | — | 12 | ⬜ |
+| WEB-25 | Reverse proxy config generator | nginx, Caddy, Traefik and HAProxy snippets (TLS, HSTS, websockets, headers, upstreams) | B | templates | — | 12 | ⬜ |
 
 ## 5. TLS & Certificates
 
@@ -138,6 +158,10 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | TLS-13 | Certificate chain validator | Pasted chain: order, signatures, missing intermediates via AIA, trust, host name | B+S | `crypto/x509` | — | 6 | ✅ |
 | TLS-14 | PKCS#12 / PFX inspector | Certificates, key match, friendly names, encryption / MAC algorithms (legacy flagged), in the browser | B | `node-forge`, `@peculiar/x509` | — | 6 | ✅ |
 | TLS-15 | Lab CA & certificate generator | Root CA (or reuse one) + server certificate with SANs, WebCrypto in the browser | B | `@peculiar/x509` | — | 6 | ✅ |
+| TLS-16 | SSH key & SSHFP tool | Fingerprints (SHA256/MD5) of SSH public keys, SSHFP records, `known_hosts` parsing | B | WebCrypto | — | 9 | ⬜ |
+| TLS-17 | ACME readiness check | Before requesting a certificate: CAA, port 80 reachability, `/.well-known/acme-challenge/` handling, `_acme-challenge` CNAME/TXT | S | `miekg/dns` + `httpcore` | — | 10 | ⬜ |
+| TLS-18 | Post-quantum TLS check | Whether a server negotiates hybrid post-quantum key exchange (X25519MLKEM768) and which groups it accepts | S | `crypto/tls` CurvePreferences | — | 11 | ⬜ |
+| TLS-19 | Expiry watchlist | Watchlist of hosts and domains kept in the browser; checks certificate and registration expiry when opened | S | TLS-02 + BGP-08 endpoints; list in browser storage | — | 12 | ⬜ |
 
 ## 6. Email
 
@@ -157,6 +181,12 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | EM-12 | Email deliverability report | MX/STARTTLS, SPF, DKIM, DMARC, MTA-STS, TLS-RPT, BIMI, DANE, FCrDNS — graded | S | composed from email tools | — | 7 | ✅ |
 | EM-13 | Microsoft 365 domain check | Records Microsoft 365 needs (MX, SPF, MS= verification, Autodiscover, DKIM selector1/2, DMARC, Intune, Teams/SIP) vs what DNS returns; tenant ID, region, managed or federated sign-in | S+P | `miekg/dns` lookups | Microsoft Entra OpenID discovery + `getuserrealm.srf` (keyless) | 8 | ✅ |
 | EM-14 | SPF flattener | Replace include/a/mx/redirect with the ip4/ip6 ranges they resolve to (aggregated), keep exists/ptr/macros, split over chained `<label>N.<domain>` records above a size limit; lookups before/after, zone-file output | S | custom on `miekg/dns` | — | 9 | ✅ |
+| EM-15 | DMARC record generator | Wizard for policy, subdomain policy, alignment, pct, rua/ruf; outputs the TXT record with explanations | B | custom | — | 9 | ⬜ |
+| EM-16 | DKIM key & record generator | RSA-2048 or Ed25519 key pair generated in the browser plus the selector TXT record | B | WebCrypto | — | 9 | ⬜ |
+| EM-17 | MTA-STS policy generator | Policy file, `_mta-sts` and `_smtp._tls` records and an nginx hosting snippet from the MX hosts | B | custom | — | 9 | ⬜ |
+| EM-18 | DKIM signature verifier | Paste a raw message; verify each DKIM-Signature (body hash, signature) against the published key, and the ARC chain | S | custom on `crypto` + `miekg/dns` | — | 10 | ⬜ |
+| EM-19 | Email address validator | Syntax (RFC 5322 / SMTPUTF8), MX or null MX, disposable and role-address detection; no mail is sent | S | `miekg/dns` + bundled lists | — | 10 | ⬜ |
+| EM-20 | Email provider detector | Which providers a domain uses for inbound mail, sending (SPF/DKIM) and security gateways | S | `miekg/dns` + fingerprint list | — | 10 | ⬜ |
 
 ## 7. Routing, BGP & Registry
 
@@ -180,6 +210,9 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | BGP-16 | Common IXPs & facilities | Exchanges and facilities two networks share, port speeds, route-server use | P | — | PeeringDB | 6 | ✅ |
 | BGP-17 | Prefix-list / route-filter tester | Cisco prefix-list (ge/le) and Junos route-filter / prefix-list evaluation per route | B | custom | — | 7 | ✅ |
 | BGP-18 | BGP community decoder | Standard / large / extended communities, well-known values, route-server conventions, hex | B | custom | — | 7 | ✅ |
+| BGP-19 | Prefix-list generator | AS or AS-SET to Cisco IOS/XR, Juniper, MikroTik, BIRD and FRR prefix-lists (bgpq4-style) | S | BGP-10 expansion + templates | — | 13 | ⬜ |
+| BGP-20 | Prefix watch | Watchlist of own prefixes kept in the browser; shows unexpected origins, more-specifics and RPKI invalids when opened | S+P | BGP-03/04 endpoints | RIPEstat (keyless) | 13 | ⬜ |
+| BGP-21 | ROA / ASPA helper | Suggest ROAs (with max-length) from what an AS announces now; show ASPA records and their effect | S+P | — | RIPEstat, RPKI validator (keyless) | 13 | ⬜ |
 
 ## 8. Reputation & Geolocation
 
@@ -204,6 +237,7 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | LAN-07 | LLDP / CDP neighbours | Which switch and port the server is connected to | S L | AF_PACKET + BPF (LLDP, CDP) | — | 5 | ✅ |
 | LAN-08 | IPv6 neighbours & routers | ff02::1 echo + NS/NA, router advertisements (prefixes, RDNSS, M/O flags) | S L | `mdlayher/ndp` | — | 5 | ✅ |
 | LAN-09 | DHCPv6 probe | Rogue DHCPv6 check: SOLICIT (IA_NA + IA_PD), collect ADVERTISEs | S L | `insomniacslk/dhcp/dhcpv6` + AF_PACKET | — | 5 | ✅ |
+| LAN-10 | RADIUS tester | Access-Request (PAP) or Status-Server with a user-supplied shared secret and test credentials | L | custom RADIUS client | — | 11 | ⬜ |
 
 ## 10. Calculators & Reference
 
@@ -231,6 +265,13 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | CAL-20 | DSCP / ToS / CoS converter | DSCP ↔ ToS ↔ precedence ↔ 802.1p, RFC 4594 classes, marking snippets | B | custom | — | 7 | ✅ |
 | CAL-21 | Network config diff | Section-aware, order-insensitive diff for IOS/EOS/NX-OS and Junos, secrets masked | B | custom | — | 7 | ✅ |
 | CAL-22 | ACL / firewall rule analyzer | Shadowed / redundant / wide rules in IOS and ASA ACLs, packet tracer | B | custom | — | 7 | ✅ |
+| CAL-23 | Fiber loss budget | Link budget from fiber type and length, connectors, splices and transceiver power/sensitivity | B | custom | — | 13 | ⬜ |
+| CAL-24 | Wi-Fi throughput estimator | MCS index table and realistic throughput per standard (802.11n/ac/ax/be), channel width, streams and guard interval | B | custom | — | 13 | ⬜ |
+| CAL-25 | Wi-Fi channel planner | 2.4/5/6 GHz channel map per region with DFS, overlap and non-overlapping plans for several APs | B | custom | — | 13 | ⬜ |
+| CAL-26 | Cabling & transceiver reference | Copper categories, fiber types and SFP/QSFP standards with speeds, reach and connectors | B | static data | — | 13 | ⬜ |
+| CAL-27 | IP list → firewall objects | Convert IPs/CIDRs/ranges into Cisco, FortiGate, pfSense, MikroTik, iptables/nftables and Palo Alto objects | B | custom | — | 13 | ⬜ |
+| CAL-28 | Capture filter builder | Build tcpdump/BPF capture filters and Wireshark display filters with explanations | B | custom | — | 13 | ⬜ |
+| CAL-29 | Log line parser | Recognise syslog (RFC 3164/5424), FortiGate, Cisco ASA, nginx/Apache lines and split them into fields | B | custom | — | 13 | ⬜ |
 
 ## 11. Client Diagnostics (runs in the user's browser)
 
@@ -244,6 +285,8 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | CLI-06 | Provider status | Per public provider: key configured (never the key), requests, cache hits, errors, last problem since start | S | `/api/v1/providers/status` | — | 7 | ✅ |
 | CLI-07 | Report bundle | Collect result tables from any tool ("Add to report"), reorder, export Markdown / JSON / print-PDF; kept in the browser | B | `localStorage` | — | 7 | ✅ |
 | CLI-08 | IPv6 connection test | test-ipv6.com-style score for the browser's own connection: IPv4, IPv6, dual-stack preference, IPv4 without DNS, slow fallback from broken IPv6 | B | `fetch` to v4-only / v6-only / dual-stack endpoints | ipify (api, api6, api64), Cloudflare `1.1.1.1/cdn-cgi/trace` *(browser-direct)* | 8 | ✅ |
+| CLI-09 | Bufferbloat test | Latency while idle and during download and upload load, with a grade | S | speedtest endpoints + latency probe | — | 12 | ⬜ |
+| CLI-10 | VoIP quality test | Jitter, loss and MOS estimate for a stream of small packets between browser and server | S | to be decided in phase 12 | — | 12 | ⬜ |
 
 ## 12. Status & Links
 

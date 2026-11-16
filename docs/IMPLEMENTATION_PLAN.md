@@ -79,6 +79,21 @@ tagged pre-release. Ask the user before starting the next phase if anything in t
 - [ ] Metrics endpoint for `METRICS_ENABLED` (accepted, not implemented yet).
 - [ ] v1.0.0 tag.
 
+## Phases 9–13 — 2026-11 extension (42 tools)
+
+Chosen by the user on 2026-11-16 from a list of 50 suggestions. Left out: syslog receiver, NetFlow
+collector, TFTP server, captive portal detector, HTTP uptime monitor, third-party request map
+(headless Chromium), browser DNS resolver detector (needs a delegated zone) and TLS client
+fingerprint (needs an extra TLS port). Watchlists (TLS-19, BGP-20) live in the browser: no server
+storage, scheduler or alerts. One stacked branch per phase (`fase-17` … `fase-21`).
+
+- [ ] **Phase 9 — generators (browser)**: EM-14 ✅, EM-15, EM-16, EM-17, DNS-22, DNS-23, DNS-24, DNS-25, TLS-16.
+- [ ] **Phase 10 — email & DNS checks**: EM-18, EM-19, EM-20, DNS-26, DNS-27, DNS-28, DNS-29, TLS-17.
+- [ ] **Phase 11 — service probes**: CON-19, CON-20, CON-21, CON-22, CON-23, CON-24, LAN-10, TLS-18.
+- [ ] **Phase 12 — web & client**: WEB-21, WEB-22, WEB-23, WEB-24, WEB-25, TLS-19, CLI-09, CLI-10.
+- [ ] **Phase 13 — BGP & calculators**: BGP-19, BGP-20, BGP-21, CAL-23 … CAL-29.
+- **Exit**: all rows ✅ or ⏸ with a reason; full e2e green; release after the user's go.
+
 ## Working agreements for Claude Code
 
 - One tool (or one shared component) per commit; run tests before committing.
