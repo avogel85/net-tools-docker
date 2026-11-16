@@ -2307,6 +2307,55 @@ tools:
       ttl-mismatch: Records of the RRset {rrset} have different TTLs; servers use one TTL per RRset.
       multiple-spf: '{name} has more than one SPF record; receivers treat that as an error.'
       low-ttl: The TTL of {ttl} s is very low and increases query load.
+  dc-locator:
+    title: AD / Kerberos DC locator
+    description: Check the SRV records Windows clients use to find Active Directory domain controllers, global catalogs and Kerberos servers, and whether every listed DC resolves.
+    domain: Active Directory domain
+    site: AD site (optional)
+    invalidSite: A site name is one label of letters, digits, - and _.
+    resolver: DNS server
+    resolverHint: AD zones usually exist only on internal DNS. Enter the IP of a domain controller or internal DNS server, or "local" for the container's resolver. Private addresses need the LAN profile or ALLOW_PRIVATE_TARGETS.
+    run: Locate domain controllers
+    ok: All required records are present; {n} domain controller(s) found.
+    dcsTitle: Domain controllers
+    dc: Domain controller
+    addresses: Addresses
+    servicesTitle: Listed for
+    lookupsTitle: SRV records (via {resolver})
+    record: Record
+    statusTitle: Status
+    status:
+      ok: Found
+      missing: Missing
+      absent: Not present
+    targets: Targets
+    port: Port
+    services:
+      ldap: LDAP
+      dc: DC locator
+      pdc: PDC emulator
+      gc: Global catalog
+      gc-tcp: Global catalog (_gc)
+      kerberos-tcp: Kerberos (TCP)
+      kerberos-udp: Kerberos (UDP)
+      kerberos-dc: Kerberos (_msdcs)
+      kpasswd-tcp: kpasswd (TCP)
+      kpasswd-udp: kpasswd (UDP)
+      domain-dns-zones: DomainDnsZones
+      forest-dns-zones: ForestDnsZones
+      site-ldap: Site LDAP
+      site-kerberos: Site Kerberos
+    findings:
+      missing-ldap: _ldap._tcp is missing — LDAP clients cannot find a domain controller.
+      missing-dc: _ldap._tcp.dc._msdcs is missing — Windows clients cannot locate a domain controller (is this an AD domain, and is the right DNS server used?).
+      missing-kerberos-tcp: _kerberos._tcp is missing — Kerberos authentication will fail.
+      missing-site-ldap: No domain controller is registered for this site; clients fall back to any DC.
+      target-no-address: A listed domain controller has no A or AAAA record.
+      unexpected-port: A record uses a non-standard port.
+      missing-pdc: No PDC emulator record (_ldap._tcp.pdc._msdcs); password changes and time sync may fail.
+      missing-gc: No global catalog record; logons in multi-domain forests and Exchange need one.
+      dc-kerberos-mismatch: The DCs listed for LDAP and for Kerberos differ — usually a stale record of a removed DC (check Netlogon registration).
+      too-many-targets: More than 20 targets; only the first 20 were resolved.
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.

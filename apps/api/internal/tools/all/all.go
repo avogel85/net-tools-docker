@@ -8,6 +8,7 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/cloudstatus"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ctsearch"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dane"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dclocator"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dns64"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dnsaxfr"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dnsbench"
@@ -100,6 +101,7 @@ func Tools() []tools.Tool {
 		&email.RelayTool{},
 		&email.SPFTool{},
 		&email.SPFFlattenTool{},
+		&dclocator.Tool{},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},

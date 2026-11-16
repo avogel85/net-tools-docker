@@ -1013,6 +1013,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/dns/dc-locator": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Active Directory / Kerberos SRV records and the domain controllers they list */
+        get: operations["dnsDcLocator"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/dns/dnssec": {
         parameters: {
             query?: never;
@@ -2453,6 +2470,32 @@ export interface components {
             lookups: number;
             voidLookups: number;
             all: string;
+            problems: string[];
+            warnings: string[];
+        };
+        DcLocator: {
+            domain: string;
+            site: string;
+            resolver: string;
+            lookups: {
+                id: string;
+                name: string;
+                port: number;
+                required: boolean;
+                rcode: string;
+                targets: {
+                    priority: number;
+                    weight: number;
+                    port: number;
+                    target: string;
+                    addresses: string[];
+                }[];
+            }[];
+            dcs: {
+                name: string;
+                addresses: string[];
+                services: string[];
+            }[];
             problems: string[];
             warnings: string[];
         };
@@ -5488,6 +5531,33 @@ export interface operations {
                     "text/event-stream": string;
                 };
             };
+        };
+    };
+    dnsDcLocator: {
+        parameters: {
+            query: {
+                domain: string;
+                site?: string;
+                resolver?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["DcLocator"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
         };
     };
     dnssecValidate: {

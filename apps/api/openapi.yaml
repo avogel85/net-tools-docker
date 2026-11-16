@@ -1225,6 +1225,29 @@ paths:
           content:
             text/event-stream:
               schema: { type: string }
+  /v1/dns/dc-locator:
+    get:
+      operationId: dnsDcLocator
+      summary: Active Directory / Kerberos SRV records and the domain controllers they list
+      tags: [dns]
+      x-capability: dns.dclocator
+      parameters:
+        - { name: domain, in: query, required: true, schema: { type: string } }
+        - { name: site, in: query, schema: { type: string, maxLength: 63 } }
+        - { name: resolver, in: query, schema: { type: string, default: system } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/DcLocator" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/dns/dnssec:
     get:
       operationId: dnssecValidate
@@ -2975,6 +2998,46 @@ components:
         lookups: { type: integer }
         voidLookups: { type: integer }
         all: { type: string }
+        problems: { type: array, items: { type: string } }
+        warnings: { type: array, items: { type: string } }
+    DcLocator:
+      type: object
+      required: [domain, site, resolver, lookups, dcs, problems, warnings]
+      properties:
+        domain: { type: string }
+        site: { type: string }
+        resolver: { type: string }
+        lookups:
+          type: array
+          items:
+            type: object
+            required: [id, name, port, required, rcode, targets]
+            properties:
+              id: { type: string }
+              name: { type: string }
+              port: { type: integer }
+              required: { type: boolean }
+              rcode: { type: string }
+              targets:
+                type: array
+                items:
+                  type: object
+                  required: [priority, weight, port, target, addresses]
+                  properties:
+                    priority: { type: integer }
+                    weight: { type: integer }
+                    port: { type: integer }
+                    target: { type: string }
+                    addresses: { type: array, items: { type: string } }
+        dcs:
+          type: array
+          items:
+            type: object
+            required: [name, addresses, services]
+            properties:
+              name: { type: string }
+              addresses: { type: array, items: { type: string } }
+              services: { type: array, items: { type: string } }
         problems: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
     EmailSpfFlatten:
