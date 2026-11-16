@@ -10,6 +10,20 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
 - SPF flattener (Email): replaces include, a, mx and redirect with the IP ranges they resolve to,
   merges adjacent ranges, keeps what cannot be flattened (exists, ptr, macros) and splits long
   results over chained `_spfN` records. Shows the DNS lookups before and after and a zone file.
+- Generators, all running in the browser:
+  - DMARC record generator, with the authorization records for external report addresses.
+  - DKIM key pair and selector record generator (RSA or Ed25519; the private key stays in the browser).
+  - MTA-STS policy generator: policy file, `_mta-sts` and TLS-RPT records, nginx snippet.
+  - DS / DNSKEY tool: computes DS records and checks which published DS records match the zone's keys.
+  - NSEC3 hash calculator, with loading of a zone's NSEC3PARAM.
+  - nsupdate / TSIG builder: TSIG keys for BIND, Knot and PowerDNS plus nsupdate scripts.
+  - Zone file linter: CNAME conflicts, missing glue, missing final dots, SOA values, TTLs and more.
+  - SSH key & SSHFP tool: SHA256/MD5 fingerprints, authorized_keys and known_hosts parsing, SSHFP records.
+- DNS lookup accepts the NSEC3PARAM record type.
+
+### Fixed
+- Tools that fill several fields at once (such as "Load" in the DMARC generator) no longer lose
+  all but the last value in the URL.
 
 ## [0.8.1] - 2026-11-15
 
