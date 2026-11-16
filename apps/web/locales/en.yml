@@ -1834,6 +1834,25 @@ tools:
       origin-cert-invalid: The origin's certificate is not valid for this host name. Fine when the CDN connects with "full" (not "strict") TLS, but check your CDN setting.
       content-differs: The CDN and the origin return different content for the same status — a stale cache, or a different origin behind the CDN.
       no-cdn-headers: The CDN response carries no typical CDN headers; the site may not be behind a CDN at all.
+  broken-links:
+    title: Broken link checker
+    description: Crawl a site (same host, two levels deep, up to 30 pages) and find links, images, scripts and stylesheets that return errors, time out or loop.
+    url: Start page
+    external: Also check links to other sites
+    hint: At most 200 links are checked (10 per external site), 4 at a time. Only crawl sites you manage or may test.
+    run: Check links
+    summary: '{pages} pages crawled, {checked} links checked, {broken} broken.'
+    truncated: The limits were reached; not every page or link was checked.
+    onlyBroken: Only broken links
+    allKinds: All kinds
+    kind: Kind
+    kinds:
+      page: Page
+      asset: Image / script / style
+      external: External
+    status: Status
+    from: Found on
+    shown: '{n} shown'
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

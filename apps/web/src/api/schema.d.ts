@@ -2022,6 +2022,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/http/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Broken link checker (same-host crawl, depth 2, 30 pages, 200 links) */
+        get: operations["httpLinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/http/origin-compare": {
         parameters: {
             query?: never;
@@ -2916,6 +2933,25 @@ export interface components {
             challengeTxt: string[];
             problems: string[];
             warnings: string[];
+        };
+        HttpLinks: {
+            start: string;
+            pages: string[];
+            checked: number;
+            broken: number;
+            truncated: boolean;
+            links: {
+                url: string;
+                /** @enum {string} */
+                kind: "page" | "asset" | "external";
+                status: number;
+                redirects: number;
+                final: string;
+                error: string;
+                broken: boolean;
+                from: string;
+                refs: number;
+            }[];
         };
         HttpTlsInfo: {
             version: string;
@@ -7610,6 +7646,33 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["CacheResult"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    httpLinks: {
+        parameters: {
+            query: {
+                url: string;
+                /** @description Also check links to other sites (at most 10 per host) */
+                external?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["HttpLinks"];
                     };
                 };
             };

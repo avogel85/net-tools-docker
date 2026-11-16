@@ -2440,6 +2440,28 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/CacheResult" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/http/links:
+    get:
+      operationId: httpLinks
+      summary: Broken link checker (same-host crawl, depth 2, 30 pages, 200 links)
+      tags: [web]
+      x-capability: web.links
+      parameters:
+        - { name: url, in: query, required: true, schema: { type: string, maxLength: 2048 } }
+        - { name: external, in: query, schema: { type: boolean, default: true }, description: Also check links to other sites (at most 10 per host) }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/HttpLinks" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/http/origin-compare:
     get:
       operationId: httpOriginCompare
@@ -3592,6 +3614,30 @@ components:
         challengeTxt: { type: array, items: { type: string } }
         problems: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
+    HttpLinks:
+      type: object
+      required: [start, pages, checked, broken, truncated, links]
+      properties:
+        start: { type: string }
+        pages: { type: array, items: { type: string } }
+        checked: { type: integer }
+        broken: { type: integer }
+        truncated: { type: boolean }
+        links:
+          type: array
+          items:
+            type: object
+            required: [url, kind, status, redirects, final, error, broken, from, refs]
+            properties:
+              url: { type: string }
+              kind: { type: string, enum: [page, asset, external] }
+              status: { type: integer }
+              redirects: { type: integer }
+              final: { type: string }
+              error: { type: string }
+              broken: { type: boolean }
+              from: { type: string }
+              refs: { type: integer }
     HttpTlsInfo:
       type: object
       required: [version, cipher, alpn, serverName, subject, issuer, notAfter, verifyError]

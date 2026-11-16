@@ -1834,6 +1834,25 @@ tools:
       origin-cert-invalid: Het certificaat van de origin is niet geldig voor deze hostnaam. Prima als het CDN met "full" (niet "strict") TLS verbindt, maar controleer de CDN-instelling.
       content-differs: Het CDN en de origin geven verschillende inhoud bij dezelfde status — een verouderde cache, of een andere origin achter het CDN.
       no-cdn-headers: Het CDN-antwoord heeft geen typische CDN-headers; de site staat mogelijk helemaal niet achter een CDN.
+  broken-links:
+    title: Controle kapotte links
+    description: Crawl een site (zelfde host, twee niveaus diep, maximaal 30 pagina's) en vind links, afbeeldingen, scripts en stylesheets die fouten geven, verlopen of in een lus doorsturen.
+    url: Startpagina
+    external: Ook links naar andere sites controleren
+    hint: Er worden maximaal 200 links gecontroleerd (10 per externe site), 4 tegelijk. Crawl alleen sites die je beheert of mag testen.
+    run: Links controleren
+    summary: "{pages} pagina's gecrawld, {checked} links gecontroleerd, {broken} kapot."
+    truncated: De limieten zijn bereikt; niet elke pagina of link is gecontroleerd.
+    onlyBroken: Alleen kapotte links
+    allKinds: Alle soorten
+    kind: Soort
+    kinds:
+      page: Pagina
+      asset: Afbeelding / script / stijl
+      external: Extern
+    status: Status
+    from: Gevonden op
+    shown: '{n} getoond'
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
