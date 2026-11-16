@@ -2031,6 +2031,31 @@ tools:
       '2.4': Gebruik alleen kanaal 1, 6 en 11 op 20 MHz; andere kanalen overlappen en geven meer storing dan een kanaal delen.
       '5': DFS-kanalen (52–144) moeten worden vrijgemaakt als een radar wordt gedetecteerd, wat clients kort verbreekt; buiten mogen in Europa alleen 100–140 worden gebruikt.
       '6': 6 GHz vereist Wi-Fi 6E- of 7-clients. Binnengebruik met laag vermogen mag zonder DFS; Europa heeft alleen de onderste 480 MHz.
+  cabling-reference:
+    title: Bekabeling- en transceiveroverzicht
+    description: Koperen categorieën, glasvezeltypen en kleuren, gangbare optics (SFP tot QSFP-DD) met golflengte, connector en bereik, en glasvezelconnectoren in één doorzoekbaar overzicht.
+    search: Zoeken
+    hint: Bereikwaarden zijn de nominale IEEE/MSA-waarden; fabrikanten kunnen meer of minder opgeven.
+    sections:
+      copper: Koper (twisted pair)
+      fiber: Glasvezeltypen
+      optics: Transceivers
+      connectors: Glasvezelconnectoren
+    cols:
+      name: Type
+      bandwidth: Bandbreedte
+      speeds: Snelheid en afstand
+      notes: Opmerkingen
+      core: Kern
+      colour: Mantelkleur
+      standard: Standaard
+      form: Vormfactor
+      wavelength: Golflengte
+      fiber: Medium
+      connector: Connector
+      reach: Bereik
+      type: Soort
+      use: Gebruikt voor
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

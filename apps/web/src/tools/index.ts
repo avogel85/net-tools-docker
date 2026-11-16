@@ -15,6 +15,7 @@ import { tool as brokenLinks } from './broken-links'
 import { tool as browserLatency } from './browser-latency'
 import { tool as bulkLookup } from './bulk-lookup'
 import { tool as caaChecker } from './caa-checker'
+import { tool as cablingReference } from './cabling-reference'
 import { tool as cacheHeaderAnalyzer } from './cache-header-analyzer'
 import { tool as captureFilter } from './capture-filter'
 import { tool as cdnWafDetector } from './cdn-waf-detector'
@@ -222,7 +223,7 @@ const categories: { id: string, components: Tool[] }[] = [
   { id: 'bgp', components: [ipToAsn, whoisLookup, rdapLookup, domainExpiry, asnInfo, prefixStatus, rpkiValidator, lookingGlass, peeringdbLookup, cloudIpLookup, irrExpansion, asPathVisualizer, bgpRouteHistory, asnNeighbourGraph, commonIxps, roaCoverage, prefixListTester, bgpCommunityDecoder] },
   { id: 'reputation', components: [ipGeolocation, passiveExposure, ipReputation, torExitCheck, urlReputation] },
   { id: 'lan', components: [wakeOnLan, arpScan, mdnsBrowser, ssdpDiscovery, dhcpProbe, gatewayInfo, lldpNeighbors, ipv6Neighbors, dhcpv6Probe, radiusTester] },
-  { id: 'calculators', components: [bandwidthCalculator, dataUnitConverter, bdpCalculator, mtuCalculator, portReference, protocolReference, dnsRecordTypes, subnetCheatSheet, wifiQrGenerator, opticalPower, wireguardConfig, routerSnippets, slaCalculator, voipBandwidthCalculator, packetDecoder, pcapViewer, poeBudgetCalculator, natCapacityCalculator, wirelessLinkCalculator, dscpConverter, configDiff, aclAnalyzer, firewallObjects, captureFilter, logParser, fiberBudget, wifiThroughput, wifiChannels] },
+  { id: 'calculators', components: [bandwidthCalculator, dataUnitConverter, bdpCalculator, mtuCalculator, portReference, protocolReference, dnsRecordTypes, subnetCheatSheet, wifiQrGenerator, opticalPower, wireguardConfig, routerSnippets, slaCalculator, voipBandwidthCalculator, packetDecoder, pcapViewer, poeBudgetCalculator, natCapacityCalculator, wirelessLinkCalculator, dscpConverter, configDiff, aclAnalyzer, firewallObjects, captureFilter, logParser, fiberBudget, wifiThroughput, wifiChannels, cablingReference] },
   { id: 'client', components: [requestHeaders, browserLatency, connectionInfo, ipv6Test, webrtcLeakTest, speedTest, dnsProxyCheck, providerStatus, reportBundle] },
   { id: 'dashboard', components: [cloudStatus, quickLinks] },
 ]

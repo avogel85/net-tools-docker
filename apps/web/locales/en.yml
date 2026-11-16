@@ -2031,6 +2031,31 @@ tools:
       '2.4': Use only channels 1, 6 and 11 at 20 MHz; other channels overlap and cause more interference than sharing a channel.
       '5': DFS channels (52–144) must be vacated when a radar is detected, which briefly disconnects clients; outdoors in Europe only 100–140 may be used.
       '6': 6 GHz needs Wi-Fi 6E or 7 clients. Indoor low-power use is allowed without DFS; Europe has only the lower 480 MHz.
+  cabling-reference:
+    title: Cabling & transceiver reference
+    description: Copper categories, fiber types and colours, common optics (SFP to QSFP-DD) with wavelength, connector and reach, and fiber connectors in one searchable reference.
+    search: Search
+    hint: Reach figures are the IEEE/MSA nominal values; vendors may quote more or less.
+    sections:
+      copper: Copper (twisted pair)
+      fiber: Fiber types
+      optics: Transceivers
+      connectors: Fiber connectors
+    cols:
+      name: Type
+      bandwidth: Bandwidth
+      speeds: Speed and distance
+      notes: Notes
+      core: Core
+      colour: Jacket colour
+      standard: Standard
+      form: Form factor
+      wavelength: Wavelength
+      fiber: Medium
+      connector: Connector
+      reach: Reach
+      type: Kind
+      use: Used for
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.
