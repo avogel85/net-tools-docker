@@ -1815,6 +1815,25 @@ tools:
       title-long: De titel is langer dan 70 tekens en wordt afgekapt.
       description-long: De beschrijving is langer dan 200 tekens en wordt afgekapt.
       missing-favicon: Er is geen favicon opgegeven (link rel="icon").
+  origin-compare:
+    title: Origin- en CDN-vergelijking
+    description: Stuur hetzelfde verzoek via je CDN en rechtstreeks naar de originserver, en vergelijk status, headers, inhoud, certificaat en timing — laat ook zien of de origin om het CDN heen bereikbaar is.
+    url: URL
+    origin: IP van de originserver
+    invalidOrigin: Vul een IPv4- of IPv6-adres in.
+    hint: Het directe verzoek gebruikt dezelfde hostnaam (Host-header en SNI) maar verbindt met het origin-IP, zoals curl --resolve. Gebruik dit alleen voor sites die je beheert.
+    run: Vergelijken
+    viaCdn: Via het CDN
+    direct: Rechtstreeks naar de origin
+    timing: 'eerste byte {ttfb} ms · totaal {total} ms'
+    comparison: Vergelijking
+    field: Veld
+    findings:
+      origin-exposed: De origin beantwoordt verzoeken voor deze site rechtstreeks. Wie het IP vindt, kan het CDN en de WAF omzeilen — beperk de origin tot de adresbereiken van het CDN.
+      origin-unreachable: De origin antwoordde niet rechtstreeks (goed, als hij alleen het CDN accepteert).
+      origin-cert-invalid: Het certificaat van de origin is niet geldig voor deze hostnaam. Prima als het CDN met "full" (niet "strict") TLS verbindt, maar controleer de CDN-instelling.
+      content-differs: Het CDN en de origin geven verschillende inhoud bij dezelfde status — een verouderde cache, of een andere origin achter het CDN.
+      no-cdn-headers: Het CDN-antwoord heeft geen typische CDN-headers; de site staat mogelijk helemaal niet achter een CDN.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

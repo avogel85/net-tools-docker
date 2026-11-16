@@ -136,7 +136,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | WEB-21 | Webhook / request inspector | Temporary URL that captures incoming requests (method, headers, body) for a short time | S | in-memory bins with TTL and size caps | — | 12 | ⬜ |
 | WEB-22 | Social preview checker | Open Graph / Twitter card preview, favicon, web manifest and missing-tag warnings | S | `httpcore` fetch + HTML parse | — | 12 | ✅ |
 | WEB-23 | Broken link checker | Small crawl of one site (depth and page cap) reporting 4xx/5xx, redirect loops and broken assets | S | `httpcore`, same-host only, capped | — | 12 | ⬜ |
-| WEB-24 | Origin vs CDN compare | The same request through the CDN and directly to an origin IP; diff of status, headers, cache and TLS | S | `httpcore` with pinned IP | — | 12 | ⬜ |
+| WEB-24 | Origin vs CDN compare | The same request through the CDN and directly to an origin IP; diff of status, headers, cache and TLS | S | `httpcore` with pinned IP | — | 12 | ✅ |
 | WEB-25 | Reverse proxy config generator | nginx, Caddy, Traefik and HAProxy snippets (TLS, HSTS, websockets, headers, upstreams) | B | templates | — | 12 | ✅ |
 
 ## 5. TLS & Certificates

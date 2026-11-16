@@ -11,6 +11,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptrace"
+	"net/netip"
 	"net/url"
 	"sort"
 	"strings"
@@ -96,8 +97,13 @@ type Request struct {
 	MaxBody int64
 	// PreviewBytes bounds the body text returned (0 = no body in the result).
 	PreviewBytes int
+	// ConnectTo dials this address instead of resolving the original URL's host (Host header and
+	// SNI stay the host name); the address passes the same target policy. Redirects to other hosts
+	// resolve normally.
+	ConnectTo netip.Addr
 	// KeepRaw keeps the (MaxBody-bounded) body bytes in Hop.Raw, for binary content.
-	KeepRaw bool
+	KeepRaw     bool
+	connectHost string
 	// Insecure skips certificate verification (the verify result is still reported).
 	Insecure  bool
 	UserAgent string
@@ -138,6 +144,7 @@ func (c *Client) Do(ctx context.Context, req Request) ([]Hop, error) {
 	if req.MaxRedirects <= 0 || req.MaxRedirects > netx.MaxRedirects {
 		req.MaxRedirects = netx.MaxRedirects
 	}
+	req.connectHost = u.Hostname()
 	method := req.Method
 	body := req.Body
 	var hops []Hop
@@ -184,6 +191,13 @@ func (c *Client) one(ctx context.Context, u *url.URL, method, body string, req R
 	tgt, err := netx.ResolveURL(ctx, c.Resolver, u)
 	if err != nil {
 		return hop, nil, err //nolint:wrapcheck // client-facing target error
+	}
+	if req.ConnectTo.IsValid() && strings.EqualFold(u.Hostname(), req.connectHost) {
+		pinned, err := c.Resolver.Resolve(ctx, req.ConnectTo.String(), target.Opts{Field: "origin"})
+		if err != nil {
+			return hop, nil, err //nolint:wrapcheck // client-facing target error
+		}
+		tgt.IP, tgt.Resolved = pinned.IP, pinned.Resolved
 	}
 	hop.Timing.ResolveMs = rttstats.Ms(time.Since(resolveStart))
 	hop.RemoteAddr = tgt.AddrPort(0)

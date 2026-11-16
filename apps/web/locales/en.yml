@@ -1815,6 +1815,25 @@ tools:
       title-long: The title is longer than 70 characters and will be cut off.
       description-long: The description is longer than 200 characters and will be cut off.
       missing-favicon: No favicon is declared (link rel="icon").
+  origin-compare:
+    title: Origin vs CDN compare
+    description: Send the same request through your CDN and directly to the origin server, and compare status, headers, content, certificate and timing — also shows whether the origin can be reached around the CDN.
+    url: URL
+    origin: Origin server IP
+    invalidOrigin: Enter an IPv4 or IPv6 address.
+    hint: The direct request uses the same host name (Host header and SNI) but connects to the origin IP, like curl --resolve. Only use it for sites you manage.
+    run: Compare
+    viaCdn: Through the CDN
+    direct: Directly to the origin
+    timing: 'first byte {ttfb} ms · total {total} ms'
+    comparison: Comparison
+    field: Field
+    findings:
+      origin-exposed: The origin answers requests for this site directly. Anyone who finds its IP can bypass the CDN and its WAF — restrict the origin to the CDN's address ranges.
+      origin-unreachable: The origin did not answer directly (good, if it only accepts the CDN).
+      origin-cert-invalid: The origin's certificate is not valid for this host name. Fine when the CDN connects with "full" (not "strict") TLS, but check your CDN setting.
+      content-differs: The CDN and the origin return different content for the same status — a stale cache, or a different origin behind the CDN.
+      no-cdn-headers: The CDN response carries no typical CDN headers; the site may not be behind a CDN at all.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

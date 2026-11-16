@@ -2440,6 +2440,28 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/CacheResult" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/http/origin-compare:
+    get:
+      operationId: httpOriginCompare
+      summary: The same request through the CDN and directly to an origin IP, compared
+      tags: [web]
+      x-capability: web.origin
+      parameters:
+        - { name: url, in: query, required: true, schema: { type: string, maxLength: 2048 } }
+        - { name: origin, in: query, required: true, schema: { type: string }, description: Origin server IP address }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/HttpOriginCompare" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/http/social:
     get:
       operationId: httpSocial
@@ -3570,6 +3592,64 @@ components:
         challengeTxt: { type: array, items: { type: string } }
         problems: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
+    HttpTlsInfo:
+      type: object
+      required: [version, cipher, alpn, serverName, subject, issuer, notAfter, verifyError]
+      properties:
+        version: { type: string }
+        cipher: { type: string }
+        alpn: { type: string }
+        serverName: { type: string }
+        subject: { type: string }
+        issuer: { type: string }
+        notAfter: { type: string }
+        verifyError: { type: string }
+    HttpOriginCompare:
+      type: object
+      required: [url, cdn, origin, diffs, findings]
+      properties:
+        url: { type: string }
+        cdn:
+          type: object
+          required: [address, status, headers, cdnHeaders, cookies, bodyBytes, bodyHash, totalMs, ttfbMs, error]
+          properties:
+            address: { type: string }
+            status: { type: integer }
+            headers: { type: object, additionalProperties: { type: string } }
+            cdnHeaders: { type: object, additionalProperties: { type: string } }
+            cookies: { type: array, items: { type: string } }
+            bodyBytes: { type: integer }
+            bodyHash: { type: string }
+            tls: { $ref: "#/components/schemas/HttpTlsInfo" }
+            totalMs: { type: number }
+            ttfbMs: { type: number }
+            error: { type: string }
+        origin:
+          type: object
+          required: [address, status, headers, cdnHeaders, cookies, bodyBytes, bodyHash, totalMs, ttfbMs, error]
+          properties:
+            address: { type: string }
+            status: { type: integer }
+            headers: { type: object, additionalProperties: { type: string } }
+            cdnHeaders: { type: object, additionalProperties: { type: string } }
+            cookies: { type: array, items: { type: string } }
+            bodyBytes: { type: integer }
+            bodyHash: { type: string }
+            tls: { $ref: "#/components/schemas/HttpTlsInfo" }
+            totalMs: { type: number }
+            ttfbMs: { type: number }
+            error: { type: string }
+        diffs:
+          type: array
+          items:
+            type: object
+            required: [field, cdn, origin, same]
+            properties:
+              field: { type: string }
+              cdn: { type: string }
+              origin: { type: string }
+              same: { type: boolean }
+        findings: { type: array, items: { type: string } }
     HttpSocial:
       type: object
       required: [url, status, title, description, canonical, themeColor, manifest, og, twitter, icons, problems, warnings]

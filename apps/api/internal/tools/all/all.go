@@ -125,6 +125,7 @@ func Tools() []tools.Tool {
 		&udpprobe.Tool{},
 		&lan.RadiusTool{},
 		&web.SocialTool{},
+		&web.OriginTool{},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},

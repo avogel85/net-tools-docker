@@ -2022,6 +2022,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/http/origin-compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The same request through the CDN and directly to an origin IP, compared */
+        get: operations["httpOriginCompare"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/http/social": {
         parameters: {
             query?: never;
@@ -2899,6 +2916,60 @@ export interface components {
             challengeTxt: string[];
             problems: string[];
             warnings: string[];
+        };
+        HttpTlsInfo: {
+            version: string;
+            cipher: string;
+            alpn: string;
+            serverName: string;
+            subject: string;
+            issuer: string;
+            notAfter: string;
+            verifyError: string;
+        };
+        HttpOriginCompare: {
+            url: string;
+            cdn: {
+                address: string;
+                status: number;
+                headers: {
+                    [key: string]: string;
+                };
+                cdnHeaders: {
+                    [key: string]: string;
+                };
+                cookies: string[];
+                bodyBytes: number;
+                bodyHash: string;
+                tls?: components["schemas"]["HttpTlsInfo"];
+                totalMs: number;
+                ttfbMs: number;
+                error: string;
+            };
+            origin: {
+                address: string;
+                status: number;
+                headers: {
+                    [key: string]: string;
+                };
+                cdnHeaders: {
+                    [key: string]: string;
+                };
+                cookies: string[];
+                bodyBytes: number;
+                bodyHash: string;
+                tls?: components["schemas"]["HttpTlsInfo"];
+                totalMs: number;
+                ttfbMs: number;
+                error: string;
+            };
+            diffs: {
+                field: string;
+                cdn: string;
+                origin: string;
+                same: boolean;
+            }[];
+            findings: string[];
         };
         HttpSocial: {
             url: string;
@@ -7539,6 +7610,33 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["CacheResult"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    httpOriginCompare: {
+        parameters: {
+            query: {
+                url: string;
+                /** @description Origin server IP address */
+                origin: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["HttpOriginCompare"];
                     };
                 };
             };

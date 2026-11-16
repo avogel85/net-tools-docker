@@ -101,6 +101,7 @@ Fixed limits for tools that follow data from third parties (not configurable):
 | Post-quantum TLS check (TLS-18) | Heavy class; one default handshake plus one per key-exchange group (6), 3 at a time, 6 s each |
 | RADIUS tester (LAN-10) | LAN profile only; POST body (shared secret and test password stay out of URLs and logs, not stored); one Status-Server or Access-Request (PAP), sent at most twice, 3 s each; replies verified with the secret |
 | Social preview (WEB-22) | Page fetch as WEB-01 (HTTP_MAX_BODY_BYTES), plus one fetch of the og:image through the target policy (5 MB, 5 redirects, 15 s); images up to 1 MB are returned as a data URI so the browser never contacts the site |
+| Origin vs CDN compare (WEB-24) | Heavy class; the origin IP passes the target policy before anything is sent; two GETs (no redirects), body as WEB-01; httpcore ConnectTo pins only the original host name |
 | DMARC (EM-03) | 10 report URIs per tag checked for external authorization |
 | MX / SMTP (EM-01) | 10 MX hosts, 64 KiB and 100 lines per reply read before STARTTLS, 15 s per probe |
 | IRR expansion (BGP-10) | `bgpq4` via execx against the fixed default IRR host (rr.ntt.net); sources from an allow-list; 30 s, 1 MiB output |
