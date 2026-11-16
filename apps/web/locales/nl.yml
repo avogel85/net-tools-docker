@@ -1509,6 +1509,37 @@ tools:
     privateKey: Privésleutel (PKCS#8)
     privateHint: Installeer deze sleutel op je mailserver of ondertekeningsdienst. Hij wordt nergens opgeslagen — verlaat of herlaad je deze pagina, dan is hij weg.
     download: .key downloaden
+  mta-sts-generator:
+    title: MTA-STS-beleidsgenerator
+    description: Maak een MTA-STS-beleidsbestand, de _mta-sts- en TLS-RPT-records en een nginx-snippet om het beleid te hosten.
+    mode: Modus
+    modes:
+      testing: Testen
+      enforce: Afdwingen
+      none: Geen (intrekken)
+    mx: Mailservers (mx)
+    invalidMx: Vul hostnamen in zoals mx1.example.com; een "*." vooraan staat voor één label.
+    mxMissing: Vul minstens één mailserver in.
+    maxAge: Cachetijd (max_age)
+    ages:
+      '86400': 1 dag
+      '604800': 1 week (aanbevolen)
+      '2592000': 30 dagen
+      '31557600': 1 jaar (maximum)
+    id: Beleids-id
+    invalidId: Gebruik 1–32 letters en cijfers.
+    newId: Nieuwe id (na elke beleidswijziging)
+    rua: TLS-RPT-rapportadressen (optioneel)
+    invalidRua: Vul e-mailadressen of https://-URL's in.
+    findings:
+      testing: In testmodus melden verzenders fouten maar leveren ze toch af. Schakel naar afdwingen zodra de TLS-rapporten schoon zijn.
+      short-max-age: Bij afdwingen wordt een max_age van minstens een week aanbevolen.
+      no-rua: Zonder TLS-RPT-adres hoor je niets over afleverproblemen.
+    records: DNS-records
+    hostHint: '{host} heeft een A/AAAA- of CNAME-record nodig en een geldig HTTPS-certificaat voor die naam.'
+    policy: Beleidsbestand
+    download: mta-sts.txt downloaden
+    nginx: nginx-serverblok
   ip-to-asn:
     title: IP → ASN
     description: Vind het autonome systeem (ASN), de aangekondigde prefix, AS-naam, land en register bij een IP-adres.

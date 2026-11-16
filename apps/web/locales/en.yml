@@ -1509,6 +1509,37 @@ tools:
     privateKey: Private key (PKCS#8)
     privateHint: Install this key on your mail server or signing service. It is not stored anywhere — once you leave or reload this page it is gone.
     download: Download .key
+  mta-sts-generator:
+    title: MTA-STS policy generator
+    description: Create an MTA-STS policy file, the _mta-sts and TLS-RPT records and an nginx snippet to host the policy.
+    mode: Mode
+    modes:
+      testing: Testing
+      enforce: Enforce
+      none: None (withdraw)
+    mx: Mail servers (mx)
+    invalidMx: Enter host names such as mx1.example.com; a leading "*." matches one label.
+    mxMissing: Enter at least one mail server.
+    maxAge: Cache time (max_age)
+    ages:
+      '86400': 1 day
+      '604800': 1 week (recommended)
+      '2592000': 30 days
+      '31557600': 1 year (maximum)
+    id: Policy id
+    invalidId: Use 1–32 letters and digits.
+    newId: New id (after every policy change)
+    rua: TLS-RPT report addresses (optional)
+    invalidRua: Enter e-mail addresses or https:// URLs.
+    findings:
+      testing: In testing mode senders report failures but still deliver. Switch to enforce once the TLS reports are clean.
+      short-max-age: With enforce, a max_age of at least one week is recommended.
+      no-rua: Without a TLS-RPT address you will not hear about delivery failures.
+    records: DNS records
+    hostHint: '{host} needs an A/AAAA or CNAME record and a valid HTTPS certificate for that name.'
+    policy: Policy file
+    download: Download mta-sts.txt
+    nginx: nginx server block
   ip-to-asn:
     title: IP → ASN
     description: Find the autonomous system (ASN), announced prefix, AS name, country and registry for an IP address.
