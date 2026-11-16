@@ -2177,6 +2177,26 @@ tools:
       noDs: The zone is signed, but the parent has no DS record, so DNSSEC is not active. Submit a DS record below to your registrar.
       noKeys: The parent has DS records but the zone publishes no DNSKEY. Validating resolvers will fail this domain.
       unsigned: The domain does not use DNSSEC (no DNSKEY and no DS).
+  nsec3-hash:
+    title: NSEC3 hash calculator
+    description: Calculate NSEC3 owner hashes for names in a zone from its salt and iteration count, or load the zone's NSEC3PARAM.
+    zone: Zone
+    load: Load NSEC3PARAM
+    noParam: '{zone} has no NSEC3PARAM record ({rcode}); it is unsigned or uses NSEC.'
+    loadFailed: The NSEC3PARAM lookup failed.
+    via: Your resolver returned no NSEC3PARAM (it may filter DNSSEC records); the parameters come from {resolver}.
+    names: Names (one per line; relative names get the zone appended)
+    salt: Salt (hex, "-" for none)
+    invalidSalt: Enter an even number of hex digits, or "-".
+    iterations: Extra iterations
+    invalidIterations: Enter a whole number from 0 to {max}.
+    name: Name
+    hash: Hash
+    owner: NSEC3 owner name
+    findings:
+      iterations: RFC 9276 recommends 0 extra iterations; more cost resolvers effort without adding protection.
+      iterations-high: More than 100 iterations — many validating resolvers treat the zone as insecure or fail it (RFC 9276).
+      salt: RFC 9276 recommends an empty salt; a salt does not make zone walking harder.
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.

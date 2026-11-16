@@ -1,7 +1,7 @@
+import type { Ref } from 'vue'
 // @vitest-environment jsdom
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
-import type { Ref } from 'vue'
 import { defineComponent, h, nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { useQueryParam } from './useQueryParam'

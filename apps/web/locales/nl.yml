@@ -2177,6 +2177,26 @@ tools:
       noDs: De zone is ondertekend, maar de bovenliggende zone heeft geen DS-record, dus DNSSEC is niet actief. Geef een DS-record hieronder door aan je registrar.
       noKeys: De bovenliggende zone heeft DS-records, maar de zone publiceert geen DNSKEY. Validerende resolvers geven voor dit domein een fout.
       unsigned: Het domein gebruikt geen DNSSEC (geen DNSKEY en geen DS).
+  nsec3-hash:
+    title: NSEC3-hashcalculator
+    description: Bereken NSEC3-hashes van namen in een zone uit de salt en het aantal iteraties, of laad de NSEC3PARAM van de zone.
+    zone: Zone
+    load: NSEC3PARAM laden
+    noParam: '{zone} heeft geen NSEC3PARAM-record ({rcode}); de zone is niet ondertekend of gebruikt NSEC.'
+    loadFailed: De NSEC3PARAM-lookup is mislukt.
+    via: Je resolver gaf geen NSEC3PARAM terug (mogelijk filtert hij DNSSEC-records); de parameters komen van {resolver}.
+    names: Namen (één per regel; aan relatieve namen wordt de zone toegevoegd)
+    salt: Salt (hex, "-" voor geen)
+    invalidSalt: Vul een even aantal hexcijfers in, of "-".
+    iterations: Extra iteraties
+    invalidIterations: Vul een geheel getal van 0 tot {max} in.
+    name: Naam
+    hash: Hash
+    owner: NSEC3-eigenaarsnaam
+    findings:
+      iterations: RFC 9276 raadt 0 extra iteraties aan; meer kost resolvers moeite zonder extra bescherming.
+      iterations-high: Meer dan 100 iteraties — veel validerende resolvers zien de zone dan als onveilig of geven een fout (RFC 9276).
+      salt: RFC 9276 raadt een lege salt aan; een salt maakt zone walking niet moeilijker.
   dnssec-validator:
     title: DNSSEC-validator
     description: Valideer de DNSSEC-vertrouwensketen van de root tot een naam, en zie precies waar die breekt — ontbrekende DS, niet-passende sleutels, verlopen of ongeldige handtekeningen.

@@ -5,11 +5,11 @@ export type DnsLookup = components['schemas']['DnsLookup']
 export type DnsRecord = components['schemas']['DnsRecord']
 export type RecordType = components['schemas']['DnsRecordType']
 
-export const RECORD_TYPES: RecordType[] = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SOA', 'SRV', 'CAA', 'PTR', 'DS', 'DNSKEY', 'HTTPS', 'SVCB', 'TLSA', 'NAPTR', 'ANY']
+export const RECORD_TYPES: RecordType[] = ['A', 'AAAA', 'CNAME', 'MX', 'NS', 'TXT', 'SOA', 'SRV', 'CAA', 'PTR', 'DS', 'DNSKEY', 'HTTPS', 'SVCB', 'TLSA', 'NAPTR', 'NSEC3PARAM', 'ANY']
 export const RESOLVER_PRESETS = ['system', 'cloudflare', 'google', 'quad9', 'opendns'] as const
 export const TRANSPORTS = ['udp', 'tcp', 'dot', 'doh'] as const
 
-const TYPE_NUMBERS: Record<number, string> = { 1: 'A', 2: 'NS', 5: 'CNAME', 6: 'SOA', 12: 'PTR', 15: 'MX', 16: 'TXT', 28: 'AAAA', 33: 'SRV', 35: 'NAPTR', 43: 'DS', 46: 'RRSIG', 47: 'NSEC', 48: 'DNSKEY', 50: 'NSEC3', 52: 'TLSA', 64: 'SVCB', 65: 'HTTPS', 257: 'CAA' }
+const TYPE_NUMBERS: Record<number, string> = { 1: 'A', 2: 'NS', 5: 'CNAME', 6: 'SOA', 12: 'PTR', 15: 'MX', 16: 'TXT', 28: 'AAAA', 33: 'SRV', 35: 'NAPTR', 43: 'DS', 46: 'RRSIG', 47: 'NSEC', 48: 'DNSKEY', 50: 'NSEC3', 51: 'NSEC3PARAM', 52: 'TLSA', 64: 'SVCB', 65: 'HTTPS', 257: 'CAA' }
 const RCODES = ['NOERROR', 'FORMERR', 'SERVFAIL', 'NXDOMAIN', 'NOTIMP', 'REFUSED']
 
 /** A domain name we can query (IDN converted); IPv4/IPv6 addresses are allowed for PTR. */

@@ -18,7 +18,7 @@ import (
 )
 
 // RecordTypes offered by the tool (docs/API_SPEC.md).
-var RecordTypes = []string{"A", "AAAA", "CNAME", "MX", "NS", "TXT", "SOA", "SRV", "CAA", "PTR", "DS", "DNSKEY", "HTTPS", "SVCB", "TLSA", "NAPTR", "ANY"}
+var RecordTypes = []string{"A", "AAAA", "CNAME", "MX", "NS", "TXT", "SOA", "SRV", "CAA", "PTR", "DS", "DNSKEY", "HTTPS", "SVCB", "TLSA", "NAPTR", "NSEC3PARAM", "ANY"}
 
 // Tool is DNS lookup.
 type Tool struct{ deps tools.Deps }

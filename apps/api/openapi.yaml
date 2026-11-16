@@ -2450,7 +2450,7 @@ components:
               value: { type: string }
     DnsRecordType:
       type: string
-      enum: [A, AAAA, CNAME, MX, NS, TXT, SOA, SRV, CAA, PTR, DS, DNSKEY, HTTPS, SVCB, TLSA, NAPTR, ANY]
+      enum: [A, AAAA, CNAME, MX, NS, TXT, SOA, SRV, CAA, PTR, DS, DNSKEY, HTTPS, SVCB, TLSA, NAPTR, NSEC3PARAM, ANY]
       default: A
     DnsRecord:
       type: object

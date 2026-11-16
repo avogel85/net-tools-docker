@@ -2035,7 +2035,7 @@ export interface components {
          * @default A
          * @enum {string}
          */
-        DnsRecordType: "A" | "AAAA" | "CNAME" | "MX" | "NS" | "TXT" | "SOA" | "SRV" | "CAA" | "PTR" | "DS" | "DNSKEY" | "HTTPS" | "SVCB" | "TLSA" | "NAPTR" | "ANY";
+        DnsRecordType: "A" | "AAAA" | "CNAME" | "MX" | "NS" | "TXT" | "SOA" | "SRV" | "CAA" | "PTR" | "DS" | "DNSKEY" | "HTTPS" | "SVCB" | "TLSA" | "NAPTR" | "NSEC3PARAM" | "ANY";
         DnsRecord: {
             name: string;
             type: string;
