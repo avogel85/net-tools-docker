@@ -2075,6 +2075,35 @@ tools:
       bird: BIRD 2
       openbgpd: OpenBGPD
     hint: Prefixes are aggregated, with more-specifics allowed up to the registered lengths. IRR data is only as good as what the network registered — compare with RPKI (ROA coverage) before you rely on it, and regenerate regularly.
+  prefix-watch:
+    title: Prefix watch
+    description: Keep a list of your prefixes and their expected origin AS in your browser, and see at a glance whether they are announced by someone else, have unexpected more-specifics or are RPKI-invalid.
+    add: Prefixes and expected origins (one per line, up to {max})
+    invalid: 'Not added (use "prefix AS64500"): {list}'
+    addButton: Add
+    check: Check now
+    storageFailed: The list could not be saved in this browser (private window or storage full).
+    skipped: '{n} prefix(es) were not refreshed this time; at most {per} are checked per visit, and results stay valid for 6 hours.'
+    watched: 'Watched prefixes ({n})'
+    notChecked: not checked yet
+    expected: 'expected {asns}'
+    seen: 'Seen from {origins} · RPKI {rpki} · checked {when}'
+    remove: Remove
+    export: Export list
+    levels:
+      alert: Check now
+      warn: Attention
+      ok: OK
+    findings:
+      not-announced: The prefix is not announced (or not visible to RIPE RIS).
+      unexpected-origin: Announced by an AS you did not list — a possible hijack or a forgotten announcement.
+      moas: Announced by more than one origin AS (MOAS).
+      foreign-more-specific: 'More-specifics announced by another AS — a possible sub-prefix hijack: {list}'
+      more-specific: 'More-specifics announced by your own AS: {list}'
+      rpki-invalid: RPKI says the announcement is invalid; many networks drop it.
+      rpki-unknown: No ROA covers this prefix; create one so others can reject hijacks.
+      error: The check failed; try again later.
+    hint: The list stays in this browser — there is no server-side monitoring or alerting. Data comes from RIPE RIS and RIPEstat; checks are limited to a few prefixes per visit.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

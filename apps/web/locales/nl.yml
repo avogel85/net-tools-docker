@@ -2075,6 +2075,35 @@ tools:
       bird: BIRD 2
       openbgpd: OpenBGPD
     hint: Prefixen worden samengevoegd, met more-specifics toegestaan tot de geregistreerde lengtes. IRR-data is zo goed als wat het netwerk heeft geregistreerd — vergelijk met RPKI (ROA-dekking) voordat je erop vertrouwt, en genereer regelmatig opnieuw.
+  prefix-watch:
+    title: Prefixbewaking
+    description: Houd in je browser een lijst bij van je prefixen en hun verwachte origin-AS, en zie in één oogopslag of iemand anders ze aankondigt, of er onverwachte more-specifics zijn of dat ze RPKI-invalid zijn.
+    add: Prefixen en verwachte origins (één per regel, maximaal {max})
+    invalid: 'Niet toegevoegd (gebruik "prefix AS64500"): {list}'
+    addButton: Toevoegen
+    check: Nu controleren
+    storageFailed: De lijst kon niet in deze browser worden opgeslagen (privévenster of opslag vol).
+    skipped: '{n} prefix(en) zijn deze keer niet ververst; per bezoek worden er maximaal {per} gecontroleerd, en resultaten blijven 6 uur geldig.'
+    watched: 'Bewaakte prefixen ({n})'
+    notChecked: nog niet gecontroleerd
+    expected: 'verwacht {asns}'
+    seen: 'Gezien vanaf {origins} · RPKI {rpki} · gecontroleerd {when}'
+    remove: Verwijderen
+    export: Lijst exporteren
+    levels:
+      alert: Nu controleren
+      warn: Let op
+      ok: OK
+    findings:
+      not-announced: De prefix wordt niet aangekondigd (of is niet zichtbaar voor RIPE RIS).
+      unexpected-origin: Aangekondigd door een AS dat je niet hebt opgegeven — een mogelijke kaping of een vergeten aankondiging.
+      moas: Aangekondigd door meer dan één origin-AS (MOAS).
+      foreign-more-specific: 'More-specifics aangekondigd door een ander AS — een mogelijke subprefix-kaping: {list}'
+      more-specific: 'More-specifics aangekondigd door je eigen AS: {list}'
+      rpki-invalid: RPKI zegt dat de aankondiging ongeldig is; veel netwerken gooien hem weg.
+      rpki-unknown: Geen ROA dekt deze prefix; maak er een zodat anderen kapingen kunnen weigeren.
+      error: De controle is mislukt; probeer het later opnieuw.
+    hint: De lijst blijft in deze browser — er is geen bewaking of melding vanaf de server. Data komt van RIPE RIS en RIPEstat; per bezoek worden maar een paar prefixen gecontroleerd.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
