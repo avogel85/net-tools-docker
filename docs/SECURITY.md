@@ -85,6 +85,26 @@ Fixed limits for tools that follow data from third parties (not configurable):
 | Tool | Limit |
 |---|---|
 | SPF (EM-02) | Walk stops after 10 DNS-querying terms (RFC 7208 permerror), include depth 12 |
+| SPF flattener (EM-14) | At most 100 DNS queries per request (plus the EM-02 walk for the "before" count), include depth 12, 10 MX hosts per mx term, 2000 prefixes, record size 100–2048 bytes; 45 s timeout |
+| AD DC locator (DNS-29) | 14 SRV queries, at most 20 targets resolved (A + AAAA), custom resolver through the target policy; 30 s timeout |
+| Email provider detector (EM-20) | 19 DNS queries (MX, TXT, `_dmarc`, 16 DKIM selectors) through the system resolver; no connections to the providers; 30 s timeout |
+| Email address validator (EM-19) | 50 addresses, 25 distinct domains (MX, then A + AAAA when there is no MX); no SMTP connection and no mail sent; addresses are not logged; 30 s timeout |
+| Subdomain takeover check (DNS-27) | Heavy class; 50 names, 8 CNAME hops each, 5 names at a time; HTTP fingerprint fetch only for known services, at most 20 per request, through the target policy, 64 KB body, 8 s each, 3 redirects; 60 s timeout |
+| Lookalike finder (DNS-28) | Heavy class; at most 150 generated candidates, one NS query each, A/AAAA/MX only for at most 50 registered ones, 10 queries in parallel; no connections to the candidates; 60 s timeout |
+| ACME readiness (TLS-17) | Heavy class; DNS (A/AAAA, CAA climb, `_acme-challenge` TXT) plus one HTTP GET of a random challenge path on port 80 through the target policy, up to 10 redirects only to ports 80/443, 4 KB body, 10 s per request; 40 s timeout |
+| DKIM verifier (EM-18) | POST body (message stays out of URLs and logs, not stored), at most 900 KB; 10 signatures; one TXT query per selector through the system resolver; 30 s timeout |
+| UDP service probe (CON-19) | Heavy class; one request per service (10 known services or one custom port), sent at most twice, 2.5 s each, through the target policy; SNMP uses v3 engine discovery (no community or user is guessed); replies capped at 4 KB |
+| IKE probe (CON-20) | Heavy class; UDP 500 or 4500 only; one IKEv2 IKE_SA_INIT (plus one retry with the group the gateway asks for) and one IKEv1 Main Mode message; no authentication |
+| SIP check (CON-21) | Heavy class; NAPTR/SRV discovery, then one OPTIONS per transport (UDP retried once), 4 s per attempt, replies capped at 16 KB |
+| LDAP check (CON-22) | Heavy class; anonymous rootDSE search and StartTLS only (no bind, no credentials), 10 s per endpoint, LDAP messages capped at 256 KB |
+| Remote access check (CON-23) | Heavy class; RDP X.224 negotiation (twice, to test NLA) and TLS certificate, VNC version and security-type list, SSH banner; no credentials, no session; 10 s per service |
+| Post-quantum TLS check (TLS-18) | Heavy class; one default handshake plus one per key-exchange group (6), 3 at a time, 6 s each |
+| RADIUS tester (LAN-10) | LAN profile only; POST body (shared secret and test password stay out of URLs and logs, not stored); one Status-Server or Access-Request (PAP), sent at most twice, 3 s each; replies verified with the secret |
+| Social preview (WEB-22) | Page fetch as WEB-01 (HTTP_MAX_BODY_BYTES), plus one fetch of the og:image through the target policy (5 MB, 5 redirects, 15 s); images up to 1 MB are returned as a data URI so the browser never contacts the site |
+| Origin vs CDN compare (WEB-24) | Heavy class; the origin IP passes the target policy before anything is sent; two GETs (no redirects), body as WEB-01; httpcore ConnectTo pins only the original host name |
+| Broken link checker (WEB-23) | Heavy class; same-host crawl, depth 2, 30 pages; at most 200 link checks (HEAD, GET fallback), 10 per external host, 4 in parallel, 10 s each, 5 redirects; every request through the target policy; 90 s timeout |
+| VoIP quality test (CLI-10) | Heavy class + concurrency slot; WebSocket `/voip/ws`, same-origin only (Origin must match Host); echoes binary packets of 12–512 bytes, at most 2100 packets and 25 s per connection, then closes (1003 bad packet, 1008 limit); no target — browser ↔ this server only |
+| Webhook inspector (WEB-21) | Bins in memory only, 15 min; 3 per visitor, 200 per server; 50 requests and 64 KB body per request; contents readable only with the bin token (X-Bin-Token header, constant-time compare). Creating is Heavy class, capturing and reading Light. The capture endpoint is a separate capability (`web.hook`): with sign-in enabled, allow it for the anonymous role or webhook senders cannot reach it. Capture paths and query strings appear in the nginx access log |
 | DMARC (EM-03) | 10 report URIs per tag checked for external authorization |
 | MX / SMTP (EM-01) | 10 MX hosts, 64 KiB and 100 lines per reply read before STARTTLS, 15 s per probe |
 | IRR expansion (BGP-10) | `bgpq4` via execx against the fixed default IRR host (rr.ntt.net); sources from an allow-list; 30 s, 1 MiB output |

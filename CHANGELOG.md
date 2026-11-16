@@ -6,6 +6,74 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-11-16
+
+### Added
+- SPF flattener (Email): replaces include, a, mx and redirect with the IP ranges they resolve to,
+  merges adjacent ranges, keeps what cannot be flattened (exists, ptr, macros) and splits long
+  results over chained `_spfN` records. Shows the DNS lookups before and after and a zone file.
+- Generators, all running in the browser:
+  - DMARC record generator, with the authorization records for external report addresses.
+  - DKIM key pair and selector record generator (RSA or Ed25519; the private key stays in the browser).
+  - MTA-STS policy generator: policy file, `_mta-sts` and TLS-RPT records, nginx snippet.
+  - DS / DNSKEY tool: computes DS records and checks which published DS records match the zone's keys.
+  - NSEC3 hash calculator, with loading of a zone's NSEC3PARAM.
+  - nsupdate / TSIG builder: TSIG keys for BIND, Knot and PowerDNS plus nsupdate scripts.
+  - Zone file linter: CNAME conflicts, missing glue, missing final dots, SOA values, TTLs and more.
+  - SSH key & SSHFP tool: SHA256/MD5 fingerprints, authorized_keys and known_hosts parsing, SSHFP records.
+- Email and DNS checks:
+  - Email provider detector: mailbox provider, security gateway, sending services, DMARC
+    reporting and verified SaaS services, from public DNS.
+  - Email address validator: syntax, MX / null MX, disposable and role addresses, typo hints
+    (no mail is sent; addresses go in a POST body and are not logged).
+  - DKIM signature verifier: paste a raw message or open an .eml file; shows each signature's
+    result, alignment with From, Authentication-Results and ARC.
+  - DNS snapshot & diff: save a domain's records in the browser and compare snapshots.
+  - Subdomain takeover check: dangling CNAMEs and unclaimed pages at hosting services.
+  - Lookalike domain finder: typo, homoglyph, IDN and TLD variants and whether they are registered.
+  - AD / Kerberos DC locator: the SRV records Windows clients use to find domain controllers.
+  - ACME readiness check: CAA, the HTTP-01 challenge path and DNS-01 delegation before you
+    request a certificate.
+- Service probes:
+  - UDP service probe: real requests for DNS, NTP, SNMPv3 (engine discovery, no community),
+    SIP, STUN, IKE, QUIC, OpenVPN, NetBIOS and TFTP, to tell open from filtered.
+  - IPsec / IKE probe: IKEv2 and IKEv1 proposals, DH groups, fragmentation and vendor IDs.
+  - SIP server check: NAPTR/SRV discovery and OPTIONS over UDP, TCP and TLS.
+  - LDAP / LDAPS check: anonymous rootDSE, StartTLS and certificate (no bind).
+  - Remote access check: RDP network level authentication and certificate, VNC security
+    types, SSH banner.
+  - Post-quantum TLS check: whether a server negotiates hybrid ML-KEM key exchange.
+  - Reverse traceroute: MTR from Globalping probes back to your public IP, with AS paths.
+  - RADIUS tester (LAN profile): Status-Server or a test Access-Request, verified with the
+    shared secret.
+- Web and client tools:
+  - Webhook / request inspector: a temporary URL that captures incoming requests for a short time.
+  - Social preview checker: Open Graph and Twitter cards, favicons, manifest, preview image size.
+  - Broken link checker: a small same-site crawl (30 pages, depth 2) that reports broken links,
+    assets and redirect loops.
+  - Origin vs CDN compare: the same request through the CDN and directly to an origin IP, side by side.
+  - Reverse proxy config generator for nginx, Caddy, Traefik and HAProxy.
+  - Expiry watchlist: certificate and domain expiry for a list kept in the browser.
+  - The speed test is now also found as the bufferbloat test.
+  - VoIP quality test: a voice-like packet stream (G.711, G.729, Opus, G.722) over a WebSocket
+    to the server, with round-trip time, jitter, packets too late for the jitter buffer and a
+    MOS score (E-model). nginx forwards the WebSocket upgrade on `/api/v1/voip/ws`.
+- BGP tools and calculators:
+  - Prefix-list generator: IRR (bgpq4) prefix filters for Cisco IOS/IOS-XR, Juniper, Arista,
+    FRR, MikroTik, BIRD and OpenBGPD.
+  - Prefix watch: a browser-kept list of prefixes with expected origins, checked for unexpected
+    origins, foreign more-specifics and RPKI status.
+  - ROA & ASPA helper: a minimal ROA plan (Krill delta or CSV) from what an AS announces, and an
+    ASPA record builder with AS-path verification.
+  - Fiber link budget, Wi-Fi throughput estimator (Wi-Fi 4–7 MCS tables), Wi-Fi channel planner
+    (2.4, 5 and 6 GHz, EU/US) and a cabling & transceiver reference.
+  - Firewall object converter, capture filter builder (tcpdump/BPF and Wireshark) and log parser.
+- DNS lookup accepts the NSEC3PARAM record type.
+
+### Fixed
+- Tools that fill several fields at once (such as "Load" in the DMARC generator) no longer lose
+  all but the last value in the URL.
+
 ## [0.8.1] - 2026-11-15
 
 ### Added
@@ -145,7 +213,8 @@ Phases 0–3 (foundations, 32 browser tools, DNS / connectivity / HTTP / TLS / e
 tools, providers and Worldwide measurements) were developed before the first release; see the git
 history and `docs/IMPLEMENTATION_PLAN.md`.
 
-[Unreleased]: https://github.com/digibaro/net-tools-docker/compare/v0.8.1...HEAD
+[Unreleased]: https://github.com/digibaro/net-tools-docker/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/digibaro/net-tools-docker/compare/v0.8.1...v0.9.0
 [0.8.1]: https://github.com/digibaro/net-tools-docker/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/digibaro/net-tools-docker/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/digibaro/net-tools-docker/compare/v0.6.0...v0.7.0

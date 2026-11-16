@@ -480,6 +480,125 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/ike/probe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** IPsec/IKE probe (IKEv2 IKE_SA_INIT and IKEv1 Main Mode); no authentication attempted */
+        get: operations["ikeProbe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ldap/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** LDAP / LDAPS check (anonymous rootDSE, StartTLS, certificate); no bind is made */
+        get: operations["ldapCheck"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/remote-access/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** RDP (NLA, certificate), VNC (security types) and SSH (banner) check; no credentials sent */
+        get: operations["remoteAccessCheck"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/sip/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** SIP server discovery (NAPTR/SRV) and OPTIONS over UDP, TCP and TLS */
+        get: operations["sipCheck"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/udp/probe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Service-aware UDP probes (DNS, NTP, SNMPv3 discovery, SIP, STUN, IKE, QUIC, OpenVPN, NetBIOS, TFTP) */
+        get: operations["udpProbe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tls/pq": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Post-quantum TLS check (hybrid ML-KEM key exchange support) */
+        get: operations["tlsPq"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tls/acme": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ACME readiness (CAA, HTTP-01 challenge path, DNS-01 delegation) for a certificate name */
+        get: operations["tlsAcme"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/tls/inspect": {
         parameters: {
             query?: never;
@@ -542,6 +661,80 @@ export interface paths {
         get: operations["emailSpf"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/email/spf-flatten": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Flatten an SPF record into ip4/ip6 terms (chained records when too long) */
+        get: operations["emailSpfFlatten"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/email/providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detect mail, gateway, sending and SaaS providers from a domain's public DNS */
+        get: operations["emailProviders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/email/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Check e-mail address syntax and whether the domains accept mail (no mail is sent)
+         * @description POST so addresses (personal data) stay out of URLs and access logs.
+         */
+        post: operations["emailValidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/email/dkim-verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify the DKIM signatures of a raw message (body hash and signature) and summarise ARC
+         * @description POST so the message stays out of URLs and access logs; it is not stored.
+         */
+        post: operations["emailDkimVerify"];
         delete?: never;
         options?: never;
         head?: never;
@@ -996,6 +1189,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/dns/dc-locator": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Active Directory / Kerberos SRV records and the domain controllers they list */
+        get: operations["dnsDcLocator"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/dns/takeover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Subdomain takeover check (dangling CNAMEs and unclaimed hosting fingerprints) */
+        get: operations["dnsTakeover"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/dns/lookalike": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Typo, homoglyph and TLD variants of a domain and whether they are registered */
+        get: operations["dnsLookalike"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/dns/dnssec": {
         parameters: {
             query?: never;
@@ -1300,6 +1544,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/voip/ws": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * WebSocket echo for the VoIP quality test (binary packets of 12–512 bytes, at most 2100 packets or 25 s)
+         * @description Upgrade to a WebSocket (same-origin only). Every binary message is echoed unchanged; the
+         *     browser numbers its packets and measures round-trip time, jitter and late packets. Text
+         *     frames or packets outside 12–512 bytes close the connection with 1003, limits with 1008.
+         */
+        get: operations["voipWebSocket"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/portscan/stream": {
         parameters: {
             query?: never;
@@ -1314,6 +1580,26 @@ export interface paths {
         get: operations["portscanStream"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/lan/radius": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * RADIUS Status-Server or Access-Request (PAP) test with a shared secret (LAN profile)
+         * @description POST so the shared secret and test password stay out of URLs and logs; nothing is stored.
+         */
+        post: operations["lanRadius"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1758,6 +2044,134 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/webhook/bins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a temporary request bin (15 minutes, in memory) */
+        post: operations["webhookCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhook/bins/{id}": {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Bin-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** Requests captured by a bin */
+        get: operations["webhookRead"];
+        put?: never;
+        post?: never;
+        /** Delete a bin */
+        delete: operations["webhookDelete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/hook/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Capture endpoint of a bin; accepts any method and any sub-path (/v1/hook/{id}/...) */
+        post: operations["hookCapture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/hook/{id}/*": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Capture endpoint with a sub-path (any method); the sub-path is recorded */
+        post: operations["hookCaptureSubpath"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/http/links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Broken link checker (same-host crawl, depth 2, 30 pages, 200 links) */
+        get: operations["httpLinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/http/origin-compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** The same request through the CDN and directly to an origin IP, compared */
+        get: operations["httpOriginCompare"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/http/social": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Open Graph / Twitter card preview, favicon, manifest and missing-tag warnings */
+        get: operations["httpSocial"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/http/mixed-content": {
         parameters: {
             query?: never;
@@ -2018,7 +2432,7 @@ export interface components {
          * @default A
          * @enum {string}
          */
-        DnsRecordType: "A" | "AAAA" | "CNAME" | "MX" | "NS" | "TXT" | "SOA" | "SRV" | "CAA" | "PTR" | "DS" | "DNSKEY" | "HTTPS" | "SVCB" | "TLSA" | "NAPTR" | "ANY";
+        DnsRecordType: "A" | "AAAA" | "CNAME" | "MX" | "NS" | "TXT" | "SOA" | "SRV" | "CAA" | "PTR" | "DS" | "DNSKEY" | "HTTPS" | "SVCB" | "TLSA" | "NAPTR" | "NSEC3PARAM" | "ANY";
         DnsRecord: {
             name: string;
             type: string;
@@ -2436,6 +2850,428 @@ export interface components {
             lookups: number;
             voidLookups: number;
             all: string;
+            problems: string[];
+            warnings: string[];
+        };
+        DnsTakeover: {
+            domain: string;
+            resolver: string;
+            common: boolean;
+            checks: {
+                name: string;
+                chain: string[];
+                /** @enum {string} */
+                status: "vulnerable" | "dangling" | "ok" | "no-cname" | "nxdomain" | "error";
+                service: string;
+                evidence: string;
+            }[];
+        };
+        DnsLookalike: {
+            domain: string;
+            resolver: string;
+            generated: number;
+            truncated: boolean;
+            candidates: {
+                domain: string;
+                unicode: string;
+                /** @enum {string} */
+                kind: "tld" | "homoglyph" | "idn" | "transposition" | "omission" | "repetition" | "hyphenation" | "prefix" | "suffix" | "replacement" | "bitsquatting";
+                registered: boolean;
+                checked: boolean;
+                a: string[];
+                mx: string[];
+                error: string;
+            }[];
+        };
+        IkeProbe: {
+            host: string;
+            address: string;
+            ikev2: {
+                answered: boolean;
+                accepted: boolean;
+                encryption: string;
+                prf: string;
+                integrity: string;
+                group: string;
+                groupWeak: boolean;
+                noProposal: boolean;
+                cookie: boolean;
+                fragmentation: boolean;
+                sigHash: boolean;
+                vendorIds: string[];
+            };
+            ikev1: {
+                answered: boolean;
+                accepted: boolean;
+                encryption: string;
+                hash: string;
+                group: string;
+                groupWeak: boolean;
+                noProposal: boolean;
+                vendorIds: string[];
+            };
+            findings: string[];
+        };
+        LanRadius: {
+            address: string;
+            mode: string;
+            answered: boolean;
+            /** @enum {string} */
+            result: "accept" | "reject" | "challenge" | "other" | "no-reply" | "refused" | "error";
+            replyMessages: string[];
+            responseAuthOk: boolean;
+            /** @enum {string} */
+            messageAuth: "ok" | "bad" | "absent";
+            rttMs: number;
+        };
+        LdapCheck: {
+            host: string;
+            endpoints: {
+                /** @enum {string} */
+                mode: "ldap" | "ldaps";
+                address: string;
+                reachable: boolean;
+                startTls: boolean;
+                tls?: components["schemas"]["TlsSession"];
+                rootDse: {
+                    [key: string]: string[];
+                };
+                error: string;
+                resultMessage: string;
+            }[];
+            warnings: string[];
+        };
+        RemoteAccess: {
+            host: string;
+            services: {
+                /** @enum {string} */
+                service: "rdp" | "vnc" | "ssh";
+                address: string;
+                open: boolean;
+                error: string;
+                protocol: string;
+                nlaRequired?: boolean;
+                cert?: components["schemas"]["TlsCert"];
+                certError: string;
+                rfbVersion: string;
+                securityTypes: string[];
+                banner: string;
+                findings: string[];
+            }[];
+        };
+        SipCheck: {
+            host: string;
+            naptr: string[];
+            srv: {
+                service: string;
+                priority: number;
+                weight: number;
+                port: number;
+                target: string;
+            }[];
+            probes: {
+                /** @enum {string} */
+                transport: "udp" | "tcp" | "tls";
+                address: string;
+                reachable: boolean;
+                status: number;
+                reason: string;
+                server: string;
+                allow: string[];
+                rttMs: number;
+                cert?: components["schemas"]["TlsCert"];
+                certError: string;
+                error: string;
+            }[];
+        };
+        UdpProbe: {
+            host: string;
+            address: string;
+            results: {
+                service: string;
+                port: number;
+                /** @enum {string} */
+                state: "open" | "closed" | "open|filtered" | "unexpected" | "error";
+                detail: string;
+                rttMs: number;
+            }[];
+        };
+        TlsPq: {
+            host: string;
+            address: string;
+            negotiated: string;
+            negotiatedPq: boolean;
+            version: string;
+            groups: {
+                name: string;
+                pq: boolean;
+                supported: boolean;
+            }[];
+            /** @description timeout, refused or handshake-failed */
+            error: string;
+        };
+        TlsAcme: {
+            name: string;
+            ca: string;
+            wildcard: boolean;
+            resolver: string;
+            a: string[];
+            aaaa: string[];
+            caaName: string;
+            caaIssue: string[];
+            caaWild: string[];
+            caaAllowed: boolean;
+            httpChecked: boolean;
+            httpHops: {
+                url: string;
+                status: number;
+                error: string;
+            }[];
+            httpResult: string;
+            challengeCname: string;
+            challengeTxt: string[];
+            problems: string[];
+            warnings: string[];
+        };
+        WebhookBin: {
+            id: string;
+            token: string;
+            path: string;
+            expires: string;
+        };
+        WebhookContent: {
+            id: string;
+            expires: string;
+            dropped: number;
+            requests: {
+                time: string;
+                method: string;
+                path: string;
+                query: string;
+                headers: {
+                    name: string;
+                    value: string;
+                }[];
+                body: string;
+                bodyBytes: number;
+                truncated: boolean;
+                binary: boolean;
+                remoteIp: string;
+                contentType: string;
+            }[];
+        };
+        HttpLinks: {
+            start: string;
+            pages: string[];
+            checked: number;
+            broken: number;
+            truncated: boolean;
+            links: {
+                url: string;
+                /** @enum {string} */
+                kind: "page" | "asset" | "external";
+                status: number;
+                redirects: number;
+                final: string;
+                error: string;
+                broken: boolean;
+                from: string;
+                refs: number;
+            }[];
+        };
+        HttpTlsInfo: {
+            version: string;
+            cipher: string;
+            alpn: string;
+            serverName: string;
+            subject: string;
+            issuer: string;
+            notAfter: string;
+            verifyError: string;
+        };
+        HttpOriginCompare: {
+            url: string;
+            cdn: {
+                address: string;
+                status: number;
+                headers: {
+                    [key: string]: string;
+                };
+                cdnHeaders: {
+                    [key: string]: string;
+                };
+                cookies: string[];
+                bodyBytes: number;
+                bodyHash: string;
+                tls?: components["schemas"]["HttpTlsInfo"];
+                totalMs: number;
+                ttfbMs: number;
+                error: string;
+            };
+            origin: {
+                address: string;
+                status: number;
+                headers: {
+                    [key: string]: string;
+                };
+                cdnHeaders: {
+                    [key: string]: string;
+                };
+                cookies: string[];
+                bodyBytes: number;
+                bodyHash: string;
+                tls?: components["schemas"]["HttpTlsInfo"];
+                totalMs: number;
+                ttfbMs: number;
+                error: string;
+            };
+            diffs: {
+                field: string;
+                cdn: string;
+                origin: string;
+                same: boolean;
+            }[];
+            findings: string[];
+        };
+        HttpSocial: {
+            url: string;
+            status: number;
+            title: string;
+            description: string;
+            canonical: string;
+            themeColor: string;
+            manifest: string;
+            og: {
+                [key: string]: string;
+            };
+            twitter: {
+                [key: string]: string;
+            };
+            icons: {
+                rel: string;
+                href: string;
+                sizes: string;
+            }[];
+            image?: {
+                url: string;
+                status: number;
+                contentType: string;
+                bytes: number;
+                width: number;
+                height: number;
+                dataUri: string;
+                error: string;
+            };
+            problems: string[];
+            warnings: string[];
+        };
+        DcLocator: {
+            domain: string;
+            site: string;
+            resolver: string;
+            lookups: {
+                id: string;
+                name: string;
+                port: number;
+                required: boolean;
+                rcode: string;
+                targets: {
+                    priority: number;
+                    weight: number;
+                    port: number;
+                    target: string;
+                    addresses: string[];
+                }[];
+            }[];
+            dcs: {
+                name: string;
+                addresses: string[];
+                services: string[];
+            }[];
+            problems: string[];
+            warnings: string[];
+        };
+        EmailProviders: {
+            domain: string;
+            mx: string[];
+            spf: string;
+            dmarc: string;
+            selectors: string[];
+            detections: {
+                provider: string;
+                /** @enum {string} */
+                role: "inbound" | "gateway" | "sending" | "verification" | "reporting";
+                evidence: string;
+            }[];
+        };
+        EmailValidate: {
+            results: {
+                input: string;
+                local: string;
+                domain: string;
+                ascii: string;
+                /** @enum {string} */
+                verdict: "valid" | "risky" | "invalid";
+                problems: string[];
+                warnings: string[];
+                mx: string[];
+                implicitMx: boolean;
+                disposable: boolean;
+                role: boolean;
+                free: boolean;
+                smtputf8: boolean;
+                suggestion: string;
+            }[];
+        };
+        EmailDkimVerify: {
+            from: string;
+            subject: string;
+            signatures: {
+                domain: string;
+                selector: string;
+                algorithm: string;
+                canon: string;
+                identifier: string;
+                headers: string[];
+                bodyLength: boolean;
+                signed: string;
+                expires: string;
+                /** @enum {string} */
+                result: "pass" | "fail" | "temperror" | "permerror";
+                error: string;
+                keyRecord: string;
+                fromAligned: boolean;
+                warnings: string[];
+            }[];
+            authResults: string[];
+            arc: {
+                instance: string;
+                cv: string;
+                domain: string;
+                results: string;
+            }[];
+            problems: string[];
+        };
+        EmailSpfFlatten: {
+            domain: string;
+            original: string;
+            originalLookups: number;
+            /** @description DNS lookups a receiver spends on the flattened policy */
+            lookups: number;
+            records: {
+                name: string;
+                value: string;
+                length: number;
+            }[];
+            sources: {
+                term: string;
+                /** @description The term could not be resolved to addresses and stays as-is */
+                kept: boolean;
+                prefixes: string[];
+            }[];
+            ip4: number;
+            ip6: number;
+            queries: number;
             problems: string[];
             warnings: string[];
         };
@@ -4647,6 +5483,199 @@ export interface operations {
             default: components["responses"]["Error"];
         };
     };
+    ikeProbe: {
+        parameters: {
+            query: {
+                host: string;
+                port?: "500" | "4500";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["IkeProbe"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    ldapCheck: {
+        parameters: {
+            query: {
+                host: string;
+                mode?: "both" | "ldap" | "ldaps";
+                /** @description 0 = 389 / 636 (used only with a single mode) */
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["LdapCheck"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    remoteAccessCheck: {
+        parameters: {
+            query: {
+                host: string;
+                service?: "all" | "rdp" | "vnc" | "ssh";
+                /** @description 0 = 3389 / 5900 / 22 (a port is used only with a single service) */
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["RemoteAccess"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    sipCheck: {
+        parameters: {
+            query: {
+                /** @description SIP domain or server (host[:port]) */
+                host: string;
+                transport?: "all" | "udp" | "tcp" | "tls";
+                /** @description 0 = from SRV, else 5060/5061 */
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["SipCheck"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    udpProbe: {
+        parameters: {
+            query: {
+                host: string;
+                service?: "all" | "custom" | "dns" | "ntp" | "snmp" | "sip" | "stun" | "ike" | "quic" | "openvpn" | "netbios" | "tftp";
+                /** @description Overrides the service port (single service); required for custom */
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["UdpProbe"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    tlsPq: {
+        parameters: {
+            query: {
+                host: string;
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["TlsPq"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    tlsAcme: {
+        parameters: {
+            query: {
+                /** @description Host name; prefix *. for a wildcard */
+                name: string;
+                ca?: "letsencrypt" | "zerossl" | "google" | "buypass" | "sslcom";
+                resolver?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["TlsAcme"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
     tlsInspect: {
         parameters: {
             query: {
@@ -4752,6 +5781,118 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["EmailSpf"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    emailSpfFlatten: {
+        parameters: {
+            query: {
+                domain: string;
+                /** @description First label of the chained records (<label>1.<domain>, …) */
+                label?: string;
+                /** @description Maximum length of one record in bytes */
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["EmailSpfFlatten"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    emailProviders: {
+        parameters: {
+            query: {
+                domain: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["EmailProviders"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    emailValidate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    addresses: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["EmailValidate"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    emailDkimVerify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    message: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["EmailDkimVerify"];
                     };
                 };
             };
@@ -5421,6 +6562,87 @@ export interface operations {
             };
         };
     };
+    dnsDcLocator: {
+        parameters: {
+            query: {
+                domain: string;
+                site?: string;
+                resolver?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["DcLocator"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    dnsTakeover: {
+        parameters: {
+            query: {
+                domain: string;
+                /** @description Up to 50 names or labels (comma or newline separated); empty checks a list of common names */
+                names?: string;
+                resolver?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["DnsTakeover"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    dnsLookalike: {
+        parameters: {
+            query: {
+                domain: string;
+                resolver?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["DnsLookalike"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
     dnssecValidate: {
         parameters: {
             query: {
@@ -5856,6 +7078,25 @@ export interface operations {
             };
         };
     };
+    voipWebSocket: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Switching Protocols */
+            101: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["Error"];
+        };
+    };
     portscanStream: {
         parameters: {
             query: {
@@ -5878,6 +7119,42 @@ export interface operations {
                     "text/event-stream": string;
                 };
             };
+        };
+    };
+    lanRadius: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    host: string;
+                    /** @default 1812 */
+                    port?: number;
+                    secret: string;
+                    /** @enum {string} */
+                    mode: "status" | "auth";
+                    username?: string;
+                    password?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["LanRadius"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
         };
     };
     lanWol: {
@@ -6514,6 +7791,200 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["CacheResult"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    webhookCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["WebhookBin"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    webhookRead: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Bin-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["WebhookContent"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    webhookDelete: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Bin-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    hookCapture: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Captured */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    hookCaptureSubpath: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Captured */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    httpLinks: {
+        parameters: {
+            query: {
+                url: string;
+                /** @description Also check links to other sites (at most 10 per host) */
+                external?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["HttpLinks"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    httpOriginCompare: {
+        parameters: {
+            query: {
+                url: string;
+                /** @description Origin server IP address */
+                origin: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["HttpOriginCompare"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    httpSocial: {
+        parameters: {
+            query: {
+                url: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["HttpSocial"];
                     };
                 };
             };

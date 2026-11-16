@@ -3,11 +3,13 @@ package all
 
 import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/acmecheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/asnlookup"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/cloudranges"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/cloudstatus"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ctsearch"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dane"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dclocator"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dns64"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dnsaxfr"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dnsbench"
@@ -25,12 +27,15 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/email"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/geo"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/hstspreload"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ikeprobe"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/iperf"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ipv6ready"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/irr"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/lan"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/latmatrix"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ldapcheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/links"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/lookalike"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/mtr"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ntpcheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/observatory"
@@ -40,28 +45,36 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/pmtu"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/portcheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/portscan"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/pqtls"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ptrscan"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/rdap"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/remote"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/remoteaccess"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/reputation"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/revocation"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ripestat"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/serverinfo"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/sipcheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/snmp"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/speedtest"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/sshaudit"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/status"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/svcb"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/takeover"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/tcping"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/tlsinspect"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/tlsscan"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/torcheck"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/udpprobe"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/voip"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/web"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/webhook"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/whois"
 )
 
 // Tools returns every registered tool, in catalog order.
 func Tools() []tools.Tool {
+	hooks := webhook.NewStore()
 	rdapSvc := &rdap.Service{}
 	return []tools.Tool{
 		&status.Tool{},
@@ -99,6 +112,26 @@ func Tools() []tools.Tool {
 		&email.BannerTool{},
 		&email.RelayTool{},
 		&email.SPFTool{},
+		&email.SPFFlattenTool{},
+		&email.ProviderTool{},
+		&email.ValidateTool{},
+		&email.DKIMVerifyTool{},
+		&dclocator.Tool{},
+		&takeover.Tool{},
+		&lookalike.Tool{},
+		&acmecheck.Tool{},
+		&pqtls.Tool{},
+		&sipcheck.Tool{},
+		&ldapcheck.Tool{},
+		&remoteaccess.Tool{},
+		&ikeprobe.Tool{},
+		&udpprobe.Tool{},
+		&lan.RadiusTool{},
+		&web.SocialTool{},
+		&web.OriginTool{},
+		&web.LinksTool{},
+		&webhook.BinTool{Store: hooks},
+		&webhook.CaptureTool{Store: hooks},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},
@@ -147,6 +180,7 @@ func Tools() []tools.Tool {
 		&pmtu.Tool{},
 		&ipv6ready.Tool{},
 		&speedtest.Tool{},
+		&voip.Tool{},
 		&portscan.Tool{},
 		&iperf.Tool{},
 		&snmp.Tool{},

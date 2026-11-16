@@ -23,6 +23,8 @@ export class ApiError extends Error {
 export interface RequestOptions {
   signal?: AbortSignal
   fetch?: typeof fetch
+  /** Extra request headers (e.g. a bin token). */
+  headers?: Record<string, string>
 }
 
 const API_BASE = '/api'
@@ -36,6 +38,11 @@ export async function apiGet<T>(path: string, options: RequestOptions = {}): Pro
   return apiRequest<T>(path, { headers: { Accept: 'application/json' } }, options)
 }
 
+/** DELETE an enveloped endpoint. */
+export async function apiDelete<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  return apiRequest<T>(path, { method: 'DELETE', headers: { Accept: 'application/json' } }, options)
+}
+
 /** POST JSON to an enveloped endpoint. */
 export async function apiPost<T>(path: string, body: unknown, options: RequestOptions = {}): Promise<T> {
   return apiRequest<T>(path, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) }, options)
@@ -45,7 +52,7 @@ async function apiRequest<T>(path: string, init: RequestInit, options: RequestOp
   const doFetch = options.fetch ?? globalThis.fetch
   let res: Response
   try {
-    res = await doFetch(`${API_BASE}${path}`, { ...init, signal: options.signal })
+    res = await doFetch(`${API_BASE}${path}`, { ...init, headers: { ...(init.headers as Record<string, string>), ...options.headers }, signal: options.signal })
   }
   catch (err) {
     if (err instanceof DOMException && err.name === 'AbortError')

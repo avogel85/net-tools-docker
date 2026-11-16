@@ -162,6 +162,8 @@ about:
   noServerTools: No server tools are registered yet.
   attributions: License & attributions
   license: NET-TOOLS is free software under the GNU GPL v3.0 or later. Its user experience is inspired by it-tools.
+recordList:
+  zone: Zone file
 dnsFilter:
   title: Blocked by a DNS filter
   ede: '{resolver} says this name is blocked (extended DNS error {code}{text}).'
@@ -398,6 +400,16 @@ email:
     bad-key: The public key cannot be decoded.
     weak-key: The RSA key is shorter than 1024 bits and is ignored by receivers.
     short-key: The RSA key is shorter than the recommended 2048 bits.
+    flatten-query-limit: More than 100 DNS queries were needed; the result is incomplete.
+    too-many-mx: An mx mechanism points to more than 10 mail servers; only the first 10 were used.
+    too-many-prefixes: More than 2000 address ranges; the list was cut off.
+    record-too-long: A record is longer than the chosen maximum size.
+    include-non-pass: An included record contains a non-pass mechanism ("-", "~" or "?"); it is left out, so the flattened policy can allow slightly more.
+    macro-kept: A term with a macro (such as %{'{'}i{'}'}) cannot be flattened and is kept as-is.
+    exists-kept: An "exists" mechanism cannot be flattened and is kept as-is.
+    order-changed: Non-pass mechanisms ("-", "~" or "?") are placed before the addresses; check that the order still gives the result you want.
+    chain-name-in-use: A chained record name is already used by the current policy; choose another chain label.
+    chain-name-exists: A TXT record already exists at a chained record name; publishing replaces it (expected when you flatten again).
     testing: The key is in testing mode (t=y).
     no-id: The MTA-STS record has no id= tag.
     policy-unreachable: The policy file on the mta-sts subdomain cannot be fetched.
@@ -1394,6 +1406,779 @@ tools:
     ok: The SPF record is valid.
     lookups: '{n} of 10 DNS lookups used'
     tree: Expanded record
+  spf-flattener:
+    title: SPF flattener
+    description: Replace the includes, a and mx terms of an SPF record with the IP ranges they resolve to, to stay under the limit of 10 DNS lookups. Splits the result over chained records when it gets too long.
+    run: Flatten
+    ok: The SPF record was flattened without remarks.
+    label: Chain label
+    invalidLabel: Use letters, digits, - and _ (for example _spf), at most 30.
+    size: Maximum record size (bytes)
+    invalidSize: Enter a size between 100 and 2048.
+    records: Flattened records
+    summary: '{before} → {after} DNS lookups · {ip4} IPv4 and {ip6} IPv6 ranges in {records} record(s)'
+    bytes: '{n} bytes'
+    zone: Zone file
+    staleTitle: Flattened records go out of date
+    stale: The addresses are a snapshot of what the providers publish now. When a provider changes its IP ranges, mail from the new addresses fails SPF until you flatten again. Re-run this regularly or automate it, and keep the original record somewhere for reference.
+    sources: Where the addresses come from
+    kept: kept as-is
+  dmarc-generator:
+    title: DMARC record generator
+    description: Build a DMARC record step by step — policy, alignment, percentage and report addresses — with the authorization records external report addresses need.
+    policy: Policy for the domain
+    policies:
+      none: Monitor (none)
+      quarantine: Quarantine
+      reject: Reject
+    sp: Subdomain policy (sp)
+    inherit: Same as the domain
+    adkim: DKIM alignment
+    aspf: SPF alignment
+    relaxed: Relaxed
+    strict: Strict
+    pct: Apply to (pct)
+    ri: Aggregate report interval
+    interval:
+      '3600': Every hour
+      '14400': Every 4 hours
+      '86400': Daily (default)
+    rua: Aggregate report addresses (rua)
+    ruf: Failure report addresses (ruf, optional)
+    invalidAddress: Enter e-mail addresses separated by commas, for example dmarc{'@'}example.com.
+    fo: Send failure reports when
+    foOptions:
+      '0': SPF and DKIM both fail
+      '1': SPF or DKIM fails
+      d: DKIM fails
+      s: SPF fails
+    authorizationHint: The report addresses are in another domain. That domain must publish the authorization record(s) above, or receivers will not send it reports.
+    findings:
+      ruf-privacy: Failure reports can contain parts of messages (personal data), and many receivers do not send them.
+      sp-none: Subdomains are only monitored while the domain itself is protected.
+    import: Start from an existing record
+    load: Load
+    importError: This is not a DMARC record (it must start with v=DMARC1).
+  email-provider-detector:
+    title: Email provider detector
+    description: See which providers a domain uses for receiving and sending mail, which security gateway filters it, where DMARC reports go and which SaaS services it has verified — from public DNS only.
+    run: Detect providers
+    none: No known providers were recognised in this domain's DNS.
+    roles:
+      inbound: Mailbox provider
+      gateway: Security gateway
+      sending: Sending services
+      reporting: DMARC reporting
+      verification: Verified SaaS services
+    roleHints:
+      inbound: From the MX records.
+      gateway: Filters mail before it reaches the mailbox (from the MX records).
+      sending: Allowed to send as this domain (SPF includes and DKIM selectors).
+      reporting: Receives the DMARC aggregate reports.
+      verification: Domain-ownership tokens in TXT records.
+    records: Records read
+    limits: Detection uses lists of known host names and token prefixes; only top-level SPF includes and a fixed set of DKIM selectors are checked.
+  email-validator:
+    title: Email address validator
+    description: Check up to 50 e-mail addresses — syntax, whether the domain accepts mail (MX, null MX), disposable and role addresses, and likely typos. No mail is sent.
+    addresses: Addresses (one per line)
+    hint: The domain's DNS is checked; the mailbox itself cannot be verified without sending mail, so "valid" means the address can receive mail, not that it exists. Addresses are not stored or put in the URL.
+    tooMany: At most {max} addresses per check.
+    run: Check {n} address(es)
+    address: Address
+    verdict: Verdict
+    notes: Notes
+    implicit: none (uses A/AAAA)
+    verdicts:
+      valid: Valid
+      risky: Risky
+      invalid: Invalid
+    findings:
+      syntax: Not an e-mail address.
+      local-too-long: The part before the {'@'} is longer than 64 characters.
+      local-syntax: The part before the {'@'} contains characters that need quoting or a misplaced dot.
+      address-literal: An IP address literal instead of a domain — almost no provider accepts this.
+      domain-syntax: The domain is not a valid domain name.
+      too-long: The address is longer than 254 characters.
+      smtputf8: The address uses non-ASCII characters; the sending and receiving servers must support SMTPUTF8.
+      no-mail-domain: The domain does not exist or has no mail server.
+      null-mx: The domain publishes a null MX — it does not accept mail.
+      implicit-mx: No MX record; mail goes to the domain's own address (works, but unusual).
+      dns-error: The DNS lookup failed; try again.
+      not-checked: More than 25 different domains; this one was not looked up.
+      disposable: A disposable (throw-away) mail service.
+      role: A role address (shared mailbox) rather than a person.
+      typo: Did you mean {suggestion}?
+  dkim-verifier:
+    title: DKIM signature verifier
+    description: Paste a raw message (or open an .eml file) to verify each DKIM signature — body hash and signature against the published key — and see whether it aligns with the From domain.
+    message: Raw message
+    placeholder: Paste the full message source, headers included ("Show original" / "View source" in your mail client).
+    hint: Paste the original source; copying the visible text loses the headers. The message is sent to the server only to verify it, is not stored and does not appear in the URL.
+    notRaw: This does not look like a raw message — it should start with header lines such as "Received:" or "DKIM-Signature:".
+    tooBig: The message is larger than 900 KB.
+    run: Verify signatures
+    open: Open .eml file
+    ok: At least one valid signature aligns with the From domain — DKIM passes for DMARC.
+    problems:
+      not-a-message: This could not be read as an e-mail message.
+      no-signature: The message has no DKIM-Signature header.
+      too-many-signatures: More than 10 signatures; only the first 10 were checked.
+      no-aligned-pass: No valid signature from the From domain, so DKIM does not count for DMARC.
+    signature: 'Signature {n} — {domain}'
+    results:
+      pass: Valid
+      fail: Invalid
+      permerror: Permanent error
+      temperror: Temporary error
+    aligned: Aligned with From
+    notAligned: Not aligned with From
+    selector: Key record
+    algorithm: Algorithm
+    headers: Signed headers
+    signed: Signed / expires
+    error: Error
+    key: Published key
+    warnings:
+      body-changed: The body was changed after signing (often a footer added by a list or gateway).
+      body-length: The signature covers only part of the body (l= tag); content can be appended without breaking it.
+      sha1: RSA-SHA1 is deprecated and rejected by many receivers.
+      from-not-signed: The From header is not signed, so the signature says nothing about the sender.
+    receivers: What the receiving servers concluded
+    receiversHint: Authentication-Results and ARC headers added along the way (ARC seals are shown, not verified).
+  sip-check:
+    title: SIP server check
+    description: Find a domain's SIP servers (NAPTR and SRV) and send a SIP OPTIONS request over UDP, TCP and TLS to see whether the server answers, which software it runs and what it allows.
+    host: SIP domain or server
+    transport: Transport
+    transports:
+      all: UDP, TCP and TLS
+      udp: UDP
+      tcp: TCP
+      tls: TLS
+    hint: With a domain, the first SRV target is probed on the ports from DNS; otherwise 5060 (UDP/TCP) and 5061 (TLS). OPTIONS does not place a call.
+    run: Check
+    probes: OPTIONS to {host}
+    server: Server
+    allow: Allowed methods
+    cert: Certificate
+    expires: '{days} days left'
+    untrusted: not trusted
+    statusHint: Any SIP reply means the server is reachable; 401, 403 or 404 are normal for servers that only accept known peers.
+    discovery: Discovery
+    service: Service
+    priority: Priority
+    weight: Weight
+    target: Target
+    errors:
+      no-reply: No reply (filtered, or no SIP server)
+      refused: Connection refused
+      timeout: Timed out
+      tls-failed: TLS handshake failed
+      not-sip: Replied, but not with SIP
+      dial-failed: Could not open a socket
+      send-failed: Sending failed
+  ldap-check:
+    title: LDAP / LDAPS check
+    description: Read the rootDSE of an LDAP server anonymously (naming contexts, versions, SASL mechanisms, AD functional levels) and check StartTLS and the LDAPS certificate. No bind is made.
+    host: LDAP server
+    mode: Check
+    modes:
+      both: LDAP (389) and LDAPS (636)
+      ldap: LDAP with StartTLS
+      ldaps: LDAPS only
+    hint: Domain controllers are usually internal; private addresses need the LAN profile or ALLOW_PRIVATE_TARGETS. host:port selects another port.
+    run: Check
+    answered: rootDSE read
+    startTls: StartTLS supported
+    noStartTls: No StartTLS
+    trusted: trusted certificate
+    untrusted: untrusted certificate
+    cert: Certificate
+    daysLeft: '{n} days left'
+    warnings:
+      no-starttls: Plain LDAP without StartTLS — directory traffic, including passwords on simple binds, can only travel unencrypted on port 389.
+      cert-untrusted: The certificate is not trusted (self-signed, internal CA or wrong name); clients must trust that CA explicitly.
+      cert-expiring: The certificate expires within 30 days.
+    errors:
+      refused: Connection refused
+      timeout: Timed out
+      tls-failed: TLS handshake failed
+      closed: The server closed the connection
+      search-refused: The server refused the anonymous rootDSE search
+      protocol-error: No valid LDAP response
+  remote-access-check:
+    title: Remote access check
+    description: See whether RDP, VNC or SSH is reachable on a host and how it is protected — RDP network level authentication and certificate, VNC security types, SSH version. No credentials are sent.
+    host: Host
+    service: Services
+    services:
+      all: RDP, VNC and SSH
+      rdp: RDP (3389)
+      vnc: VNC (5900)
+      ssh: SSH (22)
+    hint: Use it to check what your own hosts expose. host:port checks another port (with a single service). For a full SSH audit, use the SSH server audit tool.
+    run: Check
+    exposed: At least one remote access service is reachable from this server. Remote desktop services should normally sit behind a VPN or gateway.
+    open: Reachable
+    protocol: Security
+    protocols:
+      rdp: Standard RDP security (no TLS)
+      tls: TLS
+      credssp: CredSSP / NLA
+      credssp-ex: CredSSP / NLA (extended)
+      rdstls: RDSTLS
+      unknown: Unknown
+    required: required
+    optional: not required
+    cert: Certificate
+    untrusted: not trusted
+    findings:
+      rdp-nla-not-required: NLA is not required — anyone can reach the Windows login screen without authenticating first, which exposes the host to pre-authentication attacks.
+      rdp-legacy-security: The server uses standard RDP security without TLS, which is weak and open to man-in-the-middle attacks.
+      vnc-no-auth: VNC accepts connections without any authentication — anyone can take over the screen.
+      vnc-unencrypted: VNC only offers unencrypted security types; the session (and password challenge) is not protected.
+      ssh-v1: The server only speaks SSH protocol 1, which is broken.
+    errors:
+      refused: Closed (connection refused)
+      timeout: No answer (filtered)
+      closed: The server closed the connection
+      protocol-error: Something else answers on this port
+      negotiation-failed: RDP negotiation failed
+  ike-probe:
+    title: IPsec / IKE probe
+    description: Probe an IPsec VPN gateway with an IKEv2 and an IKEv1 handshake request to see which versions, proposals and Diffie-Hellman groups it accepts, whether it supports IKE fragmentation and which vendor IDs it sends. No authentication is attempted.
+    host: VPN gateway
+    port: Port
+    hint: Gateways often answer only peers they know, or rate-limit; no answer does not prove that nothing listens. Common modern proposals (AES-GCM, AES-CBC with SHA-2, X25519/ECP/MODP-2048) are offered.
+    run: Probe
+    verdict:
+      ikev2: IKEv2 accepted
+      ikev1-only: Only IKEv1 accepted
+      answers: The gateway answers but accepted no offered proposal
+      silent: No IKE answer
+    findings:
+      no-answer: Nothing answered on this port (filtered, no IPsec, or the gateway only answers known peers).
+      ikev1-enabled: IKEv1 is enabled. It is deprecated (RFC 9395); use IKEv2 only where possible.
+      ikev1-weak: The IKEv1 proposal it chose uses SHA-1, MD5 or (3)DES.
+      weak-group: A weak Diffie-Hellman group (MODP-768/1024/1536) is accepted.
+      weak-cipher: IKEv2 chose 3DES.
+    accepted: Proposal accepted
+    noProposal: No proposal chosen
+    answered: Answered
+    silent: No answer
+    fragmentation: IKE fragmentation
+    cookie: Cookie (DoS protection)
+    encryption: Encryption
+    hash: Hash
+    group: DH group
+    weak: weak
+    vendorIds: Vendor IDs
+  udp-probe:
+    title: UDP service probe
+    description: Check UDP services the way their clients do — DNS, NTP, SNMPv3, SIP, STUN, IKE, QUIC, OpenVPN, NetBIOS and TFTP — to tell an open service from a filtered port.
+    host: Host
+    service: Service
+    port: Port
+    default: default
+    services:
+      all: All known services
+      custom: Custom port (empty packet)
+      dns: DNS (53)
+      ntp: NTP (123)
+      snmp: SNMPv3 (161)
+      sip: SIP (5060)
+      stun: STUN (3478)
+      ike: IKE (500)
+      quic: QUIC (443)
+      openvpn: OpenVPN (1194)
+      netbios: NetBIOS name service (137)
+      tftp: TFTP (69)
+    hint: Each service gets a real request (SNMPv3 engine discovery without a community or user; TFTP asks for a random file name). A UDP port with no answer can be open or filtered — only an answer or an ICMP "port unreachable" is conclusive.
+    run: Probe
+    results: '{host} ({address})'
+    openCount: '{n} of {total} open'
+    state: State
+    detail: Details
+    states:
+      open: Open
+      closed: Closed
+      open|filtered: Open or filtered
+      unexpected: Answered (other protocol)
+      error: Error
+    statesHint: Closed means the host answered with ICMP "port unreachable"; open or filtered means nothing came back, which also happens when a firewall drops the packet.
+  reverse-traceroute:
+    title: Reverse traceroute
+    description: Trace the path from Globalping probes around the world back to your own public IP — the return path your traffic takes, which is often different from the way out.
+    intro: Internet routing is often asymmetric. This runs a traceroute from probes in the locations you choose towards your public IP, so you can see how other networks reach you.
+    yourIp: 'Trace to:'
+    noIp: Your public IP could not be determined (ipify is unreachable).
+    locations: Probe locations (up to 5)
+    privacy: Your public IP is sent to Globalping, a public measurement network, and the measurement is public there.
+    run: Trace back to me
+    paths: Networks on the way to you
+    pathsHint: The autonomous systems each probe's path crosses; different paths from nearby locations point to different upstreams or peering.
+  radius-tester:
+    title: RADIUS tester
+    description: Check a RADIUS server (FreeRADIUS, NPS, a Wi-Fi controller) with Status-Server or a test Access-Request, and verify the reply with the shared secret.
+    host: RADIUS server
+    port: Port
+    secret: Shared secret
+    mode: Test
+    modes:
+      status: Status-Server (is it alive?)
+      auth: Access-Request (PAP)
+    username: Test user name
+    password: Test password
+    hint: NET-TOOLS must be registered as a client (NAS) on the RADIUS server for its own IP, or the server silently ignores it. The secret and password are sent to this server in the request body only and are not stored. Use a test account.
+    run: Test
+    verdict:
+      ok: The server answered and the secret matches
+      rejected: The server rejected the user, and the secret matches
+      untrusted: The reply is not signed with this secret
+      silent: No reply
+      closed: Port closed
+    explain:
+      ok: '{result} after {ms} ms. The reply carries a valid response authenticator for this secret.'
+      rejected: '{result} after {ms} ms: wrong user name or password, or a policy (time, group, NAS) refused it. The shared secret itself is correct.'
+      untrusted: '{result} after {ms} ms, but the response authenticator does not match: the shared secret differs from the one on the server.'
+      silent: Nothing came back. Usually the shared secret is wrong or NET-TOOLS is not a registered client (servers drop such requests without answering); otherwise a firewall blocks UDP to this port, or Status-Server is disabled.
+      closed: The host answered with ICMP "port unreachable" — no RADIUS server listens on this port.
+    results:
+      accept: Access-Accept
+      reject: Access-Reject
+      challenge: Access-Challenge
+      other: Another reply
+      no-reply: No reply
+      refused: Refused
+      error: Error
+  reverse-proxy-config:
+    title: Reverse proxy config generator
+    description: Generate the same reverse proxy setup for nginx, Caddy, Traefik (file or Docker labels) and HAProxy — TLS, HTTP to HTTPS redirect, HSTS, WebSockets, compression and security headers.
+    hosts: Host names
+    invalidHosts: Enter host names such as app.example.com, separated by commas.
+    upstream: Upstream (backend)
+    invalidUpstream: Enter a URL such as http://127.0.0.1:3000 (no path).
+    tls: TLS
+    tlsModes:
+      acme: Let's Encrypt
+      files: Certificate files
+      none: No TLS
+    cert: Certificate file
+    key: Key file
+    invalidPath: Enter an absolute path.
+    redirect: HTTP → HTTPS redirect
+    compression: Compression
+    securityHeaders: Security headers
+    maxBody: Max upload (MB)
+    timeout: Read timeout (seconds)
+    serverDefault: server default
+    config: Configuration
+    targets:
+      nginx: nginx
+      caddy: Caddy
+      traefik: Traefik (file)
+      traefik-labels: Traefik (Docker labels)
+      haproxy: HAProxy
+    download: Download {file}
+    hint: Review before use — certificate paths, entry point names (Traefik) and the certbot setup (nginx, HAProxy) depend on your installation. Caddy obtains certificates and redirects to HTTPS by itself.
+  social-preview:
+    title: Social preview checker
+    description: See how a link looks when shared on LinkedIn, Facebook, X, Slack or Teams — Open Graph and Twitter card tags, the preview image, favicon and manifest — and what is missing.
+    url: Page URL
+    run: Check preview
+    ok: All the tags social networks use are present.
+    preview: Preview
+    large: Large image card (LinkedIn, Facebook, Slack)
+    summary: Summary card (X with twitter:card summary)
+    noImage: No preview image
+    disclaimer: An approximation — each network crops, shortens and caches previews in its own way. After changing tags, use the network's own debugger to refresh its cache.
+    details: Tags
+    image: Preview image
+    imageFailed: Could not be fetched
+    canonical: Canonical URL
+    icons: Icons
+    manifest: Web app manifest
+    findings:
+      missing-title: The page has no title at all.
+      missing-og-title: No og:title — networks fall back to the HTML title.
+      missing-description: No description (og:description or meta description).
+      missing-og-description: No og:description — networks fall back to the meta description.
+      missing-og-image: No og:image — shared links get no picture, or a random one from the page.
+      image-relative: og:image is not an absolute URL; several networks ignore relative image URLs.
+      image-http: og:image uses http://; some networks only load https images.
+      image-unreachable: The preview image cannot be fetched.
+      image-not-image: The og:image URL does not return an image.
+      image-large: The preview image is larger than 5 MB; most networks refuse it.
+      image-small: The preview image is smaller than 200×200 pixels; networks show it small or not at all (1200×630 is recommended).
+      missing-twitter-card: No twitter:card — X falls back to Open Graph, usually as a summary card.
+      title-long: The title is longer than 70 characters and will be cut off.
+      description-long: The description is longer than 200 characters and will be cut off.
+      missing-favicon: No favicon is declared (link rel="icon").
+  origin-compare:
+    title: Origin vs CDN compare
+    description: Send the same request through your CDN and directly to the origin server, and compare status, headers, content, certificate and timing — also shows whether the origin can be reached around the CDN.
+    url: URL
+    origin: Origin server IP
+    invalidOrigin: Enter an IPv4 or IPv6 address.
+    hint: The direct request uses the same host name (Host header and SNI) but connects to the origin IP, like curl --resolve. Only use it for sites you manage.
+    run: Compare
+    viaCdn: Through the CDN
+    direct: Directly to the origin
+    timing: 'first byte {ttfb} ms · total {total} ms'
+    comparison: Comparison
+    field: Field
+    findings:
+      origin-exposed: The origin answers requests for this site directly. Anyone who finds its IP can bypass the CDN and its WAF — restrict the origin to the CDN's address ranges.
+      origin-unreachable: The origin did not answer directly (good, if it only accepts the CDN).
+      origin-cert-invalid: The origin's certificate is not valid for this host name. Fine when the CDN connects with "full" (not "strict") TLS, but check your CDN setting.
+      content-differs: The CDN and the origin return different content for the same status — a stale cache, or a different origin behind the CDN.
+      no-cdn-headers: The CDN response carries no typical CDN headers; the site may not be behind a CDN at all.
+  broken-links:
+    title: Broken link checker
+    description: Crawl a site (same host, two levels deep, up to 30 pages) and find links, images, scripts and stylesheets that return errors, time out or loop.
+    url: Start page
+    external: Also check links to other sites
+    hint: At most 200 links are checked (10 per external site), 4 at a time. Only crawl sites you manage or may test.
+    run: Check links
+    summary: '{pages} pages crawled, {checked} links checked, {broken} broken.'
+    truncated: The limits were reached; not every page or link was checked.
+    onlyBroken: Only broken links
+    allKinds: All kinds
+    kind: Kind
+    kinds:
+      page: Page
+      asset: Image / script / style
+      external: External
+    status: Status
+    from: Found on
+    shown: '{n} shown'
+  webhook-inspector:
+    title: Webhook / request inspector
+    description: Get a temporary URL that captures every request sent to it — method, path, headers and body — to debug webhooks from GitHub, Stripe, monitoring systems or your own code.
+    intro: Create a request bin, point a webhook at its URL and watch the requests arrive here. The bin lives for 15 minutes and keeps up to 50 requests.
+    create: Create request bin
+    yourUrl: Your webhook URL
+    copyCurl: Copy curl example
+    expires: 'expires in {n} min'
+    delete: Delete bin
+    privacy: Requests are kept in this server's memory only, are visible only in this browser tab (with the bin's secret token) and are deleted when the bin expires. Anyone who knows the URL can send to it; do not send real secrets. The service sending the webhook must be able to reach this NET-TOOLS server.
+    received: 'Received requests ({n})'
+    waiting: Waiting for requests… This page checks every 3 seconds.
+    dropped: '{n} more request(s) arrived after the limit of 50 and were not stored.'
+    from: 'from {ip}'
+    truncated: body cut at 64 KB
+    binary: The body is binary and is not shown.
+  firewall-objects:
+    title: IP list → firewall objects
+    description: Turn a list of IPs, networks and ranges into address objects and groups for FortiGate, Cisco ASA/IOS, Palo Alto, Juniper, MikroTik, pfSense/OPNsense, ipset and nftables.
+    list: IPs, networks and ranges (one per line, "# comment" optional)
+    name: Group / list name
+    invalidName: Start with a letter or _, then letters, digits, _ and - (at most 41).
+    merge: Merge adjacent and overlapping networks
+    invalid: 'Ignored (line: text): {list}'
+    output: Configuration
+    download: Download
+    platforms:
+      fortigate: FortiGate
+      asa: Cisco ASA
+      ios: Cisco IOS ACL
+      paloalto: Palo Alto
+      juniper: Juniper SRX
+      mikrotik: MikroTik
+      pfsense: pfSense / OPNsense alias
+      ipset: ipset
+      nftables: nftables set
+  capture-filter:
+    title: Capture filter builder
+    description: Build tcpdump / BPF capture filters and the matching Wireshark display filter from hosts, ports, protocol, direction, TCP flags and exclusions — with ready-to-run tcpdump and tshark commands.
+    hosts: Hosts or networks
+    direction: Direction
+    directions:
+      any: Either
+      src: From
+      dst: To
+    ports: Ports or ranges
+    proto: Protocol
+    anyProto: Any
+    excludeHosts: Exclude hosts
+    excludePorts: Exclude ports (e.g. your SSH session)
+    tcpFlags: TCP flags
+    flags:
+      none: Any
+      syn: SYN only (new connections)
+      synack: SYN-ACK
+      rst: RST (resets)
+    vlan: VLAN ID
+    minSize: Min. frame size (bytes)
+    iface: Interface
+    file: Write to file (optional)
+    fix: Correct the highlighted fields.
+    errors:
+      hosts: Enter IP addresses, networks (CIDR) or host names.
+      excludeHosts: Enter IP addresses, networks (CIDR) or host names.
+      ports: Enter ports (0–65535) or ranges such as 8000-8080.
+      excludePorts: Enter ports (0–65535) or ranges such as 8000-8080.
+      vlan: Enter a VLAN ID (0–4095).
+      iface: Letters, digits, ., :, - and _ only.
+      file: Letters, digits, ., /, - and _ only.
+    result: Filters
+    outputs:
+      tcpdump: tcpdump command
+      bpf: Capture filter (BPF)
+      display: Wireshark display filter
+      tshark: tshark command
+    hint: Capture filters (BPF) decide what is recorded; display filters only hide packets in Wireshark. Host names in a capture filter are resolved once, when the capture starts. Use "any" as the interface to capture on all interfaces (Linux).
+  log-parser:
+    title: Log line parser
+    description: Paste log lines and see them split into fields — syslog (RFC 5424 and 3164, with facility and severity), Cisco ASA, FortiGate and other key=value logs, iptables/UFW, Apache/nginx access logs and JSON.
+    input: Log lines
+    placeholder: Paste up to 500 lines. They are parsed in your browser and not sent anywhere.
+    example: Load examples
+    hint: Formats are detected per line.
+    overview: 'Lines ({n})'
+    fields: Fields per line
+    format: Format
+    time: Time
+    source: Source
+    severity: Severity / status
+    text: Message
+    formats:
+      syslog5424: Syslog (RFC 5424)
+      syslog3164: Syslog (RFC 3164)
+      cisco-asa: Cisco ASA
+      keyvalue: key=value
+      access-log: Access log
+      json: JSON
+      unknown: Not recognised
+  fiber-budget:
+    title: Fiber loss budget
+    description: Check whether a fiber link works before you install it — cable, connector and splice loss against the power budget of the optics, with a safety margin and receiver overload check.
+    optic: Optic (transceiver)
+    custom: Custom values
+    fiber: Fiber and wavelength
+    fibers:
+      os2-1310: 'Single-mode OS2, 1310 nm ({db} dB/km)'
+      os2-1550: 'Single-mode OS2, 1550 nm ({db} dB/km)'
+      om2-850: 'Multimode OM2, 850 nm ({db} dB/km)'
+      om3-850: 'Multimode OM3, 850 nm ({db} dB/km)'
+      om4-850: 'Multimode OM4, 850 nm ({db} dB/km)'
+      om5-850: 'Multimode OM5, 850 nm ({db} dB/km)'
+    fields:
+      length: Length (m)
+      connectors: Connector pairs
+      connectorDb: Loss per connector (dB)
+      splices: Splices
+      spliceDb: Loss per splice (dB)
+      margin: Safety margin (dB)
+      tx: Transmit power, min. (dBm)
+      rx: Receiver sensitivity (dBm)
+      overload: Receiver overload (dBm)
+    hint: Optic values are typical datasheet figures; use your transceiver's datasheet. Count every mated connector pair, including patch panels. A margin of 3 dB covers ageing, repairs and dirty connectors.
+    verdict:
+      ok: The link fits the power budget with margin to spare.
+      tight: The link works on paper, but with less margin than you asked for.
+      fail: The losses exceed the power budget — the link will not work.
+    warnings:
+      reach: The length exceeds the standard reach of this optic on this fiber (dispersion or modal bandwidth limit), even if the power budget fits.
+      mode-mismatch: This optic is for a different fiber type (single-mode vs multimode).
+      wavelength: This optic does not use this wavelength.
+      overload: The received power is above the receiver's overload level — add an attenuator.
+      connector-high: More than 0.75 dB per connector is above the TIA-568 maximum; clean or replace connectors.
+    rows:
+      fiberLoss: Fiber loss
+      connectorLoss: Connector loss
+      spliceLoss: Splice loss
+      totalLoss: Total link loss
+      powerBudget: Power budget (Tx − Rx sensitivity)
+      margin: Remaining margin
+      rxPower: Expected received power
+  wifi-throughput:
+    title: Wi-Fi throughput estimator
+    description: PHY rate for any Wi-Fi 4, 5, 6/6E or 7 combination of channel width, spatial streams, guard interval and MCS, the full MCS table, and what to expect in practice.
+    standard: Standard
+    width: Channel width
+    streams: Spatial streams
+    gi: Guard interval
+    phy: PHY rate
+    real: Realistic TCP throughput
+    notDefined: not defined
+    modulation: Modulation
+    coding: Coding
+    table: 'MCS table — {width} MHz, {streams} stream(s), {gi} µs GI'
+    hint: 'The PHY rate is the raw link rate; one client close to the access point typically gets about {pct}% of it as TCP throughput, and airtime is shared by all clients on the channel. Clients rarely reach the highest MCS beyond a few metres, and most phones and laptops have only two streams.'
+  wifi-channels:
+    title: Wi-Fi channel planner
+    description: Channels per band, region and width with centre frequencies and DFS, and a non-overlapping channel plan for several access points.
+    band: Band
+    region: Region
+    regions:
+      eu: Europe (ETSI)
+      us: United States (FCC)
+    width: Channel width
+    aps: Access points
+    avoidDfs: Avoid DFS channels
+    wide24: 40 MHz in 2.4 GHz overlaps most of the band and is disabled by most vendors in busy areas; use 20 MHz.
+    plan: 'Channel plan ({n} non-overlapping channels)'
+    none: No channel fits these settings.
+    reuse: There are more access points than non-overlapping channels, so channels repeat. Place access points on the same channel as far apart as possible and lower their transmit power.
+    list: 'Channels ({n})'
+    channel: Channel (20 MHz parts)
+    center: Centre
+    flags: Notes
+    weather: weather radar (10-min CAC)
+    hints:
+      '2.4': Use only channels 1, 6 and 11 at 20 MHz; other channels overlap and cause more interference than sharing a channel.
+      '5': DFS channels (52–144) must be vacated when a radar is detected, which briefly disconnects clients; outdoors in Europe only 100–140 may be used.
+      '6': 6 GHz needs Wi-Fi 6E or 7 clients. Indoor low-power use is allowed without DFS; Europe has only the lower 480 MHz.
+  cabling-reference:
+    title: Cabling & transceiver reference
+    description: Copper categories, fiber types and colours, common optics (SFP to QSFP-DD) with wavelength, connector and reach, and fiber connectors in one searchable reference.
+    search: Search
+    hint: Reach figures are the IEEE/MSA nominal values; vendors may quote more or less.
+    sections:
+      copper: Copper (twisted pair)
+      fiber: Fiber types
+      optics: Transceivers
+      connectors: Fiber connectors
+    cols:
+      name: Type
+      bandwidth: Bandwidth
+      speeds: Speed and distance
+      notes: Notes
+      core: Core
+      colour: Jacket colour
+      standard: Standard
+      form: Form factor
+      wavelength: Wavelength
+      fiber: Medium
+      connector: Connector
+      reach: Reach
+      type: Kind
+      use: Used for
+  prefix-list-generator:
+    title: Prefix-list generator
+    description: Expand an AS or AS-SET from the IRR (bgpq4) and get ready-to-paste prefix filters for Cisco IOS/IOS-XR, Juniper, Arista, FRR, MikroTik, BIRD and OpenBGPD.
+    set: AS or AS-SET
+    name: List name (optional)
+    invalidName: Start with a letter; letters, digits, _ and - only.
+    run: Generate
+    config: Prefix filters
+    download: Download
+    platforms:
+      ios: Cisco IOS / IOS-XE
+      iosxr: Cisco IOS-XR
+      junos: Juniper Junos
+      eos: Arista EOS
+      frr: FRR
+      routeros: MikroTik RouterOS 7
+      bird: BIRD 2
+      openbgpd: OpenBGPD
+    hint: Prefixes are aggregated, with more-specifics allowed up to the registered lengths. IRR data is only as good as what the network registered — compare with RPKI (ROA coverage) before you rely on it, and regenerate regularly.
+  prefix-watch:
+    title: Prefix watch
+    description: Keep a list of your prefixes and their expected origin AS in your browser, and see at a glance whether they are announced by someone else, have unexpected more-specifics or are RPKI-invalid.
+    add: Prefixes and expected origins (one per line, up to {max})
+    invalid: 'Not added (use "prefix AS64500"): {list}'
+    addButton: Add
+    check: Check now
+    storageFailed: The list could not be saved in this browser (private window or storage full).
+    skipped: '{n} prefix(es) were not refreshed this time; at most {per} are checked per visit, and results stay valid for 6 hours.'
+    watched: 'Watched prefixes ({n})'
+    notChecked: not checked yet
+    expected: 'expected {asns}'
+    seen: 'Seen from {origins} · RPKI {rpki} · checked {when}'
+    remove: Remove
+    export: Export list
+    levels:
+      alert: Check now
+      warn: Attention
+      ok: OK
+    findings:
+      not-announced: The prefix is not announced (or not visible to RIPE RIS).
+      unexpected-origin: Announced by an AS you did not list — a possible hijack or a forgotten announcement.
+      moas: Announced by more than one origin AS (MOAS).
+      foreign-more-specific: 'More-specifics announced by another AS — a possible sub-prefix hijack: {list}'
+      more-specific: 'More-specifics announced by your own AS: {list}'
+      rpki-invalid: RPKI says the announcement is invalid; many networks drop it.
+      rpki-unknown: No ROA covers this prefix; create one so others can reject hijacks.
+      error: The check failed; try again later.
+    hint: The list stays in this browser — there is no server-side monitoring or alerting. Data comes from RIPE RIS and RIPEstat; checks are limited to a few prefixes per visit.
+  roa-aspa-helper:
+    title: ROA & ASPA helper
+    description: Turn what an AS announces today into minimal ROAs (add, tighten, clean up) for Krill or your RIR portal, and build ASPA records and test how they classify AS paths.
+    roaTitle: ROA plan
+    run: Build plan
+    plan: 'Changes for {asn} {name}'
+    nothing: Nothing to change — every announced prefix has a minimal, used ROA.
+    cols:
+      action: Action
+      why: Why
+    actions:
+      add: Create
+      remove: Remove
+    why:
+      not-found: The prefix is announced without a ROA.
+      invalid-length: Announced longer than the ROA allows; add a ROA for this length (or stop announcing it).
+      invalid-asn: A ROA for another AS covers it; add one only if this AS should originate it.
+      loose: The covering ROA allows lengths nobody announces (RFC 9319); replace it with exact ROAs.
+      unused: Nothing announces this ROA — remove it unless it is for planned or backup announcements (commented out in Krill).
+    roaHint: Each ROA gets a maxLength equal to the announced length, which stops forged-origin sub-prefix hijacks. Review before applying; the plan only sees what RIPE RIS sees.
+    aspaTitle: ASPA builder and path check
+    records: ASPA records (customer AS, then its providers; AS0 = no providers)
+    invalidRecords: 'Not understood: {list}'
+    path: AS path (as received; neighbour first, origin last)
+    invalidPath: Enter AS numbers separated by spaces.
+    direction: Received from
+    dirs:
+      upstream: Customer / peer
+      downstream: Provider
+    verdicts:
+      valid: Valid
+      invalid: Invalid
+      unknown: Unknown
+    hops:
+      provider: provider (attested)
+      not-provider: NOT a provider (attested)
+      no-attestation: no ASPA for the customer
+    explain:
+      valid: Every hop is consistent with the ASPA records, so the path is a valid up-ramp (and down-ramp).
+      invalid: The records prove a hop that cannot happen in a valley-free path — a route leak or forged path. Routers doing ASPA verification drop it.
+      unknown: Some ASes on the path have no ASPA, so the path can neither be proven nor ruled out; it is accepted.
+    publish: Publish with Krill
+    aspaHint: List every provider (transit and route-server-free upstreams) in your ASPA, including IPv6-only ones — a missing provider makes your own routes invalid at networks that verify. This check uses only the records you enter here.
+  voip-quality:
+    title: VoIP quality test
+    description: Sends a voice-like stream of small packets between your browser and this server and estimates call quality — round-trip time, jitter, late packets and a MOS score.
+    codec: Codec
+    duration: Duration
+    buffer: Jitter buffer
+    run: Start test
+    stop: Stop
+    rate: '{pps} packets/s of {bytes} bytes'
+    noReplies: No packets came back from the server.
+    failed: The connection to the server failed or was closed (busy, rate-limited or blocked by a proxy).
+    limit: The server ended the test at its packet or time limit.
+    chart: Round-trip time per packet
+    metric: Metric
+    value: Value
+    packetsValue: '{received} of {sent} returned'
+    rows:
+      packets: Packets
+      rtt: Round trip min / avg / p95 / max
+      oneWay: One-way delay (estimate)
+      jitter: Jitter (RFC 3550)
+      lost: Lost
+      late: 'Too late for a {buffer} ms jitter buffer'
+      loss: Effective loss
+      r: R-factor (E-model)
+    grades:
+      excellent: Excellent
+      good: Good
+      fair: Fair
+      poor: Poor
+      bad: Bad
+    tcpNote: 'The stream runs over a WebSocket (TCP) to this server, not UDP: a lost packet is resent and shows up as a late packet instead of as loss, so real calls on a lossy link can score lower. It measures the path between you and this server only; a call to a cloud PBX or Teams takes a different path.'
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.
@@ -1422,6 +2207,167 @@ tools:
       name: Record
       key: Key
       flags: Tags
+  dkim-generator:
+    title: DKIM key & record generator
+    description: Generate a DKIM key pair in your browser and the selector record to publish. The private key never leaves your browser.
+    selector: Selector
+    keyType: Key type
+    kinds:
+      rsa-2048: RSA 2048 (recommended)
+      rsa-1024: RSA 1024
+      rsa-4096: RSA 4096
+      ed25519: Ed25519
+    testing: Test mode (t=y)
+    strict: No subdomains in i= (t=s)
+    generate: Generate key pair
+    regenerate: Generate a new key pair
+    unsupported: This browser cannot generate this key type. Try another browser or choose RSA.
+    ed25519Hint: Not every receiver checks Ed25519 signatures (RFC 8463). Sign with an RSA key as well, under a second selector.
+    shortKey: 1024-bit keys still work, but 2048 bits is the recommended minimum.
+    publish: Record to publish
+    splitHint: A 2048-bit key is longer than 255 characters. Zone files split it into several quoted strings (as shown); most DNS dashboards accept the whole value in one field.
+    privateKey: Private key (PKCS#8)
+    privateHint: Install this key on your mail server or signing service. It is not stored anywhere — once you leave or reload this page it is gone.
+    download: Download .key
+  mta-sts-generator:
+    title: MTA-STS policy generator
+    description: Create an MTA-STS policy file, the _mta-sts and TLS-RPT records and an nginx snippet to host the policy.
+    mode: Mode
+    modes:
+      testing: Testing
+      enforce: Enforce
+      none: None (withdraw)
+    mx: Mail servers (mx)
+    invalidMx: Enter host names such as mx1.example.com; a leading "*." matches one label.
+    mxMissing: Enter at least one mail server.
+    maxAge: Cache time (max_age)
+    ages:
+      '86400': 1 day
+      '604800': 1 week (recommended)
+      '2592000': 30 days
+      '31557600': 1 year (maximum)
+    id: Policy id
+    invalidId: Use 1–32 letters and digits.
+    newId: New id (after every policy change)
+    rua: TLS-RPT report addresses (optional)
+    invalidRua: Enter e-mail addresses or https:// URLs.
+    findings:
+      testing: In testing mode senders report failures but still deliver. Switch to enforce once the TLS reports are clean.
+      short-max-age: With enforce, a max_age of at least one week is recommended.
+      no-rua: Without a TLS-RPT address you will not hear about delivery failures.
+    records: DNS records
+    hostHint: '{host} needs an A/AAAA or CNAME record and a valid HTTPS certificate for that name.'
+    policy: Policy file
+    download: Download mta-sts.txt
+    nginx: nginx server block
+  ssh-key-tool:
+    title: SSH key & SSHFP tool
+    description: Fingerprint SSH public keys (SHA256 and MD5), read authorized_keys and known_hosts lines, and create SSHFP records for host keys.
+    keys: Public keys
+    hint: Paste .pub files, authorized_keys or known_hosts lines, or the output of "ssh-keyscan host". Only public keys — never paste a private key.
+    host: Host name for SSHFP records
+    parseErrors: 'Lines {lines} are not SSH public keys.'
+    fingerprints: Fingerprints
+    bits: '{n} bits'
+    findings:
+      dsa: DSA keys are disabled in current OpenSSH; replace it with Ed25519.
+      rsa-short: RSA keys shorter than 2048 bits are refused by current OpenSSH.
+      rsa-2048: 2048-bit RSA is acceptable; 3072 bits or Ed25519 is recommended for new keys.
+    sshfp: SSHFP records
+    sshfpHint: SSHFP lets clients verify host keys through DNS ("VerifyHostKeyDNS yes"), but only when the zone is signed with DNSSEC and the client's resolver validates it.
+  acme-check:
+    title: ACME readiness check
+    description: Before requesting a Let's Encrypt (or other ACME) certificate, check that CAA allows the CA, the HTTP-01 challenge path is reachable on port 80 and the DNS-01 delegation is in place.
+    name: Certificate name
+    invalidName: Enter a host name such as www.example.com, or *.example.com for a wildcard.
+    ca: Certificate authority
+    cas:
+      letsencrypt: Let's Encrypt
+      zerossl: ZeroSSL (Sectigo)
+      google: Google Trust Services
+      buypass: Buypass
+      sslcom: SSL.com
+    run: Check readiness
+    verdict:
+      ready: Ready for a certificate
+      warnings: Probably works — check the notes
+      blocked: Issuance will fail
+    details: Details
+    addresses: Addresses
+    allowed: Allowed
+    denied: Not allowed
+    noCaa: No CAA records — any CA may issue.
+    httpSkipped: Not checked (wildcards need DNS-01, or the name has no address).
+    findings:
+      caa-denies: CAA records do not list {ca}; the CA must refuse to issue. Add an issue (or issuewild) record for it.
+      caa-servfail: The CAA lookup failed (SERVFAIL); most CAs refuse to issue until it succeeds.
+      no-address: The name has no A or AAAA record, so HTTP-01 cannot work (DNS-01 still can).
+      http-unreachable: Port 80 does not answer. HTTP-01 needs port 80 open to the internet, even if the site only uses HTTPS.
+      http-server-error: The web server answers the challenge path with a server error.
+      http-bad-redirect: The challenge path redirects to a port other than 80/443 or an invalid URL, which ACME validators do not follow.
+      http-too-many-redirects: The challenge path redirects too many times.
+      http-answers-200: The challenge path answers 200 for an unknown token — a catch-all rule may hide the real challenge file.
+      http-status: 'The challenge path answers HTTP {status}; the validator needs to receive the token file (normally a 404 for unknown tokens).'
+      stale-txt: _acme-challenge has old TXT records; remove leftovers so DNS-01 validation is not confused.
+      wildcard-dns01: Wildcard certificates can only be validated with DNS-01.
+      ipv6-used: The name has an AAAA record; Let's Encrypt prefers IPv6, so the challenge must work over IPv6 too (only one address family was tested).
+  pq-tls-check:
+    title: Post-quantum TLS check
+    description: Check whether a server negotiates hybrid post-quantum key exchange (ML-KEM, as current browsers offer) and which key-exchange groups it accepts.
+    host: Host
+    port: Port
+    run: Check
+    groups: Key-exchange groups
+    supported: Supported
+    notSupported: Not supported
+    hybrid: hybrid post-quantum
+    classical: classical
+    hint: 'Each group was offered on its own in a separate TLS 1.3/1.2 handshake to {address}.'
+    verdict:
+      pq: Post-quantum key exchange is used
+      pq-available: Post-quantum supported, but not chosen
+      classic: No post-quantum key exchange
+      unreachable: No TLS connection
+    explain:
+      pq: 'A client offering what current browsers offer gets {group} ({version}): traffic recorded today cannot be decrypted later with a quantum computer.'
+      pq-available: 'The server accepts a hybrid group when it is the only one offered, but picks {group} when a browser offers several — check the server''s group order.'
+      classic: 'The server uses {group} ({version}). Recorded traffic could be decrypted later by a large quantum computer ("harvest now, decrypt later"). Current OpenSSL, BoringSSL and Go support X25519MLKEM768.'
+    errors:
+      timeout: The connection timed out.
+      refused: The port refused the connection.
+      handshake-failed: The TLS handshake failed (no TLS on this port, or no common settings).
+  expiry-watchlist:
+    title: Expiry watchlist
+    description: Keep a list of hosts and domains in your browser and see at a glance which certificates and domain registrations expire soon. Checked every time you open the page.
+    add: Add hosts and domains (up to {max} in total)
+    invalid: 'Not added: {list}'
+    hint: '"example.com" watches both its certificate and its registration; a subdomain, "host:port" or "cert:host" only the certificate; "domain:example.org" only the registration.'
+    addButton: Add
+    check: Check now
+    warnDays: Warn days ahead
+    storageFailed: The list could not be saved in this browser (private window or storage full). Export it to keep it.
+    domainsPending: 'Checking {n} domain registration(s)… Registrations are refreshed at most every 12 hours and 8 per check, because RDAP servers limit lookups.'
+    results: Expiry overview
+    status: Status
+    target: Host or domain
+    kind: What
+    expires: Expires
+    days: Days left
+    by: Issuer / registrar
+    checked: Checked
+    levels:
+      expired: Expired
+      soon: Expires soon
+      ok: OK
+      unknown: Unknown
+    kinds:
+      cert: Certificate
+      domain: Registration
+    entries: Watched ({n})
+    remove: Remove
+    export: Export list
+    import: Import list
+    storageHint: The list is stored in this browser only — no server storage and no e-mail alerts. Export it to move it to another device.
   ip-to-asn:
     title: IP → ASN
     description: Find the autonomous system (ASN), announced prefix, AS name, country and registry for an IP address.
@@ -2023,6 +2969,287 @@ tools:
       avg: Avg ms
       success: Answered
       errors: Errors
+  ds-dnskey:
+    title: DS / DNSKEY tool
+    description: Compute DS records from a zone's DNSKEYs and check which published DS records still match a key — handy for linking DNSSEC at the registrar and during key rollovers.
+    modes:
+      domain: Check a domain
+      paste: Compute from a DNSKEY
+    check: Check DS and DNSKEY
+    owner: Zone (owner name)
+    dnskeys: DNSKEY records
+    parseError: Paste DNSKEY records such as "example.com. 3600 IN DNSKEY 257 3 13 …" or "257 3 13 …".
+    compute: Compute DS
+    published: DS records at the parent
+    keys: Keys in the zone
+    keysHint: Give your registrar the DS record of the key-signing key (KSK); SHA-256 is accepted everywhere.
+    keyTag: Key tag
+    role: Role
+    roles:
+      ksk: KSK
+      zsk: ZSK
+      revoked: Revoked
+    algorithm: Algorithm
+    digestType: Digest
+    digest: Digest value
+    statusTitle: Status
+    status:
+      match: Matches a key
+      mismatch: Digest does not match
+      orphan: No key with this tag
+    resolverError: '{resolver} answered {rcode} to the {type} query, so the result would be unreliable. Try again or set DNS_RESOLVER to another resolver.'
+    verdict:
+      ok: Every DS record at the parent matches a key-signing key in the zone.
+      rollover: At least one DS record matches, so validation works. Some DS records or KSKs are not paired — expected during a key rollover, otherwise clean them up.
+      broken: No DS record matches a key in the zone. Validating resolvers will fail this domain (SERVFAIL).
+      noDs: The zone is signed, but the parent has no DS record, so DNSSEC is not active. Submit a DS record below to your registrar.
+      noKeys: The parent has DS records but the zone publishes no DNSKEY. Validating resolvers will fail this domain.
+      unsigned: The domain does not use DNSSEC (no DNSKEY and no DS).
+  nsec3-hash:
+    title: NSEC3 hash calculator
+    description: Calculate NSEC3 owner hashes for names in a zone from its salt and iteration count, or load the zone's NSEC3PARAM.
+    zone: Zone
+    load: Load NSEC3PARAM
+    noParam: '{zone} has no NSEC3PARAM record ({rcode}); it is unsigned or uses NSEC.'
+    loadFailed: The NSEC3PARAM lookup failed.
+    via: Your resolver returned no NSEC3PARAM (it may filter DNSSEC records); the parameters come from {resolver}.
+    names: Names (one per line; relative names get the zone appended)
+    salt: Salt (hex, "-" for none)
+    invalidSalt: Enter an even number of hex digits, or "-".
+    iterations: Extra iterations
+    invalidIterations: Enter a whole number from 0 to {max}.
+    name: Name
+    hash: Hash
+    owner: NSEC3 owner name
+    findings:
+      iterations: RFC 9276 recommends 0 extra iterations; more cost resolvers effort without adding protection.
+      iterations-high: More than 100 iterations — many validating resolvers treat the zone as insecure or fail it (RFC 9276).
+      salt: RFC 9276 recommends an empty salt; a salt does not make zone walking harder.
+  nsupdate-builder:
+    title: nsupdate / TSIG builder
+    description: Generate a TSIG key for BIND, Knot or PowerDNS and build an nsupdate script for dynamic DNS updates (RFC 2136).
+    tsig: TSIG key
+    keyName: Key name
+    invalidKeyName: Use a DNS name such as ddns-key or host1.example.com.
+    algorithm: Algorithm
+    legacy: legacy
+    secret: Secret (base64)
+    secretPlaceholder: Generate one or paste an existing secret
+    invalidSecret: Enter base64 of at least 8 bytes.
+    generate: Generate secret
+    formats:
+      bind: BIND
+      knot: Knot
+      powerdns: PowerDNS
+      cli: nsupdate -y
+    downloadKey: Download key file
+    secretHint: The secret is generated in your browser and is not stored. Anyone with it can change the zone — keep it out of shell history and tickets ("nsupdate -y" shows it in the process list).
+    updates: Update script
+    server: Server (optional)
+    port: Port
+    invalidPort: 1–65535
+    zone: Zone
+    operations: Updates
+    syntax: "One per line: add NAME TTL TYPE DATA · replace NAME TTL TYPE DATA · delete NAME [TYPE [DATA]]. Relative names get the zone appended; {'@'} is the zone."
+    lineError: 'line {line}: {error}'
+    errors:
+      action: start with add, replace or delete
+      name: invalid name
+      ttl: TTL must be a whole number of seconds
+      type: invalid record type
+      data: record data is missing
+    showAnswer: Show the request and the answer (show / answer)
+    script: Script
+    downloadScript: Download update.txt
+    run: 'Run:'
+  zone-linter:
+    title: Zone file linter
+    description: Paste a BIND-style zone file and find mistakes before you load it — CNAME conflicts, missing glue, missing final dots, SOA values, duplicate records and more.
+    origin: Origin (if the zone has no $ORIGIN)
+    zone: Zone file
+    placeholder: Paste the zone file here. It is checked in your browser and not sent anywhere.
+    example: Load an example with mistakes
+    findingsTitle: Findings
+    errors: '{n} errors'
+    warnings: '{n} warnings'
+    records: '{n} records'
+    clean: No problems found.
+    line: 'line {n}'
+    summary: Records per type
+    type: Type
+    count: Count
+    severity:
+      error: Error
+      warning: Warning
+      info: Note
+    findings:
+      directive: Unknown or incomplete directive.
+      bad-ttl: '"{value}" is not a valid TTL.'
+      directive-skipped: '{directive} is not supported here; the lines it would add are not checked.'
+      no-origin: The zone has no $ORIGIN — enter the origin above.
+      no-owner: The record has no owner name and there is no previous record to inherit it from.
+      class: Class {class} instead of IN.
+      unknown-type: '"{type}" is not a known record type.'
+      no-data: The {type} record has no data.
+      bad-name: '{name} has an empty label or a label longer than 63 characters.'
+      no-default-ttl: There is no $TTL and records without a TTL follow; servers then use the SOA minimum or refuse the zone.
+      no-soa: The zone has no SOA record.
+      multiple-soa: The zone has more than one SOA record.
+      soa-not-apex: The SOA record is not at the zone apex.
+      soa-syntax: The SOA record needs 7 fields — primary, contact, serial, refresh, retry, expire, minimum.
+      soa-serial: The serial is larger than 4294967295.
+      soa-retry: The SOA retry should be shorter than refresh.
+      soa-expire: The SOA expire ({value} s) is short; 2–4 weeks is usual so secondaries survive a long outage.
+      soa-minimum: The SOA minimum ({value} s) is longer than a day; it sets how long "does not exist" answers are cached.
+      soa-refresh: The SOA refresh ({value} s) is short; secondaries will poll often (fine when NOTIFY is not used).
+      no-ns: The zone apex has no NS records.
+      one-ns: Only one name server; use at least two, preferably in different networks.
+      out-of-zone: '{name} is outside the zone and will be ignored or rejected.'
+      duplicate: Same record as line {first}.
+      occluded: The name is below the delegation {cut}, so this data is not served (only glue addresses are).
+      bad-address: '"{value}" is not a valid address.'
+      txt-too-long: A TXT string is longer than 255 bytes; split it into several quoted strings.
+      cname-apex: A CNAME cannot be at the zone apex (it would conflict with SOA and NS).
+      cname-other-data: '{name} has a CNAME and other records; a CNAME must be the only record at its name.'
+      multiple-cname: More than one CNAME at the same name.
+      target-is-ip: The {type} target "{value}" is an IP address; it must be a host name.
+      missing-dot: '"{value}" has no final dot, so it becomes {target}'
+      target-cname: The {type} target {target} is a CNAME; it must point to a name with address records (RFC 2181).
+      missing-glue: The name server {target} is in the zone but has no A or AAAA record (missing glue).
+      target-no-address: '{target} is in the zone but has no A or AAAA record.'
+      ttl-mismatch: Records of the RRset {rrset} have different TTLs; servers use one TTL per RRset.
+      multiple-spf: '{name} has more than one SPF record; receivers treat that as an error.'
+      low-ttl: The TTL of {ttl} s is very low and increases query load.
+  dc-locator:
+    title: AD / Kerberos DC locator
+    description: Check the SRV records Windows clients use to find Active Directory domain controllers, global catalogs and Kerberos servers, and whether every listed DC resolves.
+    domain: Active Directory domain
+    site: AD site (optional)
+    invalidSite: A site name is one label of letters, digits, - and _.
+    resolver: DNS server
+    resolverHint: AD zones usually exist only on internal DNS. Enter the IP of a domain controller or internal DNS server, or "local" for the container's resolver. Private addresses need the LAN profile or ALLOW_PRIVATE_TARGETS.
+    run: Locate domain controllers
+    ok: All required records are present; {n} domain controller(s) found.
+    dcsTitle: Domain controllers
+    dc: Domain controller
+    addresses: Addresses
+    servicesTitle: Listed for
+    lookupsTitle: SRV records (via {resolver})
+    record: Record
+    statusTitle: Status
+    status:
+      ok: Found
+      missing: Missing
+      absent: Not present
+    targets: Targets
+    port: Port
+    services:
+      ldap: LDAP
+      dc: DC locator
+      pdc: PDC emulator
+      gc: Global catalog
+      gc-tcp: Global catalog (_gc)
+      kerberos-tcp: Kerberos (TCP)
+      kerberos-udp: Kerberos (UDP)
+      kerberos-dc: Kerberos (_msdcs)
+      kpasswd-tcp: kpasswd (TCP)
+      kpasswd-udp: kpasswd (UDP)
+      domain-dns-zones: DomainDnsZones
+      forest-dns-zones: ForestDnsZones
+      site-ldap: Site LDAP
+      site-kerberos: Site Kerberos
+    findings:
+      missing-ldap: _ldap._tcp is missing — LDAP clients cannot find a domain controller.
+      missing-dc: _ldap._tcp.dc._msdcs is missing — Windows clients cannot locate a domain controller (is this an AD domain, and is the right DNS server used?).
+      missing-kerberos-tcp: _kerberos._tcp is missing — Kerberos authentication will fail.
+      missing-site-ldap: No domain controller is registered for this site; clients fall back to any DC.
+      target-no-address: A listed domain controller has no A or AAAA record.
+      unexpected-port: A record uses a non-standard port.
+      missing-pdc: No PDC emulator record (_ldap._tcp.pdc._msdcs); password changes and time sync may fail.
+      missing-gc: No global catalog record; logons in multi-domain forests and Exchange need one.
+      dc-kerberos-mismatch: The DCs listed for LDAP and for Kerberos differ — usually a stale record of a removed DC (check Netlogon registration).
+      too-many-targets: More than 20 targets; only the first 20 were resolved.
+  dns-snapshot:
+    title: DNS snapshot & diff
+    description: Save the DNS records of a domain and compare snapshots later — before and after a migration, or to see what changed.
+    extra: Extra names (up to {max})
+    resolver: Resolver
+    take: Take snapshot
+    import: Import snapshot file
+    importError: That file is not a NET-TOOLS DNS snapshot.
+    progress: Lookups done
+    storageFailed: The snapshot could not be saved in this browser (private window or storage full). Export it to keep it.
+    compare: Compare snapshots
+    before: Before
+    after: After
+    compareTtl: Compare TTLs
+    compareSerial: Compare the SOA serial
+    noChanges: No changes ({n} record sets compared).
+    added: Added
+    removed: Removed
+    changed: Changed
+    snapshotOf: Snapshot of {date}
+    summary: '{n} records via {resolver}.'
+    errors: 'Some lookups failed: {list}'
+    records: Records
+    name: Name
+    type: Type
+    data: Data
+    recordCount: '{n} records'
+    saved: Saved snapshots ({n})
+    savedHint: Snapshots are kept in this browser only (at most 30). Export one to keep it elsewhere or to compare on another device.
+    export: Export
+    delete: Delete
+  takeover-check:
+    title: Subdomain takeover check
+    description: Find subdomains whose CNAME points to a deleted cloud resource or an unclaimed page at a hosting service — names someone else could take over.
+    names: Names to check (optional)
+    hint: Leave empty to check about 35 common names (www, blog, shop, dev, …). Only check domains you manage. Services are matched against a public list of known takeover fingerprints; a match is a strong hint, not proof.
+    run: Check for takeovers
+    vulnerable: '{n} name(s) can probably be taken over. Remove the CNAME or claim the resource at the provider.'
+    dangling: '{n} CNAME(s) point to names that no longer exist. Remove them, even if the service is not known to allow takeovers.'
+    clean: No dangling or unclaimed CNAMEs among {n} existing name(s).
+    showMissing: Show names that do not exist
+    httpSkipped: The HTTP check was skipped (more than 20 candidates).
+    via: Checked via {resolver}.
+    status:
+      vulnerable: Takeover possible
+      dangling: Dangling
+      error: Lookup failed
+      ok: OK
+      no-cname: No CNAME
+      nxdomain: Does not exist
+  lookalike-finder:
+    title: Lookalike domain finder
+    description: Generate typo, homoglyph, IDN and TLD variants of your domain and see which are registered and can receive mail — candidates for phishing and brand abuse.
+    yourDomain: Your domain
+    hint: Up to 150 variants are checked with one DNS query each; registered ones are looked up in more detail. Use it to monitor your own brand.
+    run: Find look-alikes
+    summary: '{checked} variants checked: {registered} registered, {mx} with mail servers.'
+    truncated: '({n} variants were generated; the most likely ones were checked.)'
+    registeredOnly: Only registered
+    allKinds: All kinds
+    domain: Domain
+    kind: Kind
+    status: Status
+    free: Not registered
+    error: Lookup failed
+    risk:
+      high: Registered, receives mail
+      medium: Registered
+      low: Not registered
+    kinds:
+      tld: Other TLD
+      homoglyph: Look-alike characters
+      idn: Unicode look-alike (IDN)
+      transposition: Swapped letters
+      omission: Missing letter
+      repetition: Double letter
+      hyphenation: Added hyphen
+      prefix: Prefix
+      suffix: Suffix
+      replacement: Keyboard typo
+      bitsquatting: Bit flip
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.
