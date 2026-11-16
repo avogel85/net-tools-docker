@@ -7,6 +7,7 @@ import { NButton, NProgress, NTag } from 'naive-ui'
 import { computed, onMounted, ref, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { apiGet } from '@/api/client'
+import DnsFilterAlert from '@/components/DnsFilterAlert.vue'
 import { grade } from '@/components/health-report'
 import HealthReport from '@/components/HealthReport.vue'
 import { buildQuery } from '@/composables/useApi'
@@ -28,6 +29,7 @@ const done = ref(0)
 const total = ref(0)
 const ran = ref('')
 const sections = shallowRef<Section[]>()
+const lookups = shallowRef<(DnsLookup | undefined)[]>([])
 
 // The api runs at most 3 jobs per client at a time.
 const limit = limiter(3)
@@ -71,6 +73,7 @@ async function run() {
     { id: 'mail', prefix: 'tools.email-deliverability-report', checks: mail },
     { id: 'dns', prefix: 'tools.dns-health-report', checks: dnsHealth({ consistency, dnssec, soa, caa }) },
   ]
+  lookups.value = [soa, caa]
   ran.value = d
   loading.value = false
 }
@@ -98,6 +101,7 @@ const sectionTitle = (s: Section) => t(`tools.domain-scorecard.sections.${s.id}`
   </CCard>
   <template v-if="sections && overall">
     <CCard :title="t('tools.domain-scorecard.result', { domain: ran })" data-testid="result">
+      <DnsFilterAlert :results="lookups" />
       <div class="flex flex-wrap items-center gap-4">
         <NTag :type="tagType[overall.letter]" size="large" :bordered="false" data-testid="overall">
           {{ overall.letter }} · {{ overall.score }}/100

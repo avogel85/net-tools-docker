@@ -6,6 +6,16 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-11-15
+
+### Added
+- `DNS_RESOLVER`: an unfiltered resolver for every server-side lookup, for hosts whose DNS filters
+  (Pi-hole, AdGuard Home). Names it doesn't know still go to the container resolver (LAN hosts),
+  which stays selectable as "Local resolver" in DNS lookup, reverse DNS and the benchmark.
+- DNS lookup, bulk lookup, the DNS health report and the domain scorecard warn when an answer
+  looks blocked by a DNS filter (extended DNS error, `0.0.0.0` / `::`, or a record the reference
+  resolver has) and show the unfiltered answer.
+
 ## [0.8.0] - 2026-11-13
 
 ### Added
@@ -135,7 +145,9 @@ Phases 0–3 (foundations, 32 browser tools, DNS / connectivity / HTTP / TLS / e
 tools, providers and Worldwide measurements) were developed before the first release; see the git
 history and `docs/IMPLEMENTATION_PLAN.md`.
 
-[Unreleased]: https://github.com/digibaro/net-tools-docker/compare/v0.7.0...HEAD
+[Unreleased]: https://github.com/digibaro/net-tools-docker/compare/v0.8.1...HEAD
+[0.8.1]: https://github.com/digibaro/net-tools-docker/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/digibaro/net-tools-docker/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/digibaro/net-tools-docker/compare/v0.6.0...v0.7.0
 [0.6.0]: https://github.com/digibaro/net-tools-docker/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/digibaro/net-tools-docker/compare/v0.4.0...v0.5.0

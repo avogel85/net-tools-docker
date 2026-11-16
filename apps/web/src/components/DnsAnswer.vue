@@ -4,6 +4,7 @@ import { NTag } from 'naive-ui'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CKeyValueList from '@/ui/c-key-value-list.vue'
+import DnsFilterAlert from './DnsFilterAlert.vue'
 import ResultTable from './ResultTable.vue'
 
 type DnsLookup = components['schemas']['DnsLookup']
@@ -32,6 +33,7 @@ const sections = computed(() => ([
 
 <template>
   <div>
+    <DnsFilterAlert :results="[result]" />
     <div class="mb-3 flex flex-wrap items-center gap-2">
       <NTag :type="rcodeType" :bordered="false" data-testid="rcode">
         {{ result.rcode }}

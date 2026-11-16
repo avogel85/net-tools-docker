@@ -29,7 +29,10 @@ The UI shows the active profile on the About page.
 
 1. Parse: accept hostname (IDNA → ASCII, max 253 chars, label rules), IPv4, IPv6 (with optional zone
    **rejected**), `host:port` only where the tool allows. Reject URLs' userinfo, non-http(s) schemes.
-2. Resolve hostnames with the server resolver (timeout 3 s). Respect `family`.
+2. Resolve hostnames with the server resolver (timeout 3 s). Respect `family`. With `DNS_RESOLVER`
+   (an admin-set IP, never user input) names are asked of that server first; on NXDOMAIN or an
+   error the container resolver (resolv.conf) answers instead, for LAN names. Every address still
+   goes through the policy below, whichever resolver returned it.
 3. **Policy check on every resolved IP** (`net/netip`):
    - Always deny: `0.0.0.0/8`, `::/128`, `169.254.169.254/32`, `fd00:ec2::254/128`,
      `100.100.100.200/32` (Alibaba), `168.63.129.16/32` (Azure), multicast, broadcast,

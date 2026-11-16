@@ -85,6 +85,12 @@ func (t *Tool) servers(set string) ([]dnsx.Server, error) {
 	if sys, err := dnsx.SystemServer(dnsx.UDP); err == nil {
 		out = append(out, sys)
 	}
+	// With DNS_RESOLVER the container resolver (e.g. Pi-hole) is benchmarked too.
+	if dnsx.HasUpstream() {
+		if local, err := dnsx.LocalServer(dnsx.UDP); err == nil {
+			out = append(out, local)
+		}
+	}
 	if set == "quick" {
 		for _, p := range dnsx.Presets {
 			out = append(out, dnsx.Server{Label: p.Label + " (" + p.V4.String() + ")", Addr: netipPort(p.V4.String()), Transport: dnsx.UDP})

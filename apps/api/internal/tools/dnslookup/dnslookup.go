@@ -53,6 +53,8 @@ type Result struct {
 	Authority  []dnsx.Record `json:"authority"`
 	Additional []dnsx.Record `json:"additional"`
 	RTTMs      float64       `json:"rttMs"`
+	// Filtered is set when the answer looks blocked by a DNS filter (dnsx.CheckFiltered).
+	Filtered *dnsx.Filtered `json:"filtered,omitempty"`
 }
 
 // Ms converts a duration to milliseconds with 3 decimals.
@@ -110,6 +112,7 @@ func (t *Tool) handle(w http.ResponseWriter, r *http.Request) {
 		Answer: dnsx.Records(msg.Answer), Authority: dnsx.Records(msg.Ns), Additional: dnsx.Records(msg.Extra),
 		RTTMs: Ms(rtt),
 	}
+	res.Filtered = dnsx.CheckFiltered(r.Context(), srv, name, qtype, msg)
 	httpapi.JSON(w, r, res, &httpapi.Meta{
 		Tool: t.ID(), Vantage: "server", DurationMs: Ms(time.Since(start)),
 		Target: &httpapi.TargetMeta{Input: rawName, Used: srv.Addr.String()},

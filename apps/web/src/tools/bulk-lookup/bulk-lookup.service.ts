@@ -10,7 +10,7 @@ export const DNS_TYPES = ['A', 'AAAA', 'MX', 'NS', 'TXT', 'CNAME', 'CAA', 'SOA']
 
 export type OpId = 'dns' | 'reverse' | 'asn' | 'port'
 export interface Options { type: string, ports: string }
-export interface Row { target: string, status: 'ok' | 'empty' | 'error', result: string, detail: string }
+export interface Row { target: string, status: 'ok' | 'empty' | 'filtered' | 'error', result: string, detail: string }
 export type Get = <T>(path: string, q: Record<string, string>, signal?: AbortSignal) => Promise<T>
 
 export interface Op {
@@ -32,6 +32,9 @@ export const OPS: Op[] = [
     run: async (t, o, get, signal) => {
       const r = await get<S['DnsLookup']>('/v1/dns/lookup', { name: t, type: o.type, resolver: 'system' }, signal)
       const data = r.answer.filter(a => a.type === o.type).map(a => a.data)
+      // A DNS filter (Pi-hole) answered: show what an unfiltered resolver says instead.
+      if (r.filtered)
+        return { status: 'filtered', result: r.filtered.referenceData.join(', ') || data.join(', ') || r.rcode, detail: `${data.join(', ') || r.rcode} · ${r.filtered.reference || r.resolver}` }
       return { status: data.length ? 'ok' : 'empty', result: data.join(', ') || r.rcode, detail: `${r.rcode} · ${Math.round(r.rttMs)} ms` }
     },
   },

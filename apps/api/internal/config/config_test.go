@@ -225,3 +225,31 @@ func TestAuth(t *testing.T) {
 		}
 	}
 }
+
+func TestDNSResolver(t *testing.T) {
+	tests := []struct {
+		in, want string
+		ok       bool
+	}{
+		{"", "invalid AddrPort", true},
+		{"9.9.9.9", "9.9.9.9:53", true},
+		{"192.168.1.53:5353", "192.168.1.53:5353", true},
+		{"2620:fe::fe", "[2620:fe::fe]:53", true},
+		{"[2620:fe::fe]:853", "[2620:fe::fe]:853", true},
+		{"dns.quad9.net", "", false},
+		{"9.9.9.9:0", "", false},
+		{"https://dns.google/dns-query", "", false},
+	}
+	for _, tt := range tests {
+		cfg, err := LoadFrom(env(map[string]string{"DNS_RESOLVER": tt.in}), files(nil))
+		if !tt.ok {
+			if err == nil || !strings.Contains(err.Error(), "DNS_RESOLVER") {
+				t.Errorf("%q: err = %v, want a DNS_RESOLVER error", tt.in, err)
+			}
+			continue
+		}
+		if err != nil || cfg.Features.DNSResolver.String() != tt.want {
+			t.Errorf("%q = %v, %v; want %s", tt.in, cfg.Features.DNSResolver, err, tt.want)
+		}
+	}
+}

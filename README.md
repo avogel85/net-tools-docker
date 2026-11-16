@@ -177,6 +177,25 @@ The *Status & Links* tools show public cloud status feeds and a list of links. B
 replaced with a YAML file in `data/` (`status-feeds.yml`, `links.yml`) or with
 `STATUS_FEEDS_FILE` / `LINKS_FILE`. See [data/README.md](data/README.md).
 
+### Server DNS resolver
+
+By default the API uses the container's resolver, which Docker forwards to the host's DNS. If
+that is a filtering resolver (Pi-hole, AdGuard Home), blocked names come back as `0.0.0.0` or
+"does not exist" and email, DNS and reputation checks give wrong results. Set an unfiltered
+resolver for everything the server looks up:
+
+```env
+DNS_RESOLVER=9.9.9.9          # an IP, optionally with a port: 192.168.1.53:5353, [2620:fe::fe]:53
+```
+
+- Names that resolver does not know (`nas.lan`, single-label hosts) are still asked of the
+  container resolver, so LAN targets keep working.
+- The container resolver stays available as **Local resolver** in DNS lookup, reverse DNS and the
+  resolver benchmark, so you can still test your Pi-hole.
+- Without `DNS_RESOLVER`, DNS lookup, bulk lookup, the DNS health report and the domain scorecard
+  warn when an answer looks blocked. They then compare it with Cloudflare (`1.1.1.1`), which
+  receives only that query name.
+
 ## Optional services
 
 ```bash
