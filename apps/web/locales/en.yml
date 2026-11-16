@@ -1540,6 +1540,21 @@ tools:
     policy: Policy file
     download: Download mta-sts.txt
     nginx: nginx server block
+  ssh-key-tool:
+    title: SSH key & SSHFP tool
+    description: Fingerprint SSH public keys (SHA256 and MD5), read authorized_keys and known_hosts lines, and create SSHFP records for host keys.
+    keys: Public keys
+    hint: Paste .pub files, authorized_keys or known_hosts lines, or the output of "ssh-keyscan host". Only public keys — never paste a private key.
+    host: Host name for SSHFP records
+    parseErrors: 'Lines {lines} are not SSH public keys.'
+    fingerprints: Fingerprints
+    bits: '{n} bits'
+    findings:
+      dsa: DSA keys are disabled in current OpenSSH; replace it with Ed25519.
+      rsa-short: RSA keys shorter than 2048 bits are refused by current OpenSSH.
+      rsa-2048: 2048-bit RSA is acceptable; 3072 bits or Ed25519 is recommended for new keys.
+    sshfp: SSHFP records
+    sshfpHint: SSHFP lets clients verify host keys through DNS ("VerifyHostKeyDNS yes"), but only when the zone is signed with DNSSEC and the client's resolver validates it.
   ip-to-asn:
     title: IP → ASN
     description: Find the autonomous system (ASN), announced prefix, AS name, country and registry for an IP address.

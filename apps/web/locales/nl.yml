@@ -1540,6 +1540,21 @@ tools:
     policy: Beleidsbestand
     download: mta-sts.txt downloaden
     nginx: nginx-serverblok
+  ssh-key-tool:
+    title: SSH-sleutel- en SSHFP-tool
+    description: Bereken fingerprints van publieke SSH-sleutels (SHA256 en MD5), lees authorized_keys- en known_hosts-regels en maak SSHFP-records voor hostsleutels.
+    keys: Publieke sleutels
+    hint: Plak .pub-bestanden, authorized_keys- of known_hosts-regels, of de uitvoer van "ssh-keyscan host". Alleen publieke sleutels — plak nooit een privésleutel.
+    host: Hostnaam voor SSHFP-records
+    parseErrors: 'Regels {lines} zijn geen publieke SSH-sleutels.'
+    fingerprints: Fingerprints
+    bits: '{n} bits'
+    findings:
+      dsa: DSA-sleutels zijn uitgeschakeld in huidige OpenSSH; vervang ze door Ed25519.
+      rsa-short: RSA-sleutels korter dan 2048 bits worden door huidige OpenSSH geweigerd.
+      rsa-2048: 2048-bit RSA is acceptabel; voor nieuwe sleutels wordt 3072 bits of Ed25519 aanbevolen.
+    sshfp: SSHFP-records
+    sshfpHint: Met SSHFP controleren clients hostsleutels via DNS ("VerifyHostKeyDNS yes"), maar alleen als de zone met DNSSEC is ondertekend en de resolver van de client die valideert.
   ip-to-asn:
     title: IP → ASN
     description: Vind het autonome systeem (ASN), de aangekondigde prefix, AS-naam, land en register bij een IP-adres.

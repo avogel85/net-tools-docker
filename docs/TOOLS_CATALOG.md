@@ -158,7 +158,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | TLS-13 | Certificate chain validator | Pasted chain: order, signatures, missing intermediates via AIA, trust, host name | B+S | `crypto/x509` | — | 6 | ✅ |
 | TLS-14 | PKCS#12 / PFX inspector | Certificates, key match, friendly names, encryption / MAC algorithms (legacy flagged), in the browser | B | `node-forge`, `@peculiar/x509` | — | 6 | ✅ |
 | TLS-15 | Lab CA & certificate generator | Root CA (or reuse one) + server certificate with SANs, WebCrypto in the browser | B | `@peculiar/x509` | — | 6 | ✅ |
-| TLS-16 | SSH key & SSHFP tool | Fingerprints (SHA256/MD5) of SSH public keys, SSHFP records, `known_hosts` parsing | B | WebCrypto | — | 9 | ⬜ |
+| TLS-16 | SSH key & SSHFP tool | Fingerprints (SHA256/MD5) of SSH public keys, SSHFP records, `known_hosts` parsing | B | WebCrypto | — | 9 | ✅ |
 | TLS-17 | ACME readiness check | Before requesting a certificate: CAA, port 80 reachability, `/.well-known/acme-challenge/` handling, `_acme-challenge` CNAME/TXT | S | `miekg/dns` + `httpcore` | — | 10 | ⬜ |
 | TLS-18 | Post-quantum TLS check | Whether a server negotiates hybrid post-quantum key exchange (X25519MLKEM768) and which groups it accepts | S | `crypto/tls` CurvePreferences | — | 11 | ⬜ |
 | TLS-19 | Expiry watchlist | Watchlist of hosts and domains kept in the browser; checks certificate and registration expiry when opened | S | TLS-02 + BGP-08 endpoints; list in browser storage | — | 12 | ⬜ |
