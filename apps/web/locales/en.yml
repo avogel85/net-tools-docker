@@ -2197,6 +2197,43 @@ tools:
       iterations: RFC 9276 recommends 0 extra iterations; more cost resolvers effort without adding protection.
       iterations-high: More than 100 iterations — many validating resolvers treat the zone as insecure or fail it (RFC 9276).
       salt: RFC 9276 recommends an empty salt; a salt does not make zone walking harder.
+  nsupdate-builder:
+    title: nsupdate / TSIG builder
+    description: Generate a TSIG key for BIND, Knot or PowerDNS and build an nsupdate script for dynamic DNS updates (RFC 2136).
+    tsig: TSIG key
+    keyName: Key name
+    invalidKeyName: Use a DNS name such as ddns-key or host1.example.com.
+    algorithm: Algorithm
+    legacy: legacy
+    secret: Secret (base64)
+    secretPlaceholder: Generate one or paste an existing secret
+    invalidSecret: Enter base64 of at least 8 bytes.
+    generate: Generate secret
+    formats:
+      bind: BIND
+      knot: Knot
+      powerdns: PowerDNS
+      cli: nsupdate -y
+    downloadKey: Download key file
+    secretHint: The secret is generated in your browser and is not stored. Anyone with it can change the zone — keep it out of shell history and tickets ("nsupdate -y" shows it in the process list).
+    updates: Update script
+    server: Server (optional)
+    port: Port
+    invalidPort: 1–65535
+    zone: Zone
+    operations: Updates
+    syntax: "One per line: add NAME TTL TYPE DATA · replace NAME TTL TYPE DATA · delete NAME [TYPE [DATA]]. Relative names get the zone appended; {'@'} is the zone."
+    lineError: 'line {line}: {error}'
+    errors:
+      action: start with add, replace or delete
+      name: invalid name
+      ttl: TTL must be a whole number of seconds
+      type: invalid record type
+      data: record data is missing
+    showAnswer: Show the request and the answer (show / answer)
+    script: Script
+    downloadScript: Download update.txt
+    run: 'Run:'
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.

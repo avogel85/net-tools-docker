@@ -2197,6 +2197,43 @@ tools:
       iterations: RFC 9276 raadt 0 extra iteraties aan; meer kost resolvers moeite zonder extra bescherming.
       iterations-high: Meer dan 100 iteraties — veel validerende resolvers zien de zone dan als onveilig of geven een fout (RFC 9276).
       salt: RFC 9276 raadt een lege salt aan; een salt maakt zone walking niet moeilijker.
+  nsupdate-builder:
+    title: nsupdate/TSIG-builder
+    description: Genereer een TSIG-sleutel voor BIND, Knot of PowerDNS en bouw een nsupdate-script voor dynamische DNS-updates (RFC 2136).
+    tsig: TSIG-sleutel
+    keyName: Sleutelnaam
+    invalidKeyName: Gebruik een DNS-naam zoals ddns-key of host1.example.com.
+    algorithm: Algoritme
+    legacy: verouderd
+    secret: Geheim (base64)
+    secretPlaceholder: Genereer er een of plak een bestaand geheim
+    invalidSecret: Vul base64 van minstens 8 bytes in.
+    generate: Geheim genereren
+    formats:
+      bind: BIND
+      knot: Knot
+      powerdns: PowerDNS
+      cli: nsupdate -y
+    downloadKey: Sleutelbestand downloaden
+    secretHint: Het geheim wordt in je browser gegenereerd en niet opgeslagen. Wie het heeft kan de zone wijzigen — houd het uit je shellgeschiedenis en tickets ("nsupdate -y" toont het in de proceslijst).
+    updates: Updatescript
+    server: Server (optioneel)
+    port: Poort
+    invalidPort: 1–65535
+    zone: Zone
+    operations: Updates
+    syntax: "Eén per regel: add NAAM TTL TYPE DATA · replace NAAM TTL TYPE DATA · delete NAAM [TYPE [DATA]]. Aan relatieve namen wordt de zone toegevoegd; {'@'} is de zone."
+    lineError: 'regel {line}: {error}'
+    errors:
+      action: begin met add, replace of delete
+      name: ongeldige naam
+      ttl: TTL moet een geheel aantal seconden zijn
+      type: ongeldig recordtype
+      data: recorddata ontbreekt
+    showAnswer: Toon de aanvraag en het antwoord (show / answer)
+    script: Script
+    downloadScript: update.txt downloaden
+    run: 'Uitvoeren:'
   dnssec-validator:
     title: DNSSEC-validator
     description: Valideer de DNSSEC-vertrouwensketen van de root tot een naam, en zie precies waar die breekt — ontbrekende DS, niet-passende sleutels, verlopen of ongeldige handtekeningen.
