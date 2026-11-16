@@ -398,6 +398,16 @@ email:
     bad-key: De publieke sleutel kan niet worden gedecodeerd.
     weak-key: De RSA-sleutel is korter dan 1024 bits en wordt door ontvangers genegeerd.
     short-key: De RSA-sleutel is korter dan de aanbevolen 2048 bits.
+    flatten-query-limit: Er waren meer dan 100 DNS-queries nodig; het resultaat is onvolledig.
+    too-many-mx: Een mx-mechanisme wijst naar meer dan 10 mailservers; alleen de eerste 10 zijn gebruikt.
+    too-many-prefixes: Meer dan 2000 adresbereiken; de lijst is afgekapt.
+    record-too-long: Een record is langer dan de gekozen maximale grootte.
+    include-non-pass: Een geïncludeerd record bevat een niet-pass-mechanisme ("-", "~" of "?"); dat is weggelaten, dus het platgeslagen beleid kan iets meer toestaan.
+    macro-kept: Een term met een macro (zoals %{'{'}i{'}'}) kan niet worden platgeslagen en blijft staan.
+    exists-kept: Een "exists"-mechanisme kan niet worden platgeslagen en blijft staan.
+    order-changed: Niet-pass-mechanismen ("-", "~" of "?") staan vóór de adressen; controleer of de volgorde nog het gewenste resultaat geeft.
+    chain-name-in-use: Een naam voor een gekoppeld record wordt al gebruikt door het huidige beleid; kies een ander label.
+    chain-name-exists: Op een naam voor een gekoppeld record staat al een TXT-record; publiceren vervangt het (normaal als je opnieuw platslaat).
     testing: De sleutel staat in testmodus (t=y).
     no-id: Het MTA-STS-record heeft geen tag id=.
     policy-unreachable: Het beleidsbestand op het mta-sts-subdomein kan niet worden opgehaald.
@@ -1394,6 +1404,23 @@ tools:
     ok: Het SPF-record is geldig.
     lookups: '{n} van 10 DNS-lookups gebruikt'
     tree: Uitgeklapt record
+  spf-flattener:
+    title: SPF-flattener
+    description: Vervang de includes en a- en mx-termen van een SPF-record door de IP-bereiken waarnaar ze verwijzen, om onder de limiet van 10 DNS-lookups te blijven. Verdeelt het resultaat over gekoppelde records als het te lang wordt.
+    run: Platslaan
+    ok: Het SPF-record is zonder opmerkingen platgeslagen.
+    label: Label voor gekoppelde records
+    invalidLabel: Gebruik letters, cijfers, - en _ (bijvoorbeeld _spf), maximaal 30.
+    size: Maximale recordgrootte (bytes)
+    invalidSize: Vul een grootte tussen 100 en 2048 in.
+    records: Platgeslagen records
+    summary: '{before} → {after} DNS-lookups · {ip4} IPv4- en {ip6} IPv6-bereiken in {records} record(s)'
+    bytes: '{n} bytes'
+    zone: Zonebestand
+    staleTitle: Platgeslagen records verouderen
+    stale: De adressen zijn een momentopname van wat de providers nu publiceren. Wijzigt een provider zijn IP-bereiken, dan faalt SPF voor mail vanaf de nieuwe adressen tot je opnieuw platslaat. Voer dit regelmatig uit of automatiseer het, en bewaar het originele record ter referentie.
+    sources: Waar de adressen vandaan komen
+    kept: ongewijzigd
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

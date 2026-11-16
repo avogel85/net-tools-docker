@@ -6,6 +6,11 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
 
 ## [Unreleased]
 
+### Added
+- SPF flattener (Email): replaces include, a, mx and redirect with the IP ranges they resolve to,
+  merges adjacent ranges, keeps what cannot be flattened (exists, ptr, macros) and splits long
+  results over chained `_spfN` records. Shows the DNS lookups before and after and a zone file.
+
 ## [0.8.1] - 2026-11-15
 
 ### Added

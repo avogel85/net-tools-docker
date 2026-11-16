@@ -548,6 +548,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/email/spf-flatten": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Flatten an SPF record into ip4/ip6 terms (chained records when too long) */
+        get: operations["emailSpfFlatten"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/email/dmarc": {
         parameters: {
             query?: never;
@@ -2436,6 +2453,29 @@ export interface components {
             lookups: number;
             voidLookups: number;
             all: string;
+            problems: string[];
+            warnings: string[];
+        };
+        EmailSpfFlatten: {
+            domain: string;
+            original: string;
+            originalLookups: number;
+            /** @description DNS lookups a receiver spends on the flattened policy */
+            lookups: number;
+            records: {
+                name: string;
+                value: string;
+                length: number;
+            }[];
+            sources: {
+                term: string;
+                /** @description The term could not be resolved to addresses and stays as-is */
+                kept: boolean;
+                prefixes: string[];
+            }[];
+            ip4: number;
+            ip6: number;
+            queries: number;
             problems: string[];
             warnings: string[];
         };
@@ -4752,6 +4792,35 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["EmailSpf"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    emailSpfFlatten: {
+        parameters: {
+            query: {
+                domain: string;
+                /** @description First label of the chained records (<label>1.<domain>, …) */
+                label?: string;
+                /** @description Maximum length of one record in bytes */
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["EmailSpfFlatten"];
                     };
                 };
             };

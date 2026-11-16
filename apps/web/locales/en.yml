@@ -398,6 +398,16 @@ email:
     bad-key: The public key cannot be decoded.
     weak-key: The RSA key is shorter than 1024 bits and is ignored by receivers.
     short-key: The RSA key is shorter than the recommended 2048 bits.
+    flatten-query-limit: More than 100 DNS queries were needed; the result is incomplete.
+    too-many-mx: An mx mechanism points to more than 10 mail servers; only the first 10 were used.
+    too-many-prefixes: More than 2000 address ranges; the list was cut off.
+    record-too-long: A record is longer than the chosen maximum size.
+    include-non-pass: An included record contains a non-pass mechanism ("-", "~" or "?"); it is left out, so the flattened policy can allow slightly more.
+    macro-kept: A term with a macro (such as %{'{'}i{'}'}) cannot be flattened and is kept as-is.
+    exists-kept: An "exists" mechanism cannot be flattened and is kept as-is.
+    order-changed: Non-pass mechanisms ("-", "~" or "?") are placed before the addresses; check that the order still gives the result you want.
+    chain-name-in-use: A chained record name is already used by the current policy; choose another chain label.
+    chain-name-exists: A TXT record already exists at a chained record name; publishing replaces it (expected when you flatten again).
     testing: The key is in testing mode (t=y).
     no-id: The MTA-STS record has no id= tag.
     policy-unreachable: The policy file on the mta-sts subdomain cannot be fetched.
@@ -1394,6 +1404,23 @@ tools:
     ok: The SPF record is valid.
     lookups: '{n} of 10 DNS lookups used'
     tree: Expanded record
+  spf-flattener:
+    title: SPF flattener
+    description: Replace the includes, a and mx terms of an SPF record with the IP ranges they resolve to, to stay under the limit of 10 DNS lookups. Splits the result over chained records when it gets too long.
+    run: Flatten
+    ok: The SPF record was flattened without remarks.
+    label: Chain label
+    invalidLabel: Use letters, digits, - and _ (for example _spf), at most 30.
+    size: Maximum record size (bytes)
+    invalidSize: Enter a size between 100 and 2048.
+    records: Flattened records
+    summary: '{before} → {after} DNS lookups · {ip4} IPv4 and {ip6} IPv6 ranges in {records} record(s)'
+    bytes: '{n} bytes'
+    zone: Zone file
+    staleTitle: Flattened records go out of date
+    stale: The addresses are a snapshot of what the providers publish now. When a provider changes its IP ranges, mail from the new addresses fails SPF until you flatten again. Re-run this regularly or automate it, and keep the original record somewhere for reference.
+    sources: Where the addresses come from
+    kept: kept as-is
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

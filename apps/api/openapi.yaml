@@ -654,6 +654,35 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/EmailSpf" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/email/spf-flatten:
+    get:
+      operationId: emailSpfFlatten
+      summary: Flatten an SPF record into ip4/ip6 terms (chained records when too long)
+      tags: [email]
+      x-capability: email.spfflatten
+      parameters:
+        - { name: domain, in: query, required: true, schema: { type: string } }
+        - name: label
+          in: query
+          description: First label of the chained records (<label>1.<domain>, …)
+          schema: { type: string, default: _spf, maxLength: 30 }
+        - name: size
+          in: query
+          description: Maximum length of one record in bytes
+          schema: { type: integer, default: 450, minimum: 100, maximum: 2048 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/EmailSpfFlatten" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/email/dmarc:
     get:
       operationId: emailDmarc
@@ -2946,6 +2975,37 @@ components:
         lookups: { type: integer }
         voidLookups: { type: integer }
         all: { type: string }
+        problems: { type: array, items: { type: string } }
+        warnings: { type: array, items: { type: string } }
+    EmailSpfFlatten:
+      type: object
+      required: [domain, original, originalLookups, lookups, records, sources, ip4, ip6, queries, problems, warnings]
+      properties:
+        domain: { type: string }
+        original: { type: string }
+        originalLookups: { type: integer }
+        lookups: { type: integer, description: DNS lookups a receiver spends on the flattened policy }
+        records:
+          type: array
+          items:
+            type: object
+            required: [name, value, length]
+            properties:
+              name: { type: string }
+              value: { type: string }
+              length: { type: integer }
+        sources:
+          type: array
+          items:
+            type: object
+            required: [term, kept, prefixes]
+            properties:
+              term: { type: string }
+              kept: { type: boolean, description: The term could not be resolved to addresses and stays as-is }
+              prefixes: { type: array, items: { type: string } }
+        ip4: { type: integer }
+        ip6: { type: integer }
+        queries: { type: integer }
         problems: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
     DmarcReportUri:

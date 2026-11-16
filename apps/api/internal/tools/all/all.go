@@ -99,6 +99,7 @@ func Tools() []tools.Tool {
 		&email.BannerTool{},
 		&email.RelayTool{},
 		&email.SPFTool{},
+		&email.SPFFlattenTool{},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},

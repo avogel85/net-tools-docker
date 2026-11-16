@@ -156,6 +156,7 @@ The backlog of every tool. Claude Code updates the **Status** column (`⬜` todo
 | EM-11 | TLS-RPT report viewer | RFC 8460 reports (JSON / gzip): success rate, failures by type and MX | B | `fflate` | — | 7 | ✅ |
 | EM-12 | Email deliverability report | MX/STARTTLS, SPF, DKIM, DMARC, MTA-STS, TLS-RPT, BIMI, DANE, FCrDNS — graded | S | composed from email tools | — | 7 | ✅ |
 | EM-13 | Microsoft 365 domain check | Records Microsoft 365 needs (MX, SPF, MS= verification, Autodiscover, DKIM selector1/2, DMARC, Intune, Teams/SIP) vs what DNS returns; tenant ID, region, managed or federated sign-in | S+P | `miekg/dns` lookups | Microsoft Entra OpenID discovery + `getuserrealm.srf` (keyless) | 8 | ✅ |
+| EM-14 | SPF flattener | Replace include/a/mx/redirect with the ip4/ip6 ranges they resolve to (aggregated), keep exists/ptr/macros, split over chained `<label>N.<domain>` records above a size limit; lookups before/after, zone-file output | S | custom on `miekg/dns` | — | 9 | ✅ |
 
 ## 7. Routing, BGP & Registry
 
