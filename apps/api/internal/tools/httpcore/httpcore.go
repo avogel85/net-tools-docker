@@ -80,6 +80,8 @@ type Hop struct {
 	// Error is set when this hop could not be fetched (e.g. a redirect to a denied address).
 	Error     string `json:"error"`
 	ErrorCode string `json:"errorCode"`
+	// Raw is the body when Request.KeepRaw is set; never serialized.
+	Raw []byte `json:"-"`
 }
 
 // Request describes what to fetch.
@@ -94,6 +96,8 @@ type Request struct {
 	MaxBody int64
 	// PreviewBytes bounds the body text returned (0 = no body in the result).
 	PreviewBytes int
+	// KeepRaw keeps the (MaxBody-bounded) body bytes in Hop.Raw, for binary content.
+	KeepRaw bool
 	// Insecure skips certificate verification (the verify result is still reported).
 	Insecure  bool
 	UserAgent string
@@ -234,6 +238,9 @@ func (c *Client) one(ctx context.Context, u *url.URL, method, body string, req R
 			preview, hop.BodyTruncated = preview[:req.PreviewBytes], true
 		}
 		hop.BodyPreview = string(bytes.ToValidUTF8(preview, []byte("�")))
+	}
+	if req.KeepRaw {
+		hop.Raw = data
 	}
 	for name, values := range resp.Header {
 		for _, v := range values {

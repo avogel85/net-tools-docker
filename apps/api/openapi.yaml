@@ -2440,6 +2440,27 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/CacheResult" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/http/social:
+    get:
+      operationId: httpSocial
+      summary: Open Graph / Twitter card preview, favicon, manifest and missing-tag warnings
+      tags: [web]
+      x-capability: web.social
+      parameters:
+        - { name: url, in: query, required: true, schema: { type: string, maxLength: 2048 } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/HttpSocial" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/http/mixed-content:
     get:
       operationId: httpMixedContent
@@ -3547,6 +3568,42 @@ components:
         httpResult: { type: string }
         challengeCname: { type: string }
         challengeTxt: { type: array, items: { type: string } }
+        problems: { type: array, items: { type: string } }
+        warnings: { type: array, items: { type: string } }
+    HttpSocial:
+      type: object
+      required: [url, status, title, description, canonical, themeColor, manifest, og, twitter, icons, problems, warnings]
+      properties:
+        url: { type: string }
+        status: { type: integer }
+        title: { type: string }
+        description: { type: string }
+        canonical: { type: string }
+        themeColor: { type: string }
+        manifest: { type: string }
+        og: { type: object, additionalProperties: { type: string } }
+        twitter: { type: object, additionalProperties: { type: string } }
+        icons:
+          type: array
+          items:
+            type: object
+            required: [rel, href, sizes]
+            properties:
+              rel: { type: string }
+              href: { type: string }
+              sizes: { type: string }
+        image:
+          type: object
+          required: [url, status, contentType, bytes, width, height, dataUri, error]
+          properties:
+            url: { type: string }
+            status: { type: integer }
+            contentType: { type: string }
+            bytes: { type: integer }
+            width: { type: integer }
+            height: { type: integer }
+            dataUri: { type: string }
+            error: { type: string }
         problems: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
     DcLocator:

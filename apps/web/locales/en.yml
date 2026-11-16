@@ -1782,6 +1782,39 @@ tools:
       haproxy: HAProxy
     download: Download {file}
     hint: Review before use — certificate paths, entry point names (Traefik) and the certbot setup (nginx, HAProxy) depend on your installation. Caddy obtains certificates and redirects to HTTPS by itself.
+  social-preview:
+    title: Social preview checker
+    description: See how a link looks when shared on LinkedIn, Facebook, X, Slack or Teams — Open Graph and Twitter card tags, the preview image, favicon and manifest — and what is missing.
+    url: Page URL
+    run: Check preview
+    ok: All the tags social networks use are present.
+    preview: Preview
+    large: Large image card (LinkedIn, Facebook, Slack)
+    summary: Summary card (X with twitter:card summary)
+    noImage: No preview image
+    disclaimer: An approximation — each network crops, shortens and caches previews in its own way. After changing tags, use the network's own debugger to refresh its cache.
+    details: Tags
+    image: Preview image
+    imageFailed: Could not be fetched
+    canonical: Canonical URL
+    icons: Icons
+    manifest: Web app manifest
+    findings:
+      missing-title: The page has no title at all.
+      missing-og-title: No og:title — networks fall back to the HTML title.
+      missing-description: No description (og:description or meta description).
+      missing-og-description: No og:description — networks fall back to the meta description.
+      missing-og-image: No og:image — shared links get no picture, or a random one from the page.
+      image-relative: og:image is not an absolute URL; several networks ignore relative image URLs.
+      image-http: og:image uses http://; some networks only load https images.
+      image-unreachable: The preview image cannot be fetched.
+      image-not-image: The og:image URL does not return an image.
+      image-large: The preview image is larger than 5 MB; most networks refuse it.
+      image-small: The preview image is smaller than 200×200 pixels; networks show it small or not at all (1200×630 is recommended).
+      missing-twitter-card: No twitter:card — X falls back to Open Graph, usually as a summary card.
+      title-long: The title is longer than 70 characters and will be cut off.
+      description-long: The description is longer than 200 characters and will be cut off.
+      missing-favicon: No favicon is declared (link rel="icon").
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

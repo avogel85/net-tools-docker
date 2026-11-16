@@ -2022,6 +2022,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/http/social": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Open Graph / Twitter card preview, favicon, manifest and missing-tag warnings */
+        get: operations["httpSocial"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/http/mixed-content": {
         parameters: {
             query?: never;
@@ -2880,6 +2897,38 @@ export interface components {
             httpResult: string;
             challengeCname: string;
             challengeTxt: string[];
+            problems: string[];
+            warnings: string[];
+        };
+        HttpSocial: {
+            url: string;
+            status: number;
+            title: string;
+            description: string;
+            canonical: string;
+            themeColor: string;
+            manifest: string;
+            og: {
+                [key: string]: string;
+            };
+            twitter: {
+                [key: string]: string;
+            };
+            icons: {
+                rel: string;
+                href: string;
+                sizes: string;
+            }[];
+            image?: {
+                url: string;
+                status: number;
+                contentType: string;
+                bytes: number;
+                width: number;
+                height: number;
+                dataUri: string;
+                error: string;
+            };
             problems: string[];
             warnings: string[];
         };
@@ -7490,6 +7539,31 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["CacheResult"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    httpSocial: {
+        parameters: {
+            query: {
+                url: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["HttpSocial"];
                     };
                 };
             };

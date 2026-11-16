@@ -1782,6 +1782,39 @@ tools:
       haproxy: HAProxy
     download: '{file} downloaden'
     hint: Controleer voor gebruik — certificaatpaden, entry-pointnamen (Traefik) en de certbot-opzet (nginx, HAProxy) hangen af van je installatie. Caddy haalt zelf certificaten op en stuurt zelf door naar HTTPS.
+  social-preview:
+    title: Controle sociale preview
+    description: Zie hoe een link eruitziet als hij wordt gedeeld op LinkedIn, Facebook, X, Slack of Teams — Open Graph- en Twitter-cardtags, de previewafbeelding, favicon en manifest — en wat er ontbreekt.
+    url: Pagina-URL
+    run: Preview controleren
+    ok: Alle tags die sociale netwerken gebruiken zijn aanwezig.
+    preview: Preview
+    large: Kaart met grote afbeelding (LinkedIn, Facebook, Slack)
+    summary: Samenvattingskaart (X met twitter:card summary)
+    noImage: Geen previewafbeelding
+    disclaimer: Een benadering — elk netwerk snijdt bij, kort in en cachet previews op zijn eigen manier. Gebruik na het wijzigen van tags de debugger van het netwerk om de cache te verversen.
+    details: Tags
+    image: Previewafbeelding
+    imageFailed: Kon niet worden opgehaald
+    canonical: Canonieke URL
+    icons: Pictogrammen
+    manifest: Web-app-manifest
+    findings:
+      missing-title: De pagina heeft helemaal geen titel.
+      missing-og-title: Geen og:title — netwerken gebruiken dan de HTML-titel.
+      missing-description: Geen beschrijving (og:description of meta description).
+      missing-og-description: Geen og:description — netwerken gebruiken dan de meta description.
+      missing-og-image: Geen og:image — gedeelde links krijgen geen afbeelding, of een willekeurige van de pagina.
+      image-relative: og:image is geen absolute URL; diverse netwerken negeren relatieve afbeeldings-URL's.
+      image-http: og:image gebruikt http://; sommige netwerken laden alleen https-afbeeldingen.
+      image-unreachable: De previewafbeelding kan niet worden opgehaald.
+      image-not-image: De og:image-URL levert geen afbeelding op.
+      image-large: De previewafbeelding is groter dan 5 MB; de meeste netwerken weigeren hem.
+      image-small: De previewafbeelding is kleiner dan 200×200 pixels; netwerken tonen hem klein of helemaal niet (1200×630 wordt aanbevolen).
+      missing-twitter-card: Geen twitter:card — X valt terug op Open Graph, meestal als samenvattingskaart.
+      title-long: De titel is langer dan 70 tekens en wordt afgekapt.
+      description-long: De beschrijving is langer dan 200 tekens en wordt afgekapt.
+      missing-favicon: Er is geen favicon opgegeven (link rel="icon").
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
