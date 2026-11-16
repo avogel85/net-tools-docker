@@ -265,7 +265,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | CAL-20 | DSCP / ToS / CoS converter | DSCP ↔ ToS ↔ precedence ↔ 802.1p, RFC 4594 classes, marking snippets | B | custom | — | 7 | ✅ |
 | CAL-21 | Network config diff | Section-aware, order-insensitive diff for IOS/EOS/NX-OS and Junos, secrets masked | B | custom | — | 7 | ✅ |
 | CAL-22 | ACL / firewall rule analyzer | Shadowed / redundant / wide rules in IOS and ASA ACLs, packet tracer | B | custom | — | 7 | ✅ |
-| CAL-23 | Fiber loss budget | Link budget from fiber type and length, connectors, splices and transceiver power/sensitivity | B | custom | — | 13 | ⬜ |
+| CAL-23 | Fiber loss budget | Link budget from fiber type and length, connectors, splices and transceiver power/sensitivity | B | custom | — | 13 | ✅ |
 | CAL-24 | Wi-Fi throughput estimator | MCS index table and realistic throughput per standard (802.11n/ac/ax/be), channel width, streams and guard interval | B | custom | — | 13 | ⬜ |
 | CAL-25 | Wi-Fi channel planner | 2.4/5/6 GHz channel map per region with DFS, overlap and non-overlapping plans for several APs | B | custom | — | 13 | ⬜ |
 | CAL-26 | Cabling & transceiver reference | Copper categories, fiber types and SFP/QSFP standards with speeds, reach and connectors | B | static data | — | 13 | ⬜ |

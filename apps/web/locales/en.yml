@@ -1951,6 +1951,48 @@ tools:
       access-log: Access log
       json: JSON
       unknown: Not recognised
+  fiber-budget:
+    title: Fiber loss budget
+    description: Check whether a fiber link works before you install it — cable, connector and splice loss against the power budget of the optics, with a safety margin and receiver overload check.
+    optic: Optic (transceiver)
+    custom: Custom values
+    fiber: Fiber and wavelength
+    fibers:
+      os2-1310: 'Single-mode OS2, 1310 nm ({db} dB/km)'
+      os2-1550: 'Single-mode OS2, 1550 nm ({db} dB/km)'
+      om2-850: 'Multimode OM2, 850 nm ({db} dB/km)'
+      om3-850: 'Multimode OM3, 850 nm ({db} dB/km)'
+      om4-850: 'Multimode OM4, 850 nm ({db} dB/km)'
+      om5-850: 'Multimode OM5, 850 nm ({db} dB/km)'
+    fields:
+      length: Length (m)
+      connectors: Connector pairs
+      connectorDb: Loss per connector (dB)
+      splices: Splices
+      spliceDb: Loss per splice (dB)
+      margin: Safety margin (dB)
+      tx: Transmit power, min. (dBm)
+      rx: Receiver sensitivity (dBm)
+      overload: Receiver overload (dBm)
+    hint: Optic values are typical datasheet figures; use your transceiver's datasheet. Count every mated connector pair, including patch panels. A margin of 3 dB covers ageing, repairs and dirty connectors.
+    verdict:
+      ok: The link fits the power budget with margin to spare.
+      tight: The link works on paper, but with less margin than you asked for.
+      fail: The losses exceed the power budget — the link will not work.
+    warnings:
+      reach: The length exceeds the standard reach of this optic on this fiber (dispersion or modal bandwidth limit), even if the power budget fits.
+      mode-mismatch: This optic is for a different fiber type (single-mode vs multimode).
+      wavelength: This optic does not use this wavelength.
+      overload: The received power is above the receiver's overload level — add an attenuator.
+      connector-high: More than 0.75 dB per connector is above the TIA-568 maximum; clean or replace connectors.
+    rows:
+      fiberLoss: Fiber loss
+      connectorLoss: Connector loss
+      spliceLoss: Splice loss
+      totalLoss: Total link loss
+      powerBudget: Power budget (Tx − Rx sensitivity)
+      margin: Remaining margin
+      rxPower: Expected received power
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

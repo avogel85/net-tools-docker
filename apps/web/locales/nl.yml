@@ -1951,6 +1951,48 @@ tools:
       access-log: Accesslog
       json: JSON
       unknown: Niet herkend
+  fiber-budget:
+    title: Glasvezel-verliesbudget
+    description: Controleer of een glasvezelverbinding werkt voordat je hem aanlegt — kabel-, connector- en lasverlies tegen het vermogensbudget van de optics, met een veiligheidsmarge en een controle op overbelasting van de ontvanger.
+    optic: Optic (transceiver)
+    custom: Eigen waarden
+    fiber: Vezel en golflengte
+    fibers:
+      os2-1310: 'Singlemode OS2, 1310 nm ({db} dB/km)'
+      os2-1550: 'Singlemode OS2, 1550 nm ({db} dB/km)'
+      om2-850: 'Multimode OM2, 850 nm ({db} dB/km)'
+      om3-850: 'Multimode OM3, 850 nm ({db} dB/km)'
+      om4-850: 'Multimode OM4, 850 nm ({db} dB/km)'
+      om5-850: 'Multimode OM5, 850 nm ({db} dB/km)'
+    fields:
+      length: Lengte (m)
+      connectors: Connectorparen
+      connectorDb: Verlies per connector (dB)
+      splices: Lassen
+      spliceDb: Verlies per las (dB)
+      margin: Veiligheidsmarge (dB)
+      tx: Zendvermogen, min. (dBm)
+      rx: Ontvangergevoeligheid (dBm)
+      overload: Overbelasting ontvanger (dBm)
+    hint: Optic-waarden zijn typische datasheetwaarden; gebruik de datasheet van je transceiver. Tel elk gekoppeld connectorpaar mee, ook patchpanelen. Een marge van 3 dB dekt veroudering, reparaties en vuile connectoren.
+    verdict:
+      ok: De verbinding past binnen het vermogensbudget, met marge over.
+      tight: De verbinding werkt op papier, maar met minder marge dan gevraagd.
+      fail: Het verlies is groter dan het vermogensbudget — de verbinding werkt niet.
+    warnings:
+      reach: De lengte overschrijdt het standaardbereik van deze optic op deze vezel (dispersie- of modale-bandbreedtelimiet), ook als het vermogensbudget past.
+      mode-mismatch: Deze optic is voor een ander vezeltype (singlemode vs multimode).
+      wavelength: Deze optic gebruikt deze golflengte niet.
+      overload: Het ontvangen vermogen ligt boven het overbelastingsniveau van de ontvanger — plaats een verzwakker.
+      connector-high: Meer dan 0,75 dB per connector is boven het TIA-568-maximum; reinig of vervang connectoren.
+    rows:
+      fiberLoss: Vezelverlies
+      connectorLoss: Connectorverlies
+      spliceLoss: Lasverlies
+      totalLoss: Totaal linkverlies
+      powerBudget: Vermogensbudget (Tx − Rx-gevoeligheid)
+      margin: Resterende marge
+      rxPower: Verwacht ontvangen vermogen
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
