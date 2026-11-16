@@ -2104,6 +2104,49 @@ tools:
       rpki-unknown: Geen ROA dekt deze prefix; maak er een zodat anderen kapingen kunnen weigeren.
       error: De controle is mislukt; probeer het later opnieuw.
     hint: De lijst blijft in deze browser — er is geen bewaking of melding vanaf de server. Data komt van RIPE RIS en RIPEstat; per bezoek worden maar een paar prefixen gecontroleerd.
+  roa-aspa-helper:
+    title: ROA- en ASPA-hulp
+    description: Zet wat een AS vandaag aankondigt om in minimale ROA's (toevoegen, aanscherpen, opruimen) voor Krill of je RIR-portaal, en bouw ASPA-records en test hoe ze AS-paden beoordelen.
+    roaTitle: ROA-plan
+    run: Plan maken
+    plan: 'Wijzigingen voor {asn} {name}'
+    nothing: Niets te wijzigen — elke aangekondigde prefix heeft een minimale, gebruikte ROA.
+    cols:
+      action: Actie
+      why: Waarom
+    actions:
+      add: Aanmaken
+      remove: Verwijderen
+    why:
+      not-found: De prefix wordt zonder ROA aangekondigd.
+      invalid-length: Langer aangekondigd dan de ROA toestaat; maak een ROA voor deze lengte (of stop met aankondigen).
+      invalid-asn: Een ROA voor een ander AS dekt hem; maak er alleen een als dit AS hem hoort aan te kondigen.
+      loose: De dekkende ROA staat lengtes toe die niemand aankondigt (RFC 9319); vervang hem door exacte ROA's.
+      unused: Niets kondigt deze ROA aan — verwijder hem, tenzij hij voor geplande of back-upaankondigingen is (in Krill uitgecommentarieerd).
+    roaHint: Elke ROA krijgt een maxLength gelijk aan de aangekondigde lengte, wat subprefix-kapingen met een vervalste origin tegenhoudt. Controleer voor je het toepast; het plan ziet alleen wat RIPE RIS ziet.
+    aspaTitle: ASPA-bouwer en padcontrole
+    records: ASPA-records (klant-AS, dan zijn providers; AS0 = geen providers)
+    invalidRecords: 'Niet begrepen: {list}'
+    path: AS-pad (zoals ontvangen; buur eerst, origin laatst)
+    invalidPath: Voer AS-nummers in, gescheiden door spaties.
+    direction: Ontvangen van
+    dirs:
+      upstream: Klant / peer
+      downstream: Provider
+    verdicts:
+      valid: Geldig
+      invalid: Ongeldig
+      unknown: Onbekend
+    hops:
+      provider: provider (bevestigd)
+      not-provider: GEEN provider (bevestigd)
+      no-attestation: geen ASPA voor de klant
+    explain:
+      valid: Elke hop klopt met de ASPA-records, dus het pad is een geldige up-ramp (en down-ramp).
+      invalid: De records bewijzen een hop die in een valley-free pad niet kan — een route leak of vervalst pad. Routers die ASPA controleren gooien hem weg.
+      unknown: Sommige AS'en op het pad hebben geen ASPA, dus het pad is niet te bewijzen of uit te sluiten; het wordt geaccepteerd.
+    publish: Publiceren met Krill
+    aspaHint: Zet elke provider (transit en upstreams) in je ASPA, ook die alleen IPv6 doen — een ontbrekende provider maakt je eigen routes ongeldig bij netwerken die controleren. Deze controle gebruikt alleen de records die je hier invoert.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

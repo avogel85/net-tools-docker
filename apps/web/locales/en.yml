@@ -2104,6 +2104,49 @@ tools:
       rpki-unknown: No ROA covers this prefix; create one so others can reject hijacks.
       error: The check failed; try again later.
     hint: The list stays in this browser — there is no server-side monitoring or alerting. Data comes from RIPE RIS and RIPEstat; checks are limited to a few prefixes per visit.
+  roa-aspa-helper:
+    title: ROA & ASPA helper
+    description: Turn what an AS announces today into minimal ROAs (add, tighten, clean up) for Krill or your RIR portal, and build ASPA records and test how they classify AS paths.
+    roaTitle: ROA plan
+    run: Build plan
+    plan: 'Changes for {asn} {name}'
+    nothing: Nothing to change — every announced prefix has a minimal, used ROA.
+    cols:
+      action: Action
+      why: Why
+    actions:
+      add: Create
+      remove: Remove
+    why:
+      not-found: The prefix is announced without a ROA.
+      invalid-length: Announced longer than the ROA allows; add a ROA for this length (or stop announcing it).
+      invalid-asn: A ROA for another AS covers it; add one only if this AS should originate it.
+      loose: The covering ROA allows lengths nobody announces (RFC 9319); replace it with exact ROAs.
+      unused: Nothing announces this ROA — remove it unless it is for planned or backup announcements (commented out in Krill).
+    roaHint: Each ROA gets a maxLength equal to the announced length, which stops forged-origin sub-prefix hijacks. Review before applying; the plan only sees what RIPE RIS sees.
+    aspaTitle: ASPA builder and path check
+    records: ASPA records (customer AS, then its providers; AS0 = no providers)
+    invalidRecords: 'Not understood: {list}'
+    path: AS path (as received; neighbour first, origin last)
+    invalidPath: Enter AS numbers separated by spaces.
+    direction: Received from
+    dirs:
+      upstream: Customer / peer
+      downstream: Provider
+    verdicts:
+      valid: Valid
+      invalid: Invalid
+      unknown: Unknown
+    hops:
+      provider: provider (attested)
+      not-provider: NOT a provider (attested)
+      no-attestation: no ASPA for the customer
+    explain:
+      valid: Every hop is consistent with the ASPA records, so the path is a valid up-ramp (and down-ramp).
+      invalid: The records prove a hop that cannot happen in a valley-free path — a route leak or forged path. Routers doing ASPA verification drop it.
+      unknown: Some ASes on the path have no ASPA, so the path can neither be proven nor ruled out; it is accepted.
+    publish: Publish with Krill
+    aspaHint: List every provider (transit and route-server-free upstreams) in your ASPA, including IPv6-only ones — a missing provider makes your own routes invalid at networks that verify. This check uses only the records you enter here.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

@@ -212,7 +212,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | BGP-18 | BGP community decoder | Standard / large / extended communities, well-known values, route-server conventions, hex | B | custom | — | 7 | ✅ |
 | BGP-19 | Prefix-list generator | AS or AS-SET to Cisco IOS/XR, Juniper, MikroTik, BIRD and FRR prefix-lists (bgpq4-style) | S | BGP-10 expansion + templates | — | 13 | ✅ |
 | BGP-20 | Prefix watch | Watchlist of own prefixes kept in the browser; shows unexpected origins, more-specifics and RPKI invalids when opened | S+P | BGP-03/04 endpoints | RIPEstat (keyless) | 13 | ✅ |
-| BGP-21 | ROA / ASPA helper | Suggest ROAs (with max-length) from what an AS announces now; show ASPA records and their effect | S+P | — | RIPEstat, RPKI validator (keyless) | 13 | ⬜ |
+| BGP-21 | ROA / ASPA helper | Suggest ROAs (with max-length) from what an AS announces now; show ASPA records and their effect | S+P | — | RIPEstat, RPKI validator (keyless) | 13 | ✅ |
 
 ## 8. Reputation & Geolocation
 

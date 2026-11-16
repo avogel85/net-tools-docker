@@ -161,6 +161,7 @@ import { tool as reverseDnsName } from './reverse-dns-name'
 import { tool as reverseProxyConfig } from './reverse-proxy-config'
 import { tool as reverseTraceroute } from './reverse-traceroute'
 import { tool as revocationCheck } from './revocation-check'
+import { tool as roaAspaHelper } from './roa-aspa-helper'
 import { tool as roaCoverage } from './roa-coverage'
 import { tool as routerSnippets } from './router-snippets'
 import { tool as rpkiValidator } from './rpki-validator'
@@ -222,7 +223,7 @@ const categories: { id: string, components: Tool[] }[] = [
   { id: 'web', components: [urlParser, userAgentParser, httpStatusCodes, httpRequest, redirectTracer, httpTiming, securityHeaders, corsTester, hstsPreload, compressionCheck, cookieInspector, wellKnownFiles, httpProtocols, curlBuilder, websocketTester, cdnWafDetector, cacheHeaderAnalyzer, mixedContentChecker, cspBuilder, domainScorecard, reverseProxyConfig, socialPreview, originCompare, brokenLinks, webhookInspector] },
   { id: 'tls', components: [certificateDecoder, tlsInspector, tlsExpiry, csrTool, certKeyMatcher, ctSearch, starttlsCheck, revocationCheck, tlsScanner, sshAudit, sshKeyTool, keyConverter, daneChecker, certChainValidator, pkcs12Inspector, labCaGenerator, acmeCheck, pqTlsCheck, expiryWatchlist] },
   { id: 'email', components: [mxLookup, spfChecker, spfFlattener, dmarcChecker, dmarcGenerator, dkimChecker, dkimGenerator, dkimVerifier, emailHeaderAnalyzer, blacklistCheck, mtaStsChecker, mtaStsGenerator, openRelayTest, dmarcReportViewer, smtpBannerCheck, tlsRptViewer, emailDeliverabilityReport, m365DomainCheck, emailProviderDetector, emailValidator] },
-  { id: 'bgp', components: [ipToAsn, whoisLookup, rdapLookup, domainExpiry, asnInfo, prefixStatus, rpkiValidator, lookingGlass, peeringdbLookup, cloudIpLookup, irrExpansion, asPathVisualizer, bgpRouteHistory, asnNeighbourGraph, commonIxps, roaCoverage, prefixListTester, bgpCommunityDecoder, prefixListGenerator, prefixWatch] },
+  { id: 'bgp', components: [ipToAsn, whoisLookup, rdapLookup, domainExpiry, asnInfo, prefixStatus, rpkiValidator, lookingGlass, peeringdbLookup, cloudIpLookup, irrExpansion, asPathVisualizer, bgpRouteHistory, asnNeighbourGraph, commonIxps, roaCoverage, prefixListTester, bgpCommunityDecoder, prefixListGenerator, prefixWatch, roaAspaHelper] },
   { id: 'reputation', components: [ipGeolocation, passiveExposure, ipReputation, torExitCheck, urlReputation] },
   { id: 'lan', components: [wakeOnLan, arpScan, mdnsBrowser, ssdpDiscovery, dhcpProbe, gatewayInfo, lldpNeighbors, ipv6Neighbors, dhcpv6Probe, radiusTester] },
   { id: 'calculators', components: [bandwidthCalculator, dataUnitConverter, bdpCalculator, mtuCalculator, portReference, protocolReference, dnsRecordTypes, subnetCheatSheet, wifiQrGenerator, opticalPower, wireguardConfig, routerSnippets, slaCalculator, voipBandwidthCalculator, packetDecoder, pcapViewer, poeBudgetCalculator, natCapacityCalculator, wirelessLinkCalculator, dscpConverter, configDiff, aclAnalyzer, firewallObjects, captureFilter, logParser, fiberBudget, wifiThroughput, wifiChannels, cablingReference] },
