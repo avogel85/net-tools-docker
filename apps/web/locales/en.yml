@@ -2437,6 +2437,25 @@ tools:
     savedHint: Snapshots are kept in this browser only (at most 30). Export one to keep it elsewhere or to compare on another device.
     export: Export
     delete: Delete
+  takeover-check:
+    title: Subdomain takeover check
+    description: Find subdomains whose CNAME points to a deleted cloud resource or an unclaimed page at a hosting service — names someone else could take over.
+    names: Names to check (optional)
+    hint: Leave empty to check about 35 common names (www, blog, shop, dev, …). Only check domains you manage. Services are matched against a public list of known takeover fingerprints; a match is a strong hint, not proof.
+    run: Check for takeovers
+    vulnerable: '{n} name(s) can probably be taken over. Remove the CNAME or claim the resource at the provider.'
+    dangling: '{n} CNAME(s) point to names that no longer exist. Remove them, even if the service is not known to allow takeovers.'
+    clean: No dangling or unclaimed CNAMEs among {n} existing name(s).
+    showMissing: Show names that do not exist
+    httpSkipped: The HTTP check was skipped (more than 20 candidates).
+    via: Checked via {resolver}.
+    status:
+      vulnerable: Takeover possible
+      dangling: Dangling
+      error: Lookup failed
+      ok: OK
+      no-cname: No CNAME
+      nxdomain: Does not exist
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.

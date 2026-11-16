@@ -1298,6 +1298,32 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/DcLocator" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/dns/takeover:
+    get:
+      operationId: dnsTakeover
+      summary: Subdomain takeover check (dangling CNAMEs and unclaimed hosting fingerprints)
+      tags: [dns]
+      x-capability: dns.takeover
+      parameters:
+        - { name: domain, in: query, required: true, schema: { type: string } }
+        - name: names
+          in: query
+          description: Up to 50 names or labels (comma or newline separated); empty checks a list of common names
+          schema: { type: string, maxLength: 8192 }
+        - { name: resolver, in: query, schema: { type: string, default: system } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/DnsTakeover" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/dns/dnssec:
     get:
       operationId: dnssecValidate
@@ -3050,6 +3076,24 @@ components:
         all: { type: string }
         problems: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
+    DnsTakeover:
+      type: object
+      required: [domain, resolver, common, checks]
+      properties:
+        domain: { type: string }
+        resolver: { type: string }
+        common: { type: boolean }
+        checks:
+          type: array
+          items:
+            type: object
+            required: [name, chain, status, service, evidence]
+            properties:
+              name: { type: string }
+              chain: { type: array, items: { type: string } }
+              status: { type: string, enum: [vulnerable, dangling, ok, no-cname, nxdomain, error] }
+              service: { type: string }
+              evidence: { type: string }
     DcLocator:
       type: object
       required: [domain, site, resolver, lookups, dcs, problems, warnings]

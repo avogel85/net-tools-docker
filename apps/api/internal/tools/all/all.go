@@ -53,6 +53,7 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/sshaudit"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/status"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/svcb"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/takeover"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/tcping"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/tlsinspect"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/tlsscan"
@@ -104,6 +105,7 @@ func Tools() []tools.Tool {
 		&email.ProviderTool{},
 		&email.ValidateTool{},
 		&dclocator.Tool{},
+		&takeover.Tool{},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},

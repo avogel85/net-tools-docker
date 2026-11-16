@@ -2437,6 +2437,25 @@ tools:
     savedHint: Snapshots worden alleen in deze browser bewaard (maximaal 30). Exporteer er een om hem elders te bewaren of op een ander apparaat te vergelijken.
     export: Exporteren
     delete: Verwijderen
+  takeover-check:
+    title: Subdomain-takeovercontrole
+    description: Vind subdomeinen waarvan de CNAME naar een verwijderde cloudresource of een niet-geclaimde pagina bij een hostingdienst wijst — namen die iemand anders kan overnemen.
+    names: Te controleren namen (optioneel)
+    hint: Laat leeg om ongeveer 35 gangbare namen te controleren (www, blog, shop, dev, …). Controleer alleen domeinen die je beheert. Diensten worden vergeleken met een openbare lijst van bekende takeover-kenmerken; een treffer is een sterke aanwijzing, geen bewijs.
+    run: Controleren op takeovers
+    vulnerable: '{n} naam/namen kan/kunnen waarschijnlijk worden overgenomen. Verwijder de CNAME of claim de resource bij de provider.'
+    dangling: '{n} CNAME(s) wijzen naar namen die niet meer bestaan. Verwijder ze, ook als niet bekend is dat de dienst takeovers toelaat.'
+    clean: Geen loshangende of niet-geclaimde CNAME's onder {n} bestaande naam/namen.
+    showMissing: Namen tonen die niet bestaan
+    httpSkipped: De HTTP-controle is overgeslagen (meer dan 20 kandidaten).
+    via: Gecontroleerd via {resolver}.
+    status:
+      vulnerable: Takeover mogelijk
+      dangling: Loshangend
+      error: Lookup mislukt
+      ok: OK
+      no-cname: Geen CNAME
+      nxdomain: Bestaat niet
   dnssec-validator:
     title: DNSSEC-validator
     description: Valideer de DNSSEC-vertrouwensketen van de root tot een naam, en zie precies waar die breekt — ontbrekende DS, niet-passende sleutels, verlopen of ongeldige handtekeningen.

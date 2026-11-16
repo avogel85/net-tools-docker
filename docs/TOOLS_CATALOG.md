@@ -78,7 +78,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | DNS-24 | nsupdate / TSIG builder | Build `nsupdate` scripts (add/delete/replace) and generate TSIG keys in BIND, Knot and PowerDNS formats | B | custom | — | 9 | ✅ |
 | DNS-25 | Zone file linter | Parse a pasted BIND zone: CNAME conflicts, missing glue, out-of-zone data, TTL and SOA sanity, duplicate records | B | custom parser | — | 9 | ✅ |
 | DNS-26 | DNS snapshot & diff | Save the common records of a domain in the browser and diff a later snapshot against it (migrations) | S | `/dns/lookup` per type; snapshots in browser storage | — | 10 | ✅ |
-| DNS-27 | Subdomain takeover check | Flag CNAMEs (of given names or common ones) that point to unclaimed SaaS endpoints (S3, Azure, Heroku, GitHub Pages…) | S | `miekg/dns` + fingerprint list | — | 10 | ⬜ |
+| DNS-27 | Subdomain takeover check | Flag CNAMEs (of given names or common ones) that point to unclaimed SaaS endpoints (S3, Azure, Heroku, GitHub Pages…) | S | `miekg/dns` + fingerprint list | — | 10 | ✅ |
 | DNS-28 | Lookalike domain finder | Typo, homoglyph, bit-flip and TLD variants of a domain and whether they resolve or have MX (defensive) | S | custom generator + `miekg/dns`, capped | — | 10 | ⬜ |
 | DNS-29 | AD / Kerberos DC locator | Check the SRV records Active Directory needs (`_ldap._tcp.dc._msdcs`, `_kerberos`, `_gc`, `_kpasswd`) and their targets | S | `miekg/dns` | — | 10 | ✅ |
 

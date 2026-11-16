@@ -89,6 +89,7 @@ Fixed limits for tools that follow data from third parties (not configurable):
 | AD DC locator (DNS-29) | 14 SRV queries, at most 20 targets resolved (A + AAAA), custom resolver through the target policy; 30 s timeout |
 | Email provider detector (EM-20) | 19 DNS queries (MX, TXT, `_dmarc`, 16 DKIM selectors) through the system resolver; no connections to the providers; 30 s timeout |
 | Email address validator (EM-19) | 50 addresses, 25 distinct domains (MX, then A + AAAA when there is no MX); no SMTP connection and no mail sent; addresses are not logged; 30 s timeout |
+| Subdomain takeover check (DNS-27) | Heavy class; 50 names, 8 CNAME hops each, 5 names at a time; HTTP fingerprint fetch only for known services, at most 20 per request, through the target policy, 64 KB body, 8 s each, 3 redirects; 60 s timeout |
 | DMARC (EM-03) | 10 report URIs per tag checked for external authorization |
 | MX / SMTP (EM-01) | 10 MX hosts, 64 KiB and 100 lines per reply read before STARTTLS, 15 s per probe |
 | IRR expansion (BGP-10) | `bgpq4` via execx against the fixed default IRR host (rr.ntt.net); sources from an allow-list; 30 s, 1 MiB output |

@@ -1067,6 +1067,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/dns/takeover": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Subdomain takeover check (dangling CNAMEs and unclaimed hosting fingerprints) */
+        get: operations["dnsTakeover"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/dns/dnssec": {
         parameters: {
             query?: never;
@@ -2509,6 +2526,19 @@ export interface components {
             all: string;
             problems: string[];
             warnings: string[];
+        };
+        DnsTakeover: {
+            domain: string;
+            resolver: string;
+            common: boolean;
+            checks: {
+                name: string;
+                chain: string[];
+                /** @enum {string} */
+                status: "vulnerable" | "dangling" | "ok" | "no-cname" | "nxdomain" | "error";
+                service: string;
+                evidence: string;
+            }[];
         };
         DcLocator: {
             domain: string;
@@ -5677,6 +5707,34 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["DcLocator"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    dnsTakeover: {
+        parameters: {
+            query: {
+                domain: string;
+                /** @description Up to 50 names or labels (comma or newline separated); empty checks a list of common names */
+                names?: string;
+                resolver?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["DnsTakeover"];
                     };
                 };
             };
