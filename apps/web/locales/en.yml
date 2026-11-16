@@ -1459,6 +1459,25 @@ tools:
     import: Start from an existing record
     load: Load
     importError: This is not a DMARC record (it must start with v=DMARC1).
+  email-provider-detector:
+    title: Email provider detector
+    description: See which providers a domain uses for receiving and sending mail, which security gateway filters it, where DMARC reports go and which SaaS services it has verified — from public DNS only.
+    run: Detect providers
+    none: No known providers were recognised in this domain's DNS.
+    roles:
+      inbound: Mailbox provider
+      gateway: Security gateway
+      sending: Sending services
+      reporting: DMARC reporting
+      verification: Verified SaaS services
+    roleHints:
+      inbound: From the MX records.
+      gateway: Filters mail before it reaches the mailbox (from the MX records).
+      sending: Allowed to send as this domain (SPF includes and DKIM selectors).
+      reporting: Receives the DMARC aggregate reports.
+      verification: Domain-ownership tokens in TXT records.
+    records: Records read
+    limits: Detection uses lists of known host names and token prefixes; only top-level SPF includes and a fixed set of DKIM selectors are checked.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

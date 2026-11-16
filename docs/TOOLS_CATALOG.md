@@ -186,7 +186,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | EM-17 | MTA-STS policy generator | Policy file, `_mta-sts` and `_smtp._tls` records and an nginx hosting snippet from the MX hosts | B | custom | — | 9 | ✅ |
 | EM-18 | DKIM signature verifier | Paste a raw message; verify each DKIM-Signature (body hash, signature) against the published key, and the ARC chain | S | custom on `crypto` + `miekg/dns` | — | 10 | ⬜ |
 | EM-19 | Email address validator | Syntax (RFC 5322 / SMTPUTF8), MX or null MX, disposable and role-address detection; no mail is sent | S | `miekg/dns` + bundled lists | — | 10 | ⬜ |
-| EM-20 | Email provider detector | Which providers a domain uses for inbound mail, sending (SPF/DKIM) and security gateways | S | `miekg/dns` + fingerprint list | — | 10 | ⬜ |
+| EM-20 | Email provider detector | Which providers a domain uses for inbound mail, sending (SPF/DKIM) and security gateways | S | `miekg/dns` + fingerprint list | — | 10 | ✅ |
 
 ## 7. Routing, BGP & Registry
 

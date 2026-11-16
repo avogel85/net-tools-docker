@@ -683,6 +683,27 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/EmailSpfFlatten" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/email/providers:
+    get:
+      operationId: emailProviders
+      summary: Detect mail, gateway, sending and SaaS providers from a domain's public DNS
+      tags: [email]
+      x-capability: email.providers
+      parameters:
+        - { name: domain, in: query, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/EmailProviders" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/email/dmarc:
     get:
       operationId: emailDmarc
@@ -3040,6 +3061,24 @@ components:
               services: { type: array, items: { type: string } }
         problems: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
+    EmailProviders:
+      type: object
+      required: [domain, mx, spf, dmarc, selectors, detections]
+      properties:
+        domain: { type: string }
+        mx: { type: array, items: { type: string } }
+        spf: { type: string }
+        dmarc: { type: string }
+        selectors: { type: array, items: { type: string } }
+        detections:
+          type: array
+          items:
+            type: object
+            required: [provider, role, evidence]
+            properties:
+              provider: { type: string }
+              role: { type: string, enum: [inbound, gateway, sending, verification, reporting] }
+              evidence: { type: string }
     EmailSpfFlatten:
       type: object
       required: [domain, original, originalLookups, lookups, records, sources, ip4, ip6, queries, problems, warnings]

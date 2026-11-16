@@ -1459,6 +1459,25 @@ tools:
     import: Begin met een bestaand record
     load: Laden
     importError: Dit is geen DMARC-record (het moet beginnen met v=DMARC1).
+  email-provider-detector:
+    title: E-mailproviderdetector
+    description: Zie welke providers een domein gebruikt voor het ontvangen en versturen van mail, welke security-gateway het filtert, waar DMARC-rapporten heen gaan en welke SaaS-diensten het heeft geverifieerd — alleen uit openbare DNS.
+    run: Providers detecteren
+    none: Er zijn geen bekende providers herkend in de DNS van dit domein.
+    roles:
+      inbound: Mailboxprovider
+      gateway: Security-gateway
+      sending: Verzendende diensten
+      reporting: DMARC-rapportage
+      verification: Geverifieerde SaaS-diensten
+    roleHints:
+      inbound: Uit de MX-records.
+      gateway: Filtert mail voordat die de mailbox bereikt (uit de MX-records).
+      sending: Mag namens dit domein versturen (SPF-includes en DKIM-selectors).
+      reporting: Ontvangt de geaggregeerde DMARC-rapporten.
+      verification: Tokens voor domeineigendom in TXT-records.
+    records: Gelezen records
+    limits: De detectie gebruikt lijsten van bekende hostnamen en tokenprefixen; alleen SPF-includes op het hoogste niveau en een vaste set DKIM-selectors worden gecontroleerd.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

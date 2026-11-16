@@ -565,6 +565,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/email/providers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Detect mail, gateway, sending and SaaS providers from a domain's public DNS */
+        get: operations["emailProviders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/email/dmarc": {
         parameters: {
             query?: never;
@@ -2498,6 +2515,19 @@ export interface components {
             }[];
             problems: string[];
             warnings: string[];
+        };
+        EmailProviders: {
+            domain: string;
+            mx: string[];
+            spf: string;
+            dmarc: string;
+            selectors: string[];
+            detections: {
+                provider: string;
+                /** @enum {string} */
+                role: "inbound" | "gateway" | "sending" | "verification" | "reporting";
+                evidence: string;
+            }[];
         };
         EmailSpfFlatten: {
             domain: string;
@@ -4864,6 +4894,31 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["EmailSpfFlatten"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    emailProviders: {
+        parameters: {
+            query: {
+                domain: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["EmailProviders"];
                     };
                 };
             };

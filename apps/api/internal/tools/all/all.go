@@ -101,6 +101,7 @@ func Tools() []tools.Tool {
 		&email.RelayTool{},
 		&email.SPFTool{},
 		&email.SPFFlattenTool{},
+		&email.ProviderTool{},
 		&dclocator.Tool{},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
