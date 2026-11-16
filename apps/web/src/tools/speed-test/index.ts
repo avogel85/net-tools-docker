@@ -6,7 +6,7 @@ export const tool = defineTool({
   name: translate('tools.speed-test.title'),
   path: '/speed-test',
   description: translate('tools.speed-test.description'),
-  keywords: ['speed test', 'bandwidth', 'download speed', 'upload speed', 'mbps', 'throughput', 'librespeed'],
+  keywords: ['speed test', 'bandwidth', 'download speed', 'upload speed', 'mbps', 'throughput', 'librespeed', 'bufferbloat', 'latency under load', 'sqm', 'fq_codel', 'cake'],
   component: () => import('./speed-test.vue'),
   icon: Gauge,
   createdAt: new Date('2026-10-14'),

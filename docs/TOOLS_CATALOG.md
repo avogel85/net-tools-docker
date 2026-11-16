@@ -285,7 +285,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | CLI-06 | Provider status | Per public provider: key configured (never the key), requests, cache hits, errors, last problem since start | S | `/api/v1/providers/status` | — | 7 | ✅ |
 | CLI-07 | Report bundle | Collect result tables from any tool ("Add to report"), reorder, export Markdown / JSON / print-PDF; kept in the browser | B | `localStorage` | — | 7 | ✅ |
 | CLI-08 | IPv6 connection test | test-ipv6.com-style score for the browser's own connection: IPv4, IPv6, dual-stack preference, IPv4 without DNS, slow fallback from broken IPv6 | B | `fetch` to v4-only / v6-only / dual-stack endpoints | ipify (api, api6, api64), Cloudflare `1.1.1.1/cdn-cgi/trace` *(browser-direct)* | 8 | ✅ |
-| CLI-09 | Bufferbloat test | Latency while idle and during download and upload load, with a grade | S | speedtest endpoints + latency probe | — | 12 | ⬜ |
+| CLI-09 | Bufferbloat test | Latency while idle and during download and upload load, with a grade — provided by the browser speed test (CON-09), which already measures loaded latency and grades it; "bufferbloat" finds it in search | S | CON-09 | — | 12 | ✅ |
 | CLI-10 | VoIP quality test | Jitter, loss and MOS estimate for a stream of small packets between browser and server | S | to be decided in phase 12 | — | 12 | ⬜ |
 
 ## 12. Status & Links
