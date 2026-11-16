@@ -26,6 +26,7 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ednscomp"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/email"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/geo"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/homelab"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/hstspreload"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ikeprobe"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/iperf"
@@ -81,6 +82,11 @@ func Tools() []tools.Tool {
 		&cloudstatus.Tool{},
 		&links.Tool{},
 		&dnslookup.Tool{},
+		&homelab.Tool{Kind: homelab.Inventory},
+		&homelab.Tool{Kind: homelab.Reach},
+		&homelab.Tool{Kind: homelab.Certs},
+		&homelab.Tool{Kind: homelab.DNSCompare},
+		&homelab.Tool{Kind: homelab.Public},
 		&dns64.Tool{},
 		&openresolver.Tool{},
 		&ptrscan.Tool{},

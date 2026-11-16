@@ -59,6 +59,7 @@ categories:
   calculators: Rekenhulpen & naslag
   client: Clientdiagnose
   dashboard: Status & links
+  homelab: Homelab
 runMode:
   browser:
     label: Browser
@@ -3646,6 +3647,194 @@ tools:
       ip: IP-adres
       mac: MAC-adres
       vendor: Fabrikant
+  homelab-inventory:
+    title: Homelab-inventaris
+    description: Alle VM's en containers op je Proxmox-nodes met status en IP, plus een check op LAN-apparaten die geen guest toebehoren.
+    run: Verversen
+    guests: 'Guests ({n})'
+    arpTitle: Vergelijken met een ARP-scan
+    subnet: Te scannen subnet
+    known: Extra bekende adressen (nodes, router, VM's zonder agent)
+    compare: Scannen en vergelijken
+    arpNote: Alleen draaiende containers melden een IP; VM's zonder guest-agent en de nodes zelf verschijnen hier tenzij je ze als bekend opgeeft.
+    unknownResult: '{n} van {total} apparaten in de scan horen niet bij een Proxmox-guest.'
+    unifiTitle: 'UniFi-clients ({n})'
+    wired: Bedraad
+    wireless: Draadloos
+    columns:
+      node: Node
+      vmid: ID
+      type: Type
+      name: Naam
+      status: Status
+      ip: IP-adres
+      cpus: CPU's
+      mem: Geheugen (MB)
+      tags: Tags
+      mac: MAC-adres
+      conn: Verbinding
+      since: Verbonden sinds
+  homelab-reach:
+    title: VLAN-bereikbaarheidsmatrix
+    description: Controleer vanaf deze server welke hosts en poorten in je netwerk bereikbaar zijn — handig na firewall- of VLAN-wijzigingen.
+    run: Nu controleren
+    note: Test de doelen uit de homelab-config vanuit het VLAN waar deze server in staat.
+    result: 'Bereikbaar: {open} van {total}'
+    unreachable: '{n} checks zijn niet open. Closed betekent dat de host antwoordde maar niets luistert; filtered betekent een firewall of een host die uit staat.'
+    columns:
+      name: Naam
+      group: Groep
+      target: Host:poort
+      state: Status
+      rtt: RTT (ms)
+      detail: Detail
+  homelab-certs:
+    title: Interne certificaatmonitor
+    description: Geldigheid en vervaldatum van de certificaten van al je interne hosts in één tabel, slechtste bovenaan.
+    run: Nu controleren
+    valid: Geldig
+    soon: Verloopt binnenkort
+    unverified: Niet vertrouwd
+    attention: '{n} hosts vragen aandacht.'
+    columns:
+      host: Host
+      days: Dagen over
+      expires: Verloopt
+      issuer: Uitgever
+      status: Status
+  homelab-dns:
+    title: DNS-vergelijking
+    description: Stel je interne resolver en publieke resolvers dezelfde vraag en zie waar de antwoorden verschillen.
+    name: Naam (leeg gebruikt de standaard uit de config)
+    namePlaceholder: nas.internal.example.net
+    type: Recordtype
+    run: Vergelijken
+    same: Alle resolvers geven hetzelfde antwoord.
+    differs: '{n} resolver(s) wijken af van de eerste.'
+    columns:
+      resolver: Resolver
+      rcode: Resultaat
+      answers: Antwoorden
+      ttl: TTL
+      ad: DNSSEC
+      rtt: RTT (ms)
+      diff: Afwijkend
+  homelab-public:
+    title: Publieke hostnaam-check
+    description: DNS, certificaat en HTTP-status van je publieke hostnamen (zoals Cloudflare Tunnel-apps) in één overzicht.
+    run: Nu controleren
+    attention: '{n} hosts zijn verslechterd of down.'
+    columns:
+      host: Host
+      state: Status
+      http: HTTP
+      ms: ms
+      cert: Cert
+      ips: Adressen
+      detail: Detail
+  arp-conflicts:
+    title: ARP-conflictdetectie
+    description: Vind twee apparaten op één IP-adres, apparaten met een gewijzigd MAC-adres en nieuwe of ontbrekende apparaten ten opzichte van een opgeslagen basislijn.
+    subnet: Lokaal subnet
+    run: Scannen
+    saveBaseline: Opslaan als basislijn
+    note: Scant het subnet dat direct aan de NET-TOOLS-server hangt (LAN-modus). De basislijn wordt alleen in deze browser bewaard.
+    result: 'Scanresultaat ({n} apparaten)'
+    attention: '{n} bevinding(en) om te bekijken.'
+    clean: Geen conflicten en geen wijzigingen sinds de basislijn.
+    cleanNoBaseline: Geen conflicten. Sla een basislijn op om de volgende keer nieuwe of gewijzigde apparaten te zien.
+    kinds:
+      duplicate-ip: IP-conflict (twee MAC's)
+      mac-changed: MAC gewijzigd
+      new-device: Nieuw apparaat
+      gone-device: Apparaat ontbreekt
+      multi-ip: Eén MAC, meerdere IP's
+    columns:
+      kind: Bevinding
+      ip: IP-adres
+      detail: Detail
+  switch-cli:
+    title: Switch CLI-troubleshooting
+    description: Kant-en-klare show-commando's voor Cisco (IOS, NX-OS), Juniper Junos en Arista EOS — poortstatus, flaps, fouten, optisch vermogen (dBm), LLDP/CDP, voeding en alarmen. Vul apparaat en poort één keer in.
+    vendor: Platform
+    vendors:
+      junos: Juniper Junos
+      ios: Cisco IOS / IOS-XE
+      nxos: Cisco NX-OS
+      eos: Arista EOS
+    device: Apparaat (hostnaam of IP)
+    devicePlaceholder: sw-ams01.example.net
+    iface: Interface
+    match: Zoektekst (peer, omschrijving, MAC)
+    matchPlaceholder: BB-002.AMS101
+    examples: 'Voorbeelden:'
+    invalidDevice: Alleen letters, cijfers, punt, streepje en underscore.
+    invalidIface: 'Geen interfacenaam voor dit platform, bijvoorbeeld {examples}.'
+    note: 'Commando''s met een [plaatshouder] missen nog een waarde (gedimd). Er wordt niets verstuurd — kopieer een regel of een hele groep en plak die in je terminalsessie. Controleer de syntax voor jouw softwareversie; platforms verschillen per release.'
+    opticsHint: 'Vergelijk Tx/Rx-vermogen met de alarm- en waarschuwingsdrempels die de switch bij die optic toont (of de datasheet). Rx rond −30 tot −40 dBm betekent geen licht: controleer patching, polariteit, vuile of geknikte vezel en de Tx van de overkant. Een groot verschil tussen lanes bij een QSFP wijst op één slechte lane of kabel.'
+    copyGroup: Kopieer deze groep
+    groups:
+      session: Sessie
+      status: Poortstatus
+      optics: Optics en glassignaal
+      errors: Flaps en fouten
+      neighbors: Buren en MAC
+      hardware: Voeding, fans en hardware
+      logs: Logs
+    cmds:
+      ssh: Verbinden met het apparaat
+      paging: Paginering uitzetten
+      version: Softwareversie en uptime
+      ifBrief: Alle interfaces, kort
+      ifDown: Alleen poorten die down of disabled zijn
+      ifOne: Eén interface in detail
+      ifWild: Alle poorten op dezelfde kaart of module
+      descr: Alle interface-omschrijvingen
+      descrMatch: Interfaces waarvan de omschrijving de zoektekst bevat
+      errdisabled: Err-disabled poorten
+      lag: Link aggregation (LACP / port-channel)
+      opticsOne: Optische diagnostiek (DOM) van één poort
+      opticsLevels: Alleen de lichtniveaus (dBm) van één poort
+      opticsPower: Alleen de vermogensregels van één poort
+      opticsAll: Optische diagnostiek van alle poorten
+      transceivers: Geplaatste transceivers
+      flap: Laatste flap en linkstatus van één poort
+      errorsOne: Fout- en dropteller van één poort
+      errorsAll: Foutentellers van alle poorten
+      discards: Discard-tellers van alle poorten
+      lldp: LLDP-buren
+      lldpOne: LLDP-buur op één poort
+      lldpMatch: LLDP-buren die de zoektekst bevatten
+      cdp: CDP-buren
+      cdpOne: CDP-buur op één poort
+      macOne: MAC-adressen geleerd op één poort
+      alarms: Chassis-alarmen
+      sysAlarms: Systeemalarmen
+      env: Omgeving (temperatuur, fans, voeding)
+      power: Voedingen en verbruik
+      pem: Power entry modules
+      fans: Fans
+      temp: Temperaturen
+      modules: Linecards / modules
+      inventory: Hardware-inventaris
+      poe: PoE-status van één poort
+      logIface: Logregels over deze poort
+      logLink: Link up/down-gebeurtenissen
+      logLast: Laatste logregels
+  ups-runtime:
+    title: UPS-looptijdcalculator
+    description: Schat hoe lang een UPS of accubank een belasting draagt, uit capaciteit, belasting, rendement en bruikbare ontladingsdiepte.
+    note: 'Vul Wh in óf volt × Ah, en watt óf VA × arbeidsfactor. Laat wat je niet gebruikt op 0. De echte looptijd daalt met veroudering van de accu, kou en hoge ontlaadstromen.'
+    result: 'Ongeveer {time} bij {w} W (bruikbare energie {wh} Wh).'
+    fields:
+      wh: Accu-energie (Wh, 0 = gebruik V × Ah)
+      volts: Accuspanning (V)
+      ah: Capaciteit (Ah)
+      efficiency: Rendement (%)
+      depth: Bruikbare ontladingsdiepte (%)
+      watts: Belasting (W, 0 = gebruik VA × PF)
+      va: Belasting (VA)
+      powerFactor: Arbeidsfactor
   mdns-browser:
     title: mDNS- / Bonjour-browser
     description: Ontdek de services die apparaten in het lokale netwerk aankondigen — printers, AirPlay, Chromecast, bestandsshares, smart-home-hubs.

@@ -59,6 +59,7 @@ categories:
   calculators: Calculators & Reference
   client: Client Diagnostics
   dashboard: Status & Links
+  homelab: Homelab
 runMode:
   browser:
     label: Browser
@@ -1387,6 +1388,194 @@ tools:
       expires: Expires
       issuer: Issuer
       status: Status
+  homelab-inventory:
+    title: Homelab inventory
+    description: All VMs and containers on your Proxmox nodes with status and IP, plus a check for LAN devices that no guest claims.
+    run: Refresh
+    guests: 'Guests ({n})'
+    arpTitle: Compare with an ARP scan
+    subnet: Subnet to scan
+    known: Extra known addresses (nodes, router, VMs without an agent)
+    compare: Scan and compare
+    arpNote: Only running containers report an IP; VMs without a guest agent and the nodes themselves show up here unless you list them as known.
+    unknownResult: '{n} of {total} devices in the scan are not claimed by a Proxmox guest.'
+    unifiTitle: 'UniFi clients ({n})'
+    wired: Wired
+    wireless: Wireless
+    columns:
+      node: Node
+      vmid: ID
+      type: Type
+      name: Name
+      status: Status
+      ip: IP address
+      cpus: CPUs
+      mem: Memory (MB)
+      tags: Tags
+      mac: MAC address
+      conn: Connection
+      since: Connected since
+  homelab-reach:
+    title: VLAN reachability matrix
+    description: Check from this server which hosts and ports in your network are reachable — handy after firewall or VLAN changes.
+    run: Check now
+    note: Probes the targets in the homelab config from the VLAN this server lives in.
+    result: 'Reachable: {open} of {total}'
+    unreachable: '{n} checks are not open. Closed means the host answered but nothing listens; filtered means a firewall or a host that is down.'
+    columns:
+      name: Name
+      group: Group
+      target: Host:port
+      state: State
+      rtt: RTT (ms)
+      detail: Detail
+  homelab-certs:
+    title: Internal certificate monitor
+    description: Expiry and validity of the certificates of all your internal hosts in one table, worst first.
+    run: Check now
+    valid: Valid
+    soon: Expires soon
+    unverified: Not trusted
+    attention: '{n} hosts need attention.'
+    columns:
+      host: Host
+      days: Days left
+      expires: Expires
+      issuer: Issuer
+      status: Status
+  homelab-dns:
+    title: DNS comparison
+    description: Ask your internal resolver and public resolvers the same question and see where the answers differ.
+    name: Name (empty uses the default from the config)
+    namePlaceholder: nas.internal.example.net
+    type: Record type
+    run: Compare
+    same: All resolvers give the same answer.
+    differs: '{n} resolver(s) differ from the first one.'
+    columns:
+      resolver: Resolver
+      rcode: Result
+      answers: Answers
+      ttl: TTL
+      ad: DNSSEC
+      rtt: RTT (ms)
+      diff: Differs
+  homelab-public:
+    title: Public hostname check
+    description: DNS, certificate and HTTP status of your public hostnames (such as Cloudflare Tunnel apps) in one overview.
+    run: Check now
+    attention: '{n} hosts are degraded or down.'
+    columns:
+      host: Host
+      state: State
+      http: HTTP
+      ms: ms
+      cert: Cert
+      ips: Addresses
+      detail: Detail
+  arp-conflicts:
+    title: ARP conflict detector
+    description: Find two devices on one IP address, devices that changed MAC address and new or missing devices compared to a saved baseline.
+    subnet: Local subnet
+    run: Scan
+    saveBaseline: Save as baseline
+    note: Scans the subnet directly attached to the NET-TOOLS server (LAN mode). The baseline is stored in this browser only.
+    result: 'Scan result ({n} devices)'
+    attention: '{n} finding(s) need a look.'
+    clean: No conflicts and no changes since the baseline.
+    cleanNoBaseline: No conflicts. Save a baseline to detect new or changed devices next time.
+    kinds:
+      duplicate-ip: IP conflict (two MACs)
+      mac-changed: MAC changed
+      new-device: New device
+      gone-device: Device missing
+      multi-ip: One MAC, several IPs
+    columns:
+      kind: Finding
+      ip: IP address
+      detail: Detail
+  switch-cli:
+    title: Switch CLI troubleshooting
+    description: Ready-to-paste show commands for Cisco (IOS, NX-OS), Juniper Junos and Arista EOS — port status, flaps, errors, optical power (dBm), LLDP/CDP, power and alarms. Fill in the device and port once.
+    vendor: Platform
+    vendors:
+      junos: Juniper Junos
+      ios: Cisco IOS / IOS-XE
+      nxos: Cisco NX-OS
+      eos: Arista EOS
+    device: Device (hostname or IP)
+    devicePlaceholder: sw-ams01.example.net
+    iface: Interface
+    match: Search text (peer, description, MAC)
+    matchPlaceholder: BB-002.AMS101
+    examples: 'Examples:'
+    invalidDevice: Letters, digits, dot, dash and underscore only.
+    invalidIface: 'Not an interface name for this platform, for example {examples}.'
+    note: 'Commands with a [placeholder] still need a value (dimmed). Nothing is sent anywhere — copy a line, or a whole group, and paste it in your terminal session. Check the syntax against your software version; platforms differ per release.'
+    opticsHint: 'Compare Tx/Rx power with the alarm and warning thresholds the switch prints for that optic (or the module datasheet). Rx around −30 to −40 dBm means no light: check patching, polarity, dirty or bent fibre and the far-end Tx. A big difference between lanes on a QSFP points to one bad lane or cable.'
+    copyGroup: Copy this group
+    groups:
+      session: Session
+      status: Port status
+      optics: Optics and fibre signal
+      errors: Flaps and errors
+      neighbors: Neighbours and MAC
+      hardware: Power, fans and hardware
+      logs: Logs
+    cmds:
+      ssh: Connect to the device
+      paging: Turn off paging
+      version: Software version and uptime
+      ifBrief: All interfaces, short
+      ifDown: Only down or disabled ports
+      ifOne: One interface in detail
+      ifWild: All ports on the same card or module
+      descr: All interface descriptions
+      descrMatch: Interfaces whose description matches the search text
+      errdisabled: Err-disabled ports
+      lag: Link aggregation (LACP / port-channel)
+      opticsOne: Optical diagnostics (DOM) of one port
+      opticsLevels: Only the light levels (dBm) of one port
+      opticsPower: Only the power lines of one port
+      opticsAll: Optical diagnostics of all ports
+      transceivers: Installed transceivers
+      flap: Last flap and link state of one port
+      errorsOne: Error and drop counters of one port
+      errorsAll: Error counters of all ports
+      discards: Discard counters of all ports
+      lldp: LLDP neighbours
+      lldpOne: LLDP neighbour on one port
+      lldpMatch: LLDP neighbours matching the search text
+      cdp: CDP neighbours
+      cdpOne: CDP neighbour on one port
+      macOne: MAC addresses learned on one port
+      alarms: Chassis alarms
+      sysAlarms: System alarms
+      env: Environment (temperature, fans, power)
+      power: Power supplies and usage
+      pem: Power entry modules
+      fans: Fans
+      temp: Temperatures
+      modules: Line cards / modules
+      inventory: Hardware inventory
+      poe: PoE status of one port
+      logIface: Log lines about this port
+      logLink: Link up/down events
+      logLast: Latest log lines
+  ups-runtime:
+    title: UPS runtime calculator
+    description: Estimate how long a UPS or battery bank carries a load, from battery capacity, load, efficiency and usable depth of discharge.
+    note: 'Enter either Wh or volts × Ah, and either watts or VA × power factor. Leave the one you do not use at 0. Real runtime drops with battery age, cold and high discharge currents.'
+    result: 'About {time} on {w} W (usable energy {wh} Wh).'
+    fields:
+      wh: Battery energy (Wh, 0 = use V × Ah)
+      volts: Battery voltage (V)
+      ah: Capacity (Ah)
+      efficiency: Efficiency (%)
+      depth: Usable depth of discharge (%)
+      watts: Load (W, 0 = use VA × PF)
+      va: Load (VA)
+      powerFactor: Power factor
   mx-lookup:
     title: MX lookup + SMTP check
     description: List a domain's mail servers and test each on port 25 — banner, ESMTP extensions, STARTTLS and certificate.

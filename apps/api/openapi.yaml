@@ -2796,6 +2796,101 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/ProviderStatus" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/homelab/inventory:
+    get:
+      operationId: homelabInventory
+      summary: "Homelab inventory (Proxmox, UniFi, ARP) (local homelab profile only)"
+      tags: [system]
+      x-capability: homelab.inventory
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { type: object, additionalProperties: true }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/homelab/reach:
+    get:
+      operationId: homelabReach
+      summary: "Homelab VLAN reachability matrix (local homelab profile only)"
+      tags: [system]
+      x-capability: homelab.reach
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { type: object, additionalProperties: true }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/homelab/certs:
+    get:
+      operationId: homelabCerts
+      summary: "Internal certificate monitor (local homelab profile only)"
+      tags: [system]
+      x-capability: homelab.certs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { type: object, additionalProperties: true }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/homelab/dns-compare:
+    get:
+      operationId: homelabDnsCompare
+      summary: "Compare DNS answers across internal and public resolvers (local homelab profile only)"
+      tags: [system]
+      x-capability: homelab.dns-compare
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { type: object, additionalProperties: true }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/homelab/public-check:
+    get:
+      operationId: homelabPublicCheck
+      summary: "Public hostname check (local homelab profile only)"
+      tags: [system]
+      x-capability: homelab.public-check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { type: object, additionalProperties: true }
+        default: { $ref: "#/components/responses/Error" }
 components:
   parameters:
     Family:

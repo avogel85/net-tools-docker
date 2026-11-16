@@ -2,6 +2,7 @@ import type { Tool, ToolCategory } from './tool'
 import { translate } from '@/plugins/i18n.plugin'
 import { tool as aclAnalyzer } from './acl-analyzer'
 import { tool as acmeCheck } from './acme-check'
+import { tool as arpConflicts } from './arp-conflicts'
 import { tool as arpScan } from './arp-scan'
 import { tool as asPathVisualizer } from './as-path-visualizer'
 import { tool as asnInfo } from './asn-info'
@@ -75,6 +76,11 @@ import { tool as expiryWatchlist } from './expiry-watchlist'
 import { tool as fiberBudget } from './fiber-budget'
 import { tool as firewallObjects } from './firewall-objects'
 import { tool as gatewayInfo } from './gateway-info'
+import { tool as homelabCerts } from './homelab-certs'
+import { tool as homelabDns } from './homelab-dns'
+import { tool as homelabInventory } from './homelab-inventory'
+import { tool as homelabPublic } from './homelab-public'
+import { tool as homelabReach } from './homelab-reach'
 import { tool as hstsPreload } from './hsts-preload'
 import { tool as httpProtocols } from './http-protocols'
 import { tool as httpRequest } from './http-request'
@@ -183,6 +189,7 @@ import { tool as subnetCheatSheet } from './subnet-cheat-sheet'
 import { tool as subnetOverlapChecker } from './subnet-overlap-checker'
 import { tool as subnetSplitter } from './subnet-splitter'
 import { tool as svcbHttpsViewer } from './svcb-https-viewer'
+import { tool as switchCli } from './switch-cli'
 import { tool as takeoverCheck } from './takeover-check'
 import { tool as tcpPing } from './tcp-ping'
 import { tool as tlsExpiry } from './tls-expiry'
@@ -192,6 +199,7 @@ import { tool as tlsScanner } from './tls-scanner'
 import { tool as torExitCheck } from './tor-exit-check'
 import { tool as traceroute } from './traceroute'
 import { tool as udpProbe } from './udp-probe'
+import { tool as upsRuntime } from './ups-runtime'
 import { tool as urlParser } from './url-parser'
 import { tool as urlReputation } from './url-reputation'
 import { tool as userAgentParser } from './user-agent-parser'
@@ -220,14 +228,15 @@ import { tool as zoneTransferTest } from './zone-transfer-test'
 const categories: { id: string, components: Tool[] }[] = [
   { id: 'ip', components: [ipv4SubnetCalculator, ipv6SubnetCalculator, cidrRangeConverter, cidrAggregator, subnetSplitter, ipInSubnet, ipv4FormatConverter, ipv6ExpandCompress, ipv6UlaGenerator, ipSpecialCheck, wildcardMaskCalculator, reverseDnsName, macAddressLookup, macFormatter, eui64Calculator, whatIsMyIp, vlsmPlanner, ipv4InIpv6, randomIpGenerator, ipv6AddressAnalyzer, ipamSheet, nat64Dns64Check, countryIpBlocks, subnetOverlapChecker] },
   { id: 'dns', components: [punycodeConverter, domainParser, dnsLookup, reverseDns, caaChecker, dnsConsistency, dnsPropagation, dnsTrace, encryptedDnsTester, zoneBuilder, zoneLinter, nsupdateBuilder, zoneTransferTest, wildcardDetector, dnsBenchmark, dnssecValidator, dsDnskey, nsec3Hash, openResolverTest, ptrCoverage, svcbHttpsViewer, ednsCompliance, dnsTtlPlanner, dnsHealthReport, bulkLookup, dcLocator, dnsSnapshot, takeoverCheck, lookalikeFinder] },
-  { id: 'connectivity', components: [ping, tcpPing, traceroute, mtr, portCheck, ntpCheck, serverNetworkInfo, isItDown, latencyMatrix, pathMtu, ipv6Readiness, portScanner, iperf, snmp, latencyMonitor, sipCheck, ldapCheck, remoteAccessCheck, ikeProbe, udpProbe, reverseTraceroute] },
+  { id: 'connectivity', components: [ping, tcpPing, traceroute, mtr, portCheck, ntpCheck, serverNetworkInfo, isItDown, latencyMatrix, pathMtu, ipv6Readiness, portScanner, iperf, snmp, latencyMonitor, sipCheck, ldapCheck, remoteAccessCheck, ikeProbe, udpProbe, reverseTraceroute, switchCli] },
   { id: 'web', components: [urlParser, userAgentParser, httpStatusCodes, httpRequest, redirectTracer, httpTiming, securityHeaders, corsTester, hstsPreload, compressionCheck, cookieInspector, wellKnownFiles, httpProtocols, curlBuilder, websocketTester, cdnWafDetector, cacheHeaderAnalyzer, mixedContentChecker, cspBuilder, domainScorecard, reverseProxyConfig, socialPreview, originCompare, brokenLinks, webhookInspector] },
   { id: 'tls', components: [certificateDecoder, tlsInspector, tlsExpiry, csrTool, certKeyMatcher, ctSearch, starttlsCheck, revocationCheck, tlsScanner, sshAudit, sshKeyTool, keyConverter, daneChecker, certChainValidator, pkcs12Inspector, labCaGenerator, acmeCheck, pqTlsCheck, expiryWatchlist] },
   { id: 'email', components: [mxLookup, spfChecker, spfFlattener, dmarcChecker, dmarcGenerator, dkimChecker, dkimGenerator, dkimVerifier, emailHeaderAnalyzer, blacklistCheck, mtaStsChecker, mtaStsGenerator, openRelayTest, dmarcReportViewer, smtpBannerCheck, tlsRptViewer, emailDeliverabilityReport, m365DomainCheck, emailProviderDetector, emailValidator] },
   { id: 'bgp', components: [ipToAsn, whoisLookup, rdapLookup, domainExpiry, asnInfo, prefixStatus, rpkiValidator, lookingGlass, peeringdbLookup, cloudIpLookup, irrExpansion, asPathVisualizer, bgpRouteHistory, asnNeighbourGraph, commonIxps, roaCoverage, prefixListTester, bgpCommunityDecoder, prefixListGenerator, prefixWatch, roaAspaHelper] },
   { id: 'reputation', components: [ipGeolocation, passiveExposure, ipReputation, torExitCheck, urlReputation] },
-  { id: 'lan', components: [wakeOnLan, arpScan, mdnsBrowser, ssdpDiscovery, dhcpProbe, gatewayInfo, lldpNeighbors, ipv6Neighbors, dhcpv6Probe, radiusTester] },
-  { id: 'calculators', components: [bandwidthCalculator, dataUnitConverter, bdpCalculator, mtuCalculator, portReference, protocolReference, dnsRecordTypes, subnetCheatSheet, wifiQrGenerator, opticalPower, wireguardConfig, routerSnippets, slaCalculator, voipBandwidthCalculator, packetDecoder, pcapViewer, poeBudgetCalculator, natCapacityCalculator, wirelessLinkCalculator, dscpConverter, configDiff, aclAnalyzer, firewallObjects, captureFilter, logParser, fiberBudget, wifiThroughput, wifiChannels, cablingReference] },
+  { id: 'lan', components: [arpConflicts, wakeOnLan, arpScan, mdnsBrowser, ssdpDiscovery, dhcpProbe, gatewayInfo, lldpNeighbors, ipv6Neighbors, dhcpv6Probe, radiusTester] },
+  { id: 'calculators', components: [upsRuntime, bandwidthCalculator, dataUnitConverter, bdpCalculator, mtuCalculator, portReference, protocolReference, dnsRecordTypes, subnetCheatSheet, wifiQrGenerator, opticalPower, wireguardConfig, routerSnippets, slaCalculator, voipBandwidthCalculator, packetDecoder, pcapViewer, poeBudgetCalculator, natCapacityCalculator, wirelessLinkCalculator, dscpConverter, configDiff, aclAnalyzer, firewallObjects, captureFilter, logParser, fiberBudget, wifiThroughput, wifiChannels, cablingReference] },
+  { id: 'homelab', components: [homelabInventory, homelabReach, homelabCerts, homelabDns, homelabPublic] },
   { id: 'client', components: [requestHeaders, browserLatency, voipQuality, connectionInfo, ipv6Test, webrtcLeakTest, speedTest, dnsProxyCheck, providerStatus, reportBundle] },
   { id: 'dashboard', components: [cloudStatus, quickLinks] },
 ]
