@@ -2007,6 +2007,30 @@ tools:
     coding: Codering
     table: 'MCS-tabel — {width} MHz, {streams} stream(s), {gi} µs GI'
     hint: 'De PHY-snelheid is de ruwe linksnelheid; één client dicht bij het access point haalt daarvan meestal zo''n {pct}% als TCP-doorvoer, en de zendtijd wordt gedeeld door alle clients op het kanaal. Clients halen de hoogste MCS zelden verder dan een paar meter, en de meeste telefoons en laptops hebben maar twee streams.'
+  wifi-channels:
+    title: Wifi-kanaalplanner
+    description: Kanalen per band, regio en breedte met middenfrequenties en DFS, en een kanaalplan zonder overlap voor meerdere access points.
+    band: Band
+    region: Regio
+    regions:
+      eu: Europa (ETSI)
+      us: Verenigde Staten (FCC)
+    width: Kanaalbreedte
+    aps: Access points
+    avoidDfs: DFS-kanalen vermijden
+    wide24: 40 MHz in 2,4 GHz overlapt het grootste deel van de band en wordt in drukke omgevingen door de meeste fabrikanten uitgeschakeld; gebruik 20 MHz.
+    plan: 'Kanaalplan ({n} kanalen zonder overlap)'
+    none: Geen kanaal past bij deze instellingen.
+    reuse: Er zijn meer access points dan kanalen zonder overlap, dus kanalen worden hergebruikt. Plaats access points op hetzelfde kanaal zo ver mogelijk uit elkaar en verlaag hun zendvermogen.
+    list: 'Kanalen ({n})'
+    channel: Kanaal (20 MHz-delen)
+    center: Midden
+    flags: Opmerkingen
+    weather: weerradar (10 min CAC)
+    hints:
+      '2.4': Gebruik alleen kanaal 1, 6 en 11 op 20 MHz; andere kanalen overlappen en geven meer storing dan een kanaal delen.
+      '5': DFS-kanalen (52–144) moeten worden vrijgemaakt als een radar wordt gedetecteerd, wat clients kort verbreekt; buiten mogen in Europa alleen 100–140 worden gebruikt.
+      '6': 6 GHz vereist Wi-Fi 6E- of 7-clients. Binnengebruik met laag vermogen mag zonder DFS; Europa heeft alleen de onderste 480 MHz.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

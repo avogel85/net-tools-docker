@@ -2007,6 +2007,30 @@ tools:
     coding: Coding
     table: 'MCS table — {width} MHz, {streams} stream(s), {gi} µs GI'
     hint: 'The PHY rate is the raw link rate; one client close to the access point typically gets about {pct}% of it as TCP throughput, and airtime is shared by all clients on the channel. Clients rarely reach the highest MCS beyond a few metres, and most phones and laptops have only two streams.'
+  wifi-channels:
+    title: Wi-Fi channel planner
+    description: Channels per band, region and width with centre frequencies and DFS, and a non-overlapping channel plan for several access points.
+    band: Band
+    region: Region
+    regions:
+      eu: Europe (ETSI)
+      us: United States (FCC)
+    width: Channel width
+    aps: Access points
+    avoidDfs: Avoid DFS channels
+    wide24: 40 MHz in 2.4 GHz overlaps most of the band and is disabled by most vendors in busy areas; use 20 MHz.
+    plan: 'Channel plan ({n} non-overlapping channels)'
+    none: No channel fits these settings.
+    reuse: There are more access points than non-overlapping channels, so channels repeat. Place access points on the same channel as far apart as possible and lower their transmit power.
+    list: 'Channels ({n})'
+    channel: Channel (20 MHz parts)
+    center: Centre
+    flags: Notes
+    weather: weather radar (10-min CAC)
+    hints:
+      '2.4': Use only channels 1, 6 and 11 at 20 MHz; other channels overlap and cause more interference than sharing a channel.
+      '5': DFS channels (52–144) must be vacated when a radar is detected, which briefly disconnects clients; outdoors in Europe only 100–140 may be used.
+      '6': 6 GHz needs Wi-Fi 6E or 7 clients. Indoor low-power use is allowed without DFS; Europe has only the lower 480 MHz.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.
