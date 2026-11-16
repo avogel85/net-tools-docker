@@ -1853,6 +1853,22 @@ tools:
     status: Status
     from: Found on
     shown: '{n} shown'
+  webhook-inspector:
+    title: Webhook / request inspector
+    description: Get a temporary URL that captures every request sent to it — method, path, headers and body — to debug webhooks from GitHub, Stripe, monitoring systems or your own code.
+    intro: Create a request bin, point a webhook at its URL and watch the requests arrive here. The bin lives for 15 minutes and keeps up to 50 requests.
+    create: Create request bin
+    yourUrl: Your webhook URL
+    copyCurl: Copy curl example
+    expires: 'expires in {n} min'
+    delete: Delete bin
+    privacy: Requests are kept in this server's memory only, are visible only in this browser tab (with the bin's secret token) and are deleted when the bin expires. Anyone who knows the URL can send to it; do not send real secrets. The service sending the webhook must be able to reach this NET-TOOLS server.
+    received: 'Received requests ({n})'
+    waiting: Waiting for requests… This page checks every 3 seconds.
+    dropped: '{n} more request(s) arrived after the limit of 50 and were not stored.'
+    from: 'from {ip}'
+    truncated: body cut at 64 KB
+    binary: The body is binary and is not shown.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

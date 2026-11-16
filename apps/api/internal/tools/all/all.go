@@ -67,11 +67,13 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/torcheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/udpprobe"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/web"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/webhook"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/whois"
 )
 
 // Tools returns every registered tool, in catalog order.
 func Tools() []tools.Tool {
+	hooks := webhook.NewStore()
 	rdapSvc := &rdap.Service{}
 	return []tools.Tool{
 		&status.Tool{},
@@ -127,6 +129,8 @@ func Tools() []tools.Tool {
 		&web.SocialTool{},
 		&web.OriginTool{},
 		&web.LinksTool{},
+		&webhook.BinTool{Store: hooks},
+		&webhook.CaptureTool{Store: hooks},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},

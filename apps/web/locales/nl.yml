@@ -1853,6 +1853,22 @@ tools:
     status: Status
     from: Gevonden op
     shown: '{n} getoond'
+  webhook-inspector:
+    title: Webhook-/requestinspector
+    description: Krijg een tijdelijke URL die elk verzoek ontvangt dat ernaar wordt gestuurd — methode, pad, headers en body — om webhooks van GitHub, Stripe, monitoringsystemen of je eigen code te debuggen.
+    intro: Maak een request-bin, laat een webhook naar de URL wijzen en zie de verzoeken hier binnenkomen. De bin bestaat 15 minuten en bewaart maximaal 50 verzoeken.
+    create: Request-bin maken
+    yourUrl: Je webhook-URL
+    copyCurl: curl-voorbeeld kopiëren
+    expires: 'verloopt over {n} min'
+    delete: Bin verwijderen
+    privacy: Verzoeken staan alleen in het geheugen van deze server, zijn alleen in dit browsertabblad zichtbaar (met het geheime token van de bin) en worden verwijderd als de bin verloopt. Iedereen die de URL kent kan ernaar sturen; stuur geen echte geheimen. De dienst die de webhook verstuurt moet deze NET-TOOLS-server kunnen bereiken.
+    received: 'Ontvangen verzoeken ({n})'
+    waiting: Wachten op verzoeken… Deze pagina kijkt elke 3 seconden.
+    dropped: '{n} verzoek(en) kwamen binnen na de limiet van 50 en zijn niet bewaard.'
+    from: 'van {ip}'
+    truncated: body afgekapt op 64 KB
+    binary: De body is binair en wordt niet getoond.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

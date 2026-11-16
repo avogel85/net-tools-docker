@@ -2022,6 +2022,83 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/webhook/bins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a temporary request bin (15 minutes, in memory) */
+        post: operations["webhookCreate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhook/bins/{id}": {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Bin-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        /** Requests captured by a bin */
+        get: operations["webhookRead"];
+        put?: never;
+        post?: never;
+        /** Delete a bin */
+        delete: operations["webhookDelete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/hook/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Capture endpoint of a bin; accepts any method and any sub-path (/v1/hook/{id}/...) */
+        post: operations["hookCapture"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/hook/{id}/*": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Capture endpoint with a sub-path (any method); the sub-path is recorded */
+        post: operations["hookCaptureSubpath"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/http/links": {
         parameters: {
             query?: never;
@@ -2933,6 +3010,33 @@ export interface components {
             challengeTxt: string[];
             problems: string[];
             warnings: string[];
+        };
+        WebhookBin: {
+            id: string;
+            token: string;
+            path: string;
+            expires: string;
+        };
+        WebhookContent: {
+            id: string;
+            expires: string;
+            dropped: number;
+            requests: {
+                time: string;
+                method: string;
+                path: string;
+                query: string;
+                headers: {
+                    name: string;
+                    value: string;
+                }[];
+                body: string;
+                bodyBytes: number;
+                truncated: boolean;
+                binary: boolean;
+                remoteIp: string;
+                contentType: string;
+            }[];
         };
         HttpLinks: {
             start: string;
@@ -7648,6 +7752,121 @@ export interface operations {
                         data: components["schemas"]["CacheResult"];
                     };
                 };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    webhookCreate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["WebhookBin"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    webhookRead: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Bin-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["WebhookContent"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    webhookDelete: {
+        parameters: {
+            query?: never;
+            header: {
+                "X-Bin-Token": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    hookCapture: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Captured */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    hookCaptureSubpath: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Captured */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             default: components["responses"]["Error"];
         };

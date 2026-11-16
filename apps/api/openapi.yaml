@@ -2440,6 +2440,80 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/CacheResult" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/webhook/bins:
+    post:
+      operationId: webhookCreate
+      summary: Create a temporary request bin (15 minutes, in memory)
+      tags: [web]
+      x-capability: web.webhook
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/WebhookBin" }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/webhook/bins/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+      - { name: X-Bin-Token, in: header, required: true, schema: { type: string } }
+    get:
+      operationId: webhookRead
+      summary: Requests captured by a bin
+      tags: [web]
+      x-capability: web.webhook
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/WebhookContent" }
+        default: { $ref: "#/components/responses/Error" }
+    delete:
+      operationId: webhookDelete
+      summary: Delete a bin
+      tags: [web]
+      x-capability: web.webhook
+      responses:
+        "200":
+          description: OK
+        default: { $ref: "#/components/responses/Error" }
+  /v1/hook/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    post:
+      operationId: hookCapture
+      summary: Capture endpoint of a bin; accepts any method and any sub-path (/v1/hook/{id}/...)
+      tags: [web]
+      x-capability: web.hook
+      responses:
+        "200":
+          description: Captured
+        default: { $ref: "#/components/responses/Error" }
+  /v1/hook/{id}/*:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+    post:
+      operationId: hookCaptureSubpath
+      summary: Capture endpoint with a sub-path (any method); the sub-path is recorded
+      tags: [web]
+      x-capability: web.hook
+      responses:
+        "200":
+          description: Captured
+        default: { $ref: "#/components/responses/Error" }
   /v1/http/links:
     get:
       operationId: httpLinks
@@ -3614,6 +3688,45 @@ components:
         challengeTxt: { type: array, items: { type: string } }
         problems: { type: array, items: { type: string } }
         warnings: { type: array, items: { type: string } }
+    WebhookBin:
+      type: object
+      required: [id, token, path, expires]
+      properties:
+        id: { type: string }
+        token: { type: string }
+        path: { type: string }
+        expires: { type: string }
+    WebhookContent:
+      type: object
+      required: [id, expires, dropped, requests]
+      properties:
+        id: { type: string }
+        expires: { type: string }
+        dropped: { type: integer }
+        requests:
+          type: array
+          items:
+            type: object
+            required: [time, method, path, query, headers, body, bodyBytes, truncated, binary, remoteIp, contentType]
+            properties:
+              time: { type: string }
+              method: { type: string }
+              path: { type: string }
+              query: { type: string }
+              headers:
+                type: array
+                items:
+                  type: object
+                  required: [name, value]
+                  properties:
+                    name: { type: string }
+                    value: { type: string }
+              body: { type: string }
+              bodyBytes: { type: integer }
+              truncated: { type: boolean }
+              binary: { type: boolean }
+              remoteIp: { type: string }
+              contentType: { type: string }
     HttpLinks:
       type: object
       required: [start, pages, checked, broken, truncated, links]
