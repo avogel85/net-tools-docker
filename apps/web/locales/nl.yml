@@ -2456,6 +2456,37 @@ tools:
       ok: OK
       no-cname: Geen CNAME
       nxdomain: Bestaat niet
+  lookalike-finder:
+    title: Lookalike-domeinzoeker
+    description: Genereer typfout-, homoglief-, IDN- en TLD-varianten van je domein en zie welke geregistreerd zijn en mail kunnen ontvangen — kandidaten voor phishing en merkmisbruik.
+    yourDomain: Je domein
+    hint: Tot 150 varianten worden met één DNS-query per stuk gecontroleerd; geregistreerde varianten worden uitgebreider opgezocht. Gebruik dit om je eigen merk te bewaken.
+    run: Lookalikes zoeken
+    summary: '{checked} varianten gecontroleerd: {registered} geregistreerd, {mx} met mailservers.'
+    truncated: '({n} varianten gegenereerd; de waarschijnlijkste zijn gecontroleerd.)'
+    registeredOnly: Alleen geregistreerd
+    allKinds: Alle soorten
+    domain: Domein
+    kind: Soort
+    status: Status
+    free: Niet geregistreerd
+    error: Lookup mislukt
+    risk:
+      high: Geregistreerd, ontvangt mail
+      medium: Geregistreerd
+      low: Niet geregistreerd
+    kinds:
+      tld: Andere TLD
+      homoglyph: Gelijkende tekens
+      idn: Unicode-lookalike (IDN)
+      transposition: Verwisselde letters
+      omission: Ontbrekende letter
+      repetition: Dubbele letter
+      hyphenation: Toegevoegd streepje
+      prefix: Voorvoegsel
+      suffix: Achtervoegsel
+      replacement: Toetsenbordtypfout
+      bitsquatting: Bitflip
   dnssec-validator:
     title: DNSSEC-validator
     description: Valideer de DNSSEC-vertrouwensketen van de root tot een naam, en zie precies waar die breekt — ontbrekende DS, niet-passende sleutels, verlopen of ongeldige handtekeningen.

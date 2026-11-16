@@ -1324,6 +1324,28 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/DnsTakeover" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/dns/lookalike:
+    get:
+      operationId: dnsLookalike
+      summary: Typo, homoglyph and TLD variants of a domain and whether they are registered
+      tags: [dns]
+      x-capability: dns.lookalike
+      parameters:
+        - { name: domain, in: query, required: true, schema: { type: string } }
+        - { name: resolver, in: query, schema: { type: string, default: system } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/DnsLookalike" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/dns/dnssec:
     get:
       operationId: dnssecValidate
@@ -3094,6 +3116,28 @@ components:
               status: { type: string, enum: [vulnerable, dangling, ok, no-cname, nxdomain, error] }
               service: { type: string }
               evidence: { type: string }
+    DnsLookalike:
+      type: object
+      required: [domain, resolver, generated, truncated, candidates]
+      properties:
+        domain: { type: string }
+        resolver: { type: string }
+        generated: { type: integer }
+        truncated: { type: boolean }
+        candidates:
+          type: array
+          items:
+            type: object
+            required: [domain, unicode, kind, registered, checked, a, mx, error]
+            properties:
+              domain: { type: string }
+              unicode: { type: string }
+              kind: { type: string, enum: [tld, homoglyph, idn, transposition, omission, repetition, hyphenation, prefix, suffix, replacement, bitsquatting] }
+              registered: { type: boolean }
+              checked: { type: boolean }
+              a: { type: array, items: { type: string } }
+              mx: { type: array, items: { type: string } }
+              error: { type: string }
     DcLocator:
       type: object
       required: [domain, site, resolver, lookups, dcs, problems, warnings]

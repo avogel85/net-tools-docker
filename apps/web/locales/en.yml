@@ -2456,6 +2456,37 @@ tools:
       ok: OK
       no-cname: No CNAME
       nxdomain: Does not exist
+  lookalike-finder:
+    title: Lookalike domain finder
+    description: Generate typo, homoglyph, IDN and TLD variants of your domain and see which are registered and can receive mail — candidates for phishing and brand abuse.
+    yourDomain: Your domain
+    hint: Up to 150 variants are checked with one DNS query each; registered ones are looked up in more detail. Use it to monitor your own brand.
+    run: Find look-alikes
+    summary: '{checked} variants checked: {registered} registered, {mx} with mail servers.'
+    truncated: '({n} variants were generated; the most likely ones were checked.)'
+    registeredOnly: Only registered
+    allKinds: All kinds
+    domain: Domain
+    kind: Kind
+    status: Status
+    free: Not registered
+    error: Lookup failed
+    risk:
+      high: Registered, receives mail
+      medium: Registered
+      low: Not registered
+    kinds:
+      tld: Other TLD
+      homoglyph: Look-alike characters
+      idn: Unicode look-alike (IDN)
+      transposition: Swapped letters
+      omission: Missing letter
+      repetition: Double letter
+      hyphenation: Added hyphen
+      prefix: Prefix
+      suffix: Suffix
+      replacement: Keyboard typo
+      bitsquatting: Bit flip
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.

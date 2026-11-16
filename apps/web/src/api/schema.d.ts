@@ -1084,6 +1084,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/dns/lookalike": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Typo, homoglyph and TLD variants of a domain and whether they are registered */
+        get: operations["dnsLookalike"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/dns/dnssec": {
         parameters: {
             query?: never;
@@ -2538,6 +2555,23 @@ export interface components {
                 status: "vulnerable" | "dangling" | "ok" | "no-cname" | "nxdomain" | "error";
                 service: string;
                 evidence: string;
+            }[];
+        };
+        DnsLookalike: {
+            domain: string;
+            resolver: string;
+            generated: number;
+            truncated: boolean;
+            candidates: {
+                domain: string;
+                unicode: string;
+                /** @enum {string} */
+                kind: "tld" | "homoglyph" | "idn" | "transposition" | "omission" | "repetition" | "hyphenation" | "prefix" | "suffix" | "replacement" | "bitsquatting";
+                registered: boolean;
+                checked: boolean;
+                a: string[];
+                mx: string[];
+                error: string;
             }[];
         };
         DcLocator: {
@@ -5735,6 +5769,32 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["DnsTakeover"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    dnsLookalike: {
+        parameters: {
+            query: {
+                domain: string;
+                resolver?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["DnsLookalike"];
                     };
                 };
             };

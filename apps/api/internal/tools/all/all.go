@@ -32,6 +32,7 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/lan"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/latmatrix"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/links"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/lookalike"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/mtr"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/ntpcheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/observatory"
@@ -106,6 +107,7 @@ func Tools() []tools.Tool {
 		&email.ValidateTool{},
 		&dclocator.Tool{},
 		&takeover.Tool{},
+		&lookalike.Tool{},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},
