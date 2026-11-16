@@ -2234,6 +2234,64 @@ tools:
     script: Script
     downloadScript: Download update.txt
     run: 'Run:'
+  zone-linter:
+    title: Zone file linter
+    description: Paste a BIND-style zone file and find mistakes before you load it — CNAME conflicts, missing glue, missing final dots, SOA values, duplicate records and more.
+    origin: Origin (if the zone has no $ORIGIN)
+    zone: Zone file
+    placeholder: Paste the zone file here. It is checked in your browser and not sent anywhere.
+    example: Load an example with mistakes
+    findingsTitle: Findings
+    errors: '{n} errors'
+    warnings: '{n} warnings'
+    records: '{n} records'
+    clean: No problems found.
+    line: 'line {n}'
+    summary: Records per type
+    type: Type
+    count: Count
+    severity:
+      error: Error
+      warning: Warning
+      info: Note
+    findings:
+      directive: Unknown or incomplete directive.
+      bad-ttl: '"{value}" is not a valid TTL.'
+      directive-skipped: '{directive} is not supported here; the lines it would add are not checked.'
+      no-origin: The zone has no $ORIGIN — enter the origin above.
+      no-owner: The record has no owner name and there is no previous record to inherit it from.
+      class: Class {class} instead of IN.
+      unknown-type: '"{type}" is not a known record type.'
+      no-data: The {type} record has no data.
+      bad-name: '{name} has an empty label or a label longer than 63 characters.'
+      no-default-ttl: There is no $TTL and records without a TTL follow; servers then use the SOA minimum or refuse the zone.
+      no-soa: The zone has no SOA record.
+      multiple-soa: The zone has more than one SOA record.
+      soa-not-apex: The SOA record is not at the zone apex.
+      soa-syntax: The SOA record needs 7 fields — primary, contact, serial, refresh, retry, expire, minimum.
+      soa-serial: The serial is larger than 4294967295.
+      soa-retry: The SOA retry should be shorter than refresh.
+      soa-expire: The SOA expire ({value} s) is short; 2–4 weeks is usual so secondaries survive a long outage.
+      soa-minimum: The SOA minimum ({value} s) is longer than a day; it sets how long "does not exist" answers are cached.
+      soa-refresh: The SOA refresh ({value} s) is short; secondaries will poll often (fine when NOTIFY is not used).
+      no-ns: The zone apex has no NS records.
+      one-ns: Only one name server; use at least two, preferably in different networks.
+      out-of-zone: '{name} is outside the zone and will be ignored or rejected.'
+      duplicate: Same record as line {first}.
+      occluded: The name is below the delegation {cut}, so this data is not served (only glue addresses are).
+      bad-address: '"{value}" is not a valid address.'
+      txt-too-long: A TXT string is longer than 255 bytes; split it into several quoted strings.
+      cname-apex: A CNAME cannot be at the zone apex (it would conflict with SOA and NS).
+      cname-other-data: '{name} has a CNAME and other records; a CNAME must be the only record at its name.'
+      multiple-cname: More than one CNAME at the same name.
+      target-is-ip: The {type} target "{value}" is an IP address; it must be a host name.
+      missing-dot: '"{value}" has no final dot, so it becomes {target}'
+      target-cname: The {type} target {target} is a CNAME; it must point to a name with address records (RFC 2181).
+      missing-glue: The name server {target} is in the zone but has no A or AAAA record (missing glue).
+      target-no-address: '{target} is in the zone but has no A or AAAA record.'
+      ttl-mismatch: Records of the RRset {rrset} have different TTLs; servers use one TTL per RRset.
+      multiple-spf: '{name} has more than one SPF record; receivers treat that as an error.'
+      low-ttl: The TTL of {ttl} s is very low and increases query load.
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.

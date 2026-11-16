@@ -2234,6 +2234,64 @@ tools:
     script: Script
     downloadScript: update.txt downloaden
     run: 'Uitvoeren:'
+  zone-linter:
+    title: Zonebestand-linter
+    description: Plak een zonebestand in BIND-formaat en vind fouten voordat je het laadt — CNAME-conflicten, ontbrekende glue, ontbrekende punten, SOA-waarden, dubbele records en meer.
+    origin: Origin (als de zone geen $ORIGIN heeft)
+    zone: Zonebestand
+    placeholder: Plak het zonebestand hier. Het wordt in je browser gecontroleerd en nergens heen gestuurd.
+    example: Voorbeeld met fouten laden
+    findingsTitle: Bevindingen
+    errors: '{n} fouten'
+    warnings: '{n} waarschuwingen'
+    records: '{n} records'
+    clean: Geen problemen gevonden.
+    line: 'regel {n}'
+    summary: Records per type
+    type: Type
+    count: Aantal
+    severity:
+      error: Fout
+      warning: Waarschuwing
+      info: Opmerking
+    findings:
+      directive: Onbekende of onvolledige directive.
+      bad-ttl: '"{value}" is geen geldige TTL.'
+      directive-skipped: '{directive} wordt hier niet ondersteund; de regels die het zou toevoegen worden niet gecontroleerd.'
+      no-origin: De zone heeft geen $ORIGIN — vul de origin hierboven in.
+      no-owner: Het record heeft geen eigenaarsnaam en er is geen vorig record om die van over te nemen.
+      class: Klasse {class} in plaats van IN.
+      unknown-type: '"{type}" is geen bekend recordtype.'
+      no-data: Het {type}-record heeft geen data.
+      bad-name: '{name} heeft een leeg label of een label langer dan 63 tekens.'
+      no-default-ttl: Er is geen $TTL en er volgen records zonder TTL; servers gebruiken dan het SOA-minimum of weigeren de zone.
+      no-soa: De zone heeft geen SOA-record.
+      multiple-soa: De zone heeft meer dan één SOA-record.
+      soa-not-apex: Het SOA-record staat niet op de apex van de zone.
+      soa-syntax: Het SOA-record heeft 7 velden nodig — primary, contact, serial, refresh, retry, expire, minimum.
+      soa-serial: De serial is groter dan 4294967295.
+      soa-retry: De SOA-retry hoort korter te zijn dan refresh.
+      soa-expire: De SOA-expire ({value} s) is kort; 2–4 weken is gebruikelijk zodat secondaries een lange storing overleven.
+      soa-minimum: Het SOA-minimum ({value} s) is langer dan een dag; het bepaalt hoe lang "bestaat niet"-antwoorden gecachet worden.
+      soa-refresh: De SOA-refresh ({value} s) is kort; secondaries vragen vaak (prima als NOTIFY niet wordt gebruikt).
+      no-ns: De apex van de zone heeft geen NS-records.
+      one-ns: Maar één nameserver; gebruik er minstens twee, bij voorkeur in verschillende netwerken.
+      out-of-zone: '{name} valt buiten de zone en wordt genegeerd of geweigerd.'
+      duplicate: Hetzelfde record als regel {first}.
+      occluded: De naam ligt onder de delegatie {cut}, dus deze data wordt niet geserveerd (alleen glue-adressen wel).
+      bad-address: '"{value}" is geen geldig adres.'
+      txt-too-long: Een TXT-string is langer dan 255 bytes; splits hem in meerdere strings tussen aanhalingstekens.
+      cname-apex: Een CNAME kan niet op de apex van de zone staan (dat botst met SOA en NS).
+      cname-other-data: '{name} heeft een CNAME en andere records; een CNAME moet het enige record op die naam zijn.'
+      multiple-cname: Meer dan één CNAME op dezelfde naam.
+      target-is-ip: Het {type}-doel "{value}" is een IP-adres; het moet een hostnaam zijn.
+      missing-dot: '"{value}" heeft geen punt aan het eind, dus het wordt {target}'
+      target-cname: Het {type}-doel {target} is een CNAME; het moet naar een naam met adresrecords wijzen (RFC 2181).
+      missing-glue: De nameserver {target} ligt in de zone maar heeft geen A- of AAAA-record (ontbrekende glue).
+      target-no-address: '{target} ligt in de zone maar heeft geen A- of AAAA-record.'
+      ttl-mismatch: Records van de RRset {rrset} hebben verschillende TTL's; servers gebruiken één TTL per RRset.
+      multiple-spf: '{name} heeft meer dan één SPF-record; ontvangers zien dat als een fout.'
+      low-ttl: De TTL van {ttl} s is erg laag en verhoogt het aantal queries.
   dnssec-validator:
     title: DNSSEC-validator
     description: Valideer de DNSSEC-vertrouwensketen van de root tot een naam, en zie precies waar die breekt — ontbrekende DS, niet-passende sleutels, verlopen of ongeldige handtekeningen.
