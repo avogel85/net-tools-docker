@@ -66,6 +66,7 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/tlsscan"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/torcheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/udpprobe"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/voip"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/web"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/webhook"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/whois"
@@ -179,6 +180,7 @@ func Tools() []tools.Tool {
 		&pmtu.Tool{},
 		&ipv6ready.Tool{},
 		&speedtest.Tool{},
+		&voip.Tool{},
 		&portscan.Tool{},
 		&iperf.Tool{},
 		&snmp.Tool{},

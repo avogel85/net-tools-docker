@@ -2147,6 +2147,38 @@ tools:
       unknown: Sommige AS'en op het pad hebben geen ASPA, dus het pad is niet te bewijzen of uit te sluiten; het wordt geaccepteerd.
     publish: Publiceren met Krill
     aspaHint: Zet elke provider (transit en upstreams) in je ASPA, ook die alleen IPv6 doen — een ontbrekende provider maakt je eigen routes ongeldig bij netwerken die controleren. Deze controle gebruikt alleen de records die je hier invoert.
+  voip-quality:
+    title: VoIP-kwaliteitstest
+    description: Stuurt een spraakachtige stroom kleine pakketten tussen je browser en deze server en schat de gesprekskwaliteit — round-trip time, jitter, te late pakketten en een MOS-score.
+    codec: Codec
+    duration: Duur
+    buffer: Jitterbuffer
+    run: Test starten
+    stop: Stoppen
+    rate: '{pps} pakketten/s van {bytes} bytes'
+    noReplies: Er kwamen geen pakketten terug van de server.
+    failed: De verbinding met de server is mislukt of gesloten (bezet, rate limit of geblokkeerd door een proxy).
+    limit: De server heeft de test beëindigd bij zijn pakket- of tijdslimiet.
+    chart: Round-trip time per pakket
+    metric: Meting
+    value: Waarde
+    packetsValue: '{received} van {sent} teruggekomen'
+    rows:
+      packets: Pakketten
+      rtt: Round trip min / gem / p95 / max
+      oneWay: Enkele vertraging (schatting)
+      jitter: Jitter (RFC 3550)
+      lost: Verloren
+      late: 'Te laat voor een jitterbuffer van {buffer} ms'
+      loss: Effectief verlies
+      r: R-factor (E-model)
+    grades:
+      excellent: Uitstekend
+      good: Goed
+      fair: Redelijk
+      poor: Matig
+      bad: Slecht
+    tcpNote: 'De stroom loopt via een WebSocket (TCP) naar deze server, niet via UDP: een verloren pakket wordt opnieuw verzonden en verschijnt als te laat pakket in plaats van als verlies, dus echte gesprekken op een verbinding met verlies kunnen lager scoren. Het meet alleen het pad tussen jou en deze server; een gesprek naar een cloudcentrale of Teams loopt via een ander pad.'
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

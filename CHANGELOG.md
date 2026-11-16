@@ -53,6 +53,9 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
   - Reverse proxy config generator for nginx, Caddy, Traefik and HAProxy.
   - Expiry watchlist: certificate and domain expiry for a list kept in the browser.
   - The speed test is now also found as the bufferbloat test.
+  - VoIP quality test: a voice-like packet stream (G.711, G.729, Opus, G.722) over a WebSocket
+    to the server, with round-trip time, jitter, packets too late for the jitter buffer and a
+    MOS score (E-model). nginx forwards the WebSocket upgrade on `/api/v1/voip/ws`.
 - BGP tools and calculators:
   - Prefix-list generator: IRR (bgpq4) prefix filters for Cisco IOS/IOS-XR, Juniper, Arista,
     FRR, MikroTik, BIRD and OpenBGPD.

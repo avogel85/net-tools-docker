@@ -1544,6 +1544,28 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/voip/ws": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * WebSocket echo for the VoIP quality test (binary packets of 12–512 bytes, at most 2100 packets or 25 s)
+         * @description Upgrade to a WebSocket (same-origin only). Every binary message is echoed unchanged; the
+         *     browser numbers its packets and measures round-trip time, jitter and late packets. Text
+         *     frames or packets outside 12–512 bytes close the connection with 1003, limits with 1008.
+         */
+        get: operations["voipWebSocket"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/portscan/stream": {
         parameters: {
             query?: never;
@@ -7054,6 +7076,25 @@ export interface operations {
                     "text/plain": string;
                 };
             };
+        };
+    };
+    voipWebSocket: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Switching Protocols */
+            101: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            default: components["responses"]["Error"];
         };
     };
     portscanStream: {

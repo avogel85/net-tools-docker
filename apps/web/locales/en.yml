@@ -2147,6 +2147,38 @@ tools:
       unknown: Some ASes on the path have no ASPA, so the path can neither be proven nor ruled out; it is accepted.
     publish: Publish with Krill
     aspaHint: List every provider (transit and route-server-free upstreams) in your ASPA, including IPv6-only ones — a missing provider makes your own routes invalid at networks that verify. This check uses only the records you enter here.
+  voip-quality:
+    title: VoIP quality test
+    description: Sends a voice-like stream of small packets between your browser and this server and estimates call quality — round-trip time, jitter, late packets and a MOS score.
+    codec: Codec
+    duration: Duration
+    buffer: Jitter buffer
+    run: Start test
+    stop: Stop
+    rate: '{pps} packets/s of {bytes} bytes'
+    noReplies: No packets came back from the server.
+    failed: The connection to the server failed or was closed (busy, rate-limited or blocked by a proxy).
+    limit: The server ended the test at its packet or time limit.
+    chart: Round-trip time per packet
+    metric: Metric
+    value: Value
+    packetsValue: '{received} of {sent} returned'
+    rows:
+      packets: Packets
+      rtt: Round trip min / avg / p95 / max
+      oneWay: One-way delay (estimate)
+      jitter: Jitter (RFC 3550)
+      lost: Lost
+      late: 'Too late for a {buffer} ms jitter buffer'
+      loss: Effective loss
+      r: R-factor (E-model)
+    grades:
+      excellent: Excellent
+      good: Good
+      fair: Fair
+      poor: Poor
+      bad: Bad
+    tcpNote: 'The stream runs over a WebSocket (TCP) to this server, not UDP: a lost packet is resent and shows up as a late packet instead of as loss, so real calls on a lossy link can score lower. It measures the path between you and this server only; a call to a cloud PBX or Teams takes a different path.'
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

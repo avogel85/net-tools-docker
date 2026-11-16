@@ -1876,6 +1876,19 @@ paths:
           content:
             text/plain:
               schema: { type: string }
+  /v1/voip/ws:
+    get:
+      operationId: voipWebSocket
+      summary: WebSocket echo for the VoIP quality test (binary packets of 12–512 bytes, at most 2100 packets or 25 s)
+      description: |
+        Upgrade to a WebSocket (same-origin only). Every binary message is echoed unchanged; the
+        browser numbers its packets and measures round-trip time, jitter and late packets. Text
+        frames or packets outside 12–512 bytes close the connection with 1003, limits with 1008.
+      tags: [connectivity]
+      x-capability: net.voip
+      responses:
+        "101": { description: Switching Protocols }
+        default: { $ref: "#/components/responses/Error" }
   /v1/portscan/stream:
     get:
       operationId: portscanStream

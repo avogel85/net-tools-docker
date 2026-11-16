@@ -4,6 +4,7 @@ go 1.27.4
 
 require (
 	github.com/beevik/ntp v1.6.0
+	github.com/coder/websocket v1.8.15
 	github.com/coreos/go-oidc/v3 v3.21.0
 	github.com/emersion/go-msgauth v0.7.0
 	github.com/go-chi/chi/v5 v5.4.0
