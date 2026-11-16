@@ -1564,6 +1564,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/lan/radius": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * RADIUS Status-Server or Access-Request (PAP) test with a shared secret (LAN profile)
+         * @description POST so the shared secret and test password stay out of URLs and logs; nothing is stored.
+         */
+        post: operations["lanRadius"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/lan/wol": {
         parameters: {
             query?: never;
@@ -2741,6 +2761,18 @@ export interface components {
                 vendorIds: string[];
             };
             findings: string[];
+        };
+        LanRadius: {
+            address: string;
+            mode: string;
+            answered: boolean;
+            /** @enum {string} */
+            result: "accept" | "reject" | "challenge" | "other" | "no-reply" | "refused" | "error";
+            replyMessages: string[];
+            responseAuthOk: boolean;
+            /** @enum {string} */
+            messageAuth: "ok" | "bad" | "absent";
+            rttMs: number;
         };
         LdapCheck: {
             host: string;
@@ -6786,6 +6818,42 @@ export interface operations {
                     "text/event-stream": string;
                 };
             };
+        };
+    };
+    lanRadius: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    host: string;
+                    /** @default 1812 */
+                    port?: number;
+                    secret: string;
+                    /** @enum {string} */
+                    mode: "status" | "auth";
+                    username?: string;
+                    password?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["LanRadius"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
         };
     };
     lanWol: {

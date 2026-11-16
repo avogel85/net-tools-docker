@@ -123,6 +123,7 @@ func Tools() []tools.Tool {
 		&remoteaccess.Tool{},
 		&ikeprobe.Tool{},
 		&udpprobe.Tool{},
+		&lan.RadiusTool{},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},

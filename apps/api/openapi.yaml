@@ -1892,6 +1892,40 @@ paths:
           content:
             text/event-stream:
               schema: { type: string }
+  /v1/lan/radius:
+    post:
+      operationId: lanRadius
+      summary: RADIUS Status-Server or Access-Request (PAP) test with a shared secret (LAN profile)
+      description: POST so the shared secret and test password stay out of URLs and logs; nothing is stored.
+      tags: [lan]
+      x-capability: lan.radius
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [host, secret, mode]
+              properties:
+                host: { type: string }
+                port: { type: integer, minimum: 0, maximum: 65535, default: 1812 }
+                secret: { type: string, maxLength: 128 }
+                mode: { type: string, enum: [status, auth] }
+                username: { type: string, maxLength: 253 }
+                password: { type: string, maxLength: 128 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/LanRadius" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/lan/wol:
     post:
       operationId: lanWol
@@ -3361,6 +3395,18 @@ components:
             noProposal: { type: boolean }
             vendorIds: { type: array, items: { type: string } }
         findings: { type: array, items: { type: string } }
+    LanRadius:
+      type: object
+      required: [address, mode, answered, result, replyMessages, responseAuthOk, messageAuth, rttMs]
+      properties:
+        address: { type: string }
+        mode: { type: string }
+        answered: { type: boolean }
+        result: { type: string, enum: [accept, reject, challenge, other, no-reply, refused, error] }
+        replyMessages: { type: array, items: { type: string } }
+        responseAuthOk: { type: boolean }
+        messageAuth: { type: string, enum: [ok, bad, absent] }
+        rttMs: { type: number }
     LdapCheck:
       type: object
       required: [host, endpoints, warnings]

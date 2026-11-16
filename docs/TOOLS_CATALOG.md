@@ -237,7 +237,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | LAN-07 | LLDP / CDP neighbours | Which switch and port the server is connected to | S L | AF_PACKET + BPF (LLDP, CDP) | — | 5 | ✅ |
 | LAN-08 | IPv6 neighbours & routers | ff02::1 echo + NS/NA, router advertisements (prefixes, RDNSS, M/O flags) | S L | `mdlayher/ndp` | — | 5 | ✅ |
 | LAN-09 | DHCPv6 probe | Rogue DHCPv6 check: SOLICIT (IA_NA + IA_PD), collect ADVERTISEs | S L | `insomniacslk/dhcp/dhcpv6` + AF_PACKET | — | 5 | ✅ |
-| LAN-10 | RADIUS tester | Access-Request (PAP) or Status-Server with a user-supplied shared secret and test credentials | L | custom RADIUS client | — | 11 | ⬜ |
+| LAN-10 | RADIUS tester | Access-Request (PAP) or Status-Server with a user-supplied shared secret and test credentials | L | custom RADIUS client | — | 11 | ✅ |
 
 ## 10. Calculators & Reference
 

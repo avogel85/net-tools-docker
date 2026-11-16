@@ -1718,6 +1718,40 @@ tools:
     run: Trace back to me
     paths: Networks on the way to you
     pathsHint: The autonomous systems each probe's path crosses; different paths from nearby locations point to different upstreams or peering.
+  radius-tester:
+    title: RADIUS tester
+    description: Check a RADIUS server (FreeRADIUS, NPS, a Wi-Fi controller) with Status-Server or a test Access-Request, and verify the reply with the shared secret.
+    host: RADIUS server
+    port: Port
+    secret: Shared secret
+    mode: Test
+    modes:
+      status: Status-Server (is it alive?)
+      auth: Access-Request (PAP)
+    username: Test user name
+    password: Test password
+    hint: NET-TOOLS must be registered as a client (NAS) on the RADIUS server for its own IP, or the server silently ignores it. The secret and password are sent to this server in the request body only and are not stored. Use a test account.
+    run: Test
+    verdict:
+      ok: The server answered and the secret matches
+      rejected: The server rejected the user, and the secret matches
+      untrusted: The reply is not signed with this secret
+      silent: No reply
+      closed: Port closed
+    explain:
+      ok: '{result} after {ms} ms. The reply carries a valid response authenticator for this secret.'
+      rejected: '{result} after {ms} ms: wrong user name or password, or a policy (time, group, NAS) refused it. The shared secret itself is correct.'
+      untrusted: '{result} after {ms} ms, but the response authenticator does not match: the shared secret differs from the one on the server.'
+      silent: Nothing came back. Usually the shared secret is wrong or NET-TOOLS is not a registered client (servers drop such requests without answering); otherwise a firewall blocks UDP to this port, or Status-Server is disabled.
+      closed: The host answered with ICMP "port unreachable" — no RADIUS server listens on this port.
+    results:
+      accept: Access-Accept
+      reject: Access-Reject
+      challenge: Access-Challenge
+      other: Another reply
+      no-reply: No reply
+      refused: Refused
+      error: Error
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

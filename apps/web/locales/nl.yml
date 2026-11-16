@@ -1718,6 +1718,40 @@ tools:
     run: Terug naar mij traceren
     paths: Netwerken op weg naar jou
     pathsHint: De autonome systemen die het pad van elke probe doorkruist; verschillende paden vanaf nabije locaties wijzen op andere upstreams of peering.
+  radius-tester:
+    title: RADIUS-tester
+    description: Controleer een RADIUS-server (FreeRADIUS, NPS, een wifi-controller) met Status-Server of een test-Access-Request, en controleer het antwoord met het shared secret.
+    host: RADIUS-server
+    port: Poort
+    secret: Shared secret
+    mode: Test
+    modes:
+      status: Status-Server (leeft hij?)
+      auth: Access-Request (PAP)
+    username: Testgebruikersnaam
+    password: Testwachtwoord
+    hint: NET-TOOLS moet voor zijn eigen IP als client (NAS) op de RADIUS-server zijn geregistreerd, anders negeert de server hem zonder antwoord. Het secret en wachtwoord gaan alleen in de request-body naar deze server en worden niet opgeslagen. Gebruik een testaccount.
+    run: Testen
+    verdict:
+      ok: De server antwoordde en het secret klopt
+      rejected: De server weigerde de gebruiker, en het secret klopt
+      untrusted: Het antwoord is niet ondertekend met dit secret
+      silent: Geen antwoord
+      closed: Poort gesloten
+    explain:
+      ok: '{result} na {ms} ms. Het antwoord heeft een geldige response authenticator voor dit secret.'
+      rejected: '{result} na {ms} ms: verkeerde gebruikersnaam of wachtwoord, of een beleid (tijd, groep, NAS) weigerde het. Het shared secret zelf klopt.'
+      untrusted: '{result} na {ms} ms, maar de response authenticator klopt niet: het shared secret verschilt van dat op de server.'
+      silent: Er kwam niets terug. Meestal is het shared secret verkeerd of is NET-TOOLS geen geregistreerde client (servers gooien zulke verzoeken zonder antwoord weg); anders blokkeert een firewall UDP naar deze poort, of staat Status-Server uit.
+      closed: De host antwoordde met ICMP "port unreachable" — er luistert geen RADIUS-server op deze poort.
+    results:
+      accept: Access-Accept
+      reject: Access-Reject
+      challenge: Access-Challenge
+      other: Een ander antwoord
+      no-reply: Geen antwoord
+      refused: Geweigerd
+      error: Fout
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

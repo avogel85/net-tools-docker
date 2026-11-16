@@ -32,6 +32,18 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
   - AD / Kerberos DC locator: the SRV records Windows clients use to find domain controllers.
   - ACME readiness check: CAA, the HTTP-01 challenge path and DNS-01 delegation before you
     request a certificate.
+- Service probes:
+  - UDP service probe: real requests for DNS, NTP, SNMPv3 (engine discovery, no community),
+    SIP, STUN, IKE, QUIC, OpenVPN, NetBIOS and TFTP, to tell open from filtered.
+  - IPsec / IKE probe: IKEv2 and IKEv1 proposals, DH groups, fragmentation and vendor IDs.
+  - SIP server check: NAPTR/SRV discovery and OPTIONS over UDP, TCP and TLS.
+  - LDAP / LDAPS check: anonymous rootDSE, StartTLS and certificate (no bind).
+  - Remote access check: RDP network level authentication and certificate, VNC security
+    types, SSH banner.
+  - Post-quantum TLS check: whether a server negotiates hybrid ML-KEM key exchange.
+  - Reverse traceroute: MTR from Globalping probes back to your public IP, with AS paths.
+  - RADIUS tester (LAN profile): Status-Server or a test Access-Request, verified with the
+    shared secret.
 - DNS lookup accepts the NSEC3PARAM record type.
 
 ### Fixed
