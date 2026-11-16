@@ -1869,6 +1869,26 @@ tools:
     from: 'from {ip}'
     truncated: body cut at 64 KB
     binary: The body is binary and is not shown.
+  firewall-objects:
+    title: IP list → firewall objects
+    description: Turn a list of IPs, networks and ranges into address objects and groups for FortiGate, Cisco ASA/IOS, Palo Alto, Juniper, MikroTik, pfSense/OPNsense, ipset and nftables.
+    list: IPs, networks and ranges (one per line, "# comment" optional)
+    name: Group / list name
+    invalidName: Start with a letter or _, then letters, digits, _ and - (at most 41).
+    merge: Merge adjacent and overlapping networks
+    invalid: 'Ignored (line: text): {list}'
+    output: Configuration
+    download: Download
+    platforms:
+      fortigate: FortiGate
+      asa: Cisco ASA
+      ios: Cisco IOS ACL
+      paloalto: Palo Alto
+      juniper: Juniper SRX
+      mikrotik: MikroTik
+      pfsense: pfSense / OPNsense alias
+      ipset: ipset
+      nftables: nftables set
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

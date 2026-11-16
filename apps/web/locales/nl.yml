@@ -1869,6 +1869,26 @@ tools:
     from: 'van {ip}'
     truncated: body afgekapt op 64 KB
     binary: De body is binair en wordt niet getoond.
+  firewall-objects:
+    title: IP-lijst → firewallobjecten
+    description: Zet een lijst IP's, netwerken en reeksen om in adresobjecten en groepen voor FortiGate, Cisco ASA/IOS, Palo Alto, Juniper, MikroTik, pfSense/OPNsense, ipset en nftables.
+    list: IP's, netwerken en reeksen (één per regel, "# opmerking" optioneel)
+    name: Groeps-/lijstnaam
+    invalidName: Begin met een letter of _, daarna letters, cijfers, _ en - (maximaal 41).
+    merge: Aangrenzende en overlappende netwerken samenvoegen
+    invalid: 'Genegeerd (regel: tekst): {list}'
+    output: Configuratie
+    download: Downloaden
+    platforms:
+      fortigate: FortiGate
+      asa: Cisco ASA
+      ios: Cisco IOS-ACL
+      paloalto: Palo Alto
+      juniper: Juniper SRX
+      mikrotik: MikroTik
+      pfsense: pfSense/OPNsense-alias
+      ipset: ipset
+      nftables: nftables-set
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

@@ -70,6 +70,7 @@ import { tool as emailValidator } from './email-validator'
 import { tool as encryptedDnsTester } from './encrypted-dns-tester'
 import { tool as eui64Calculator } from './eui64-calculator'
 import { tool as expiryWatchlist } from './expiry-watchlist'
+import { tool as firewallObjects } from './firewall-objects'
 import { tool as gatewayInfo } from './gateway-info'
 import { tool as hstsPreload } from './hsts-preload'
 import { tool as httpProtocols } from './http-protocols'
@@ -216,7 +217,7 @@ const categories: { id: string, components: Tool[] }[] = [
   { id: 'bgp', components: [ipToAsn, whoisLookup, rdapLookup, domainExpiry, asnInfo, prefixStatus, rpkiValidator, lookingGlass, peeringdbLookup, cloudIpLookup, irrExpansion, asPathVisualizer, bgpRouteHistory, asnNeighbourGraph, commonIxps, roaCoverage, prefixListTester, bgpCommunityDecoder] },
   { id: 'reputation', components: [ipGeolocation, passiveExposure, ipReputation, torExitCheck, urlReputation] },
   { id: 'lan', components: [wakeOnLan, arpScan, mdnsBrowser, ssdpDiscovery, dhcpProbe, gatewayInfo, lldpNeighbors, ipv6Neighbors, dhcpv6Probe, radiusTester] },
-  { id: 'calculators', components: [bandwidthCalculator, dataUnitConverter, bdpCalculator, mtuCalculator, portReference, protocolReference, dnsRecordTypes, subnetCheatSheet, wifiQrGenerator, opticalPower, wireguardConfig, routerSnippets, slaCalculator, voipBandwidthCalculator, packetDecoder, pcapViewer, poeBudgetCalculator, natCapacityCalculator, wirelessLinkCalculator, dscpConverter, configDiff, aclAnalyzer] },
+  { id: 'calculators', components: [bandwidthCalculator, dataUnitConverter, bdpCalculator, mtuCalculator, portReference, protocolReference, dnsRecordTypes, subnetCheatSheet, wifiQrGenerator, opticalPower, wireguardConfig, routerSnippets, slaCalculator, voipBandwidthCalculator, packetDecoder, pcapViewer, poeBudgetCalculator, natCapacityCalculator, wirelessLinkCalculator, dscpConverter, configDiff, aclAnalyzer, firewallObjects] },
   { id: 'client', components: [requestHeaders, browserLatency, connectionInfo, ipv6Test, webrtcLeakTest, speedTest, dnsProxyCheck, providerStatus, reportBundle] },
   { id: 'dashboard', components: [cloudStatus, quickLinks] },
 ]
