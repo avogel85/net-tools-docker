@@ -19,6 +19,19 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
   - nsupdate / TSIG builder: TSIG keys for BIND, Knot and PowerDNS plus nsupdate scripts.
   - Zone file linter: CNAME conflicts, missing glue, missing final dots, SOA values, TTLs and more.
   - SSH key & SSHFP tool: SHA256/MD5 fingerprints, authorized_keys and known_hosts parsing, SSHFP records.
+- Email and DNS checks:
+  - Email provider detector: mailbox provider, security gateway, sending services, DMARC
+    reporting and verified SaaS services, from public DNS.
+  - Email address validator: syntax, MX / null MX, disposable and role addresses, typo hints
+    (no mail is sent; addresses go in a POST body and are not logged).
+  - DKIM signature verifier: paste a raw message or open an .eml file; shows each signature's
+    result, alignment with From, Authentication-Results and ARC.
+  - DNS snapshot & diff: save a domain's records in the browser and compare snapshots.
+  - Subdomain takeover check: dangling CNAMEs and unclaimed pages at hosting services.
+  - Lookalike domain finder: typo, homoglyph, IDN and TLD variants and whether they are registered.
+  - AD / Kerberos DC locator: the SRV records Windows clients use to find domain controllers.
+  - ACME readiness check: CAA, the HTTP-01 challenge path and DNS-01 delegation before you
+    request a certificate.
 - DNS lookup accepts the NSEC3PARAM record type.
 
 ### Fixed

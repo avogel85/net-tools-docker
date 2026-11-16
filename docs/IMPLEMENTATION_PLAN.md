@@ -88,7 +88,7 @@ fingerprint (needs an extra TLS port). Watchlists (TLS-19, BGP-20) live in the b
 storage, scheduler or alerts. One stacked branch per phase (`fase-17` … `fase-21`).
 
 - [x] **Phase 9 — generators (browser)**: EM-14 ✅, EM-15, EM-16, EM-17, DNS-22, DNS-23, DNS-24, DNS-25, TLS-16.
-- [ ] **Phase 10 — email & DNS checks**: EM-18, EM-19, EM-20, DNS-26, DNS-27, DNS-28, DNS-29, TLS-17.
+- [x] **Phase 10 — email & DNS checks**: EM-18, EM-19, EM-20, DNS-26, DNS-27, DNS-28, DNS-29, TLS-17.
 - [ ] **Phase 11 — service probes**: CON-19, CON-20, CON-21, CON-22, CON-23, CON-24, LAN-10, TLS-18.
 - [ ] **Phase 12 — web & client**: WEB-21, WEB-22, WEB-23, WEB-24, WEB-25, TLS-19, CLI-09, CLI-10.
 - [ ] **Phase 13 — BGP & calculators**: BGP-19, BGP-20, BGP-21, CAL-23 … CAL-29.
