@@ -1,6 +1,7 @@
 import type { Tool, ToolCategory } from './tool'
 import { translate } from '@/plugins/i18n.plugin'
 import { tool as aclAnalyzer } from './acl-analyzer'
+import { tool as acmeCheck } from './acme-check'
 import { tool as arpScan } from './arp-scan'
 import { tool as asPathVisualizer } from './as-path-visualizer'
 import { tool as asnInfo } from './asn-info'
@@ -195,7 +196,7 @@ const categories: { id: string, components: Tool[] }[] = [
   { id: 'dns', components: [punycodeConverter, domainParser, dnsLookup, reverseDns, caaChecker, dnsConsistency, dnsPropagation, dnsTrace, encryptedDnsTester, zoneBuilder, zoneLinter, nsupdateBuilder, zoneTransferTest, wildcardDetector, dnsBenchmark, dnssecValidator, dsDnskey, nsec3Hash, openResolverTest, ptrCoverage, svcbHttpsViewer, ednsCompliance, dnsTtlPlanner, dnsHealthReport, bulkLookup, dcLocator, dnsSnapshot, takeoverCheck, lookalikeFinder] },
   { id: 'connectivity', components: [ping, tcpPing, traceroute, mtr, portCheck, ntpCheck, serverNetworkInfo, isItDown, latencyMatrix, pathMtu, ipv6Readiness, portScanner, iperf, snmp, latencyMonitor] },
   { id: 'web', components: [urlParser, userAgentParser, httpStatusCodes, httpRequest, redirectTracer, httpTiming, securityHeaders, corsTester, hstsPreload, compressionCheck, cookieInspector, wellKnownFiles, httpProtocols, curlBuilder, websocketTester, cdnWafDetector, cacheHeaderAnalyzer, mixedContentChecker, cspBuilder, domainScorecard] },
-  { id: 'tls', components: [certificateDecoder, tlsInspector, tlsExpiry, csrTool, certKeyMatcher, ctSearch, starttlsCheck, revocationCheck, tlsScanner, sshAudit, sshKeyTool, keyConverter, daneChecker, certChainValidator, pkcs12Inspector, labCaGenerator] },
+  { id: 'tls', components: [certificateDecoder, tlsInspector, tlsExpiry, csrTool, certKeyMatcher, ctSearch, starttlsCheck, revocationCheck, tlsScanner, sshAudit, sshKeyTool, keyConverter, daneChecker, certChainValidator, pkcs12Inspector, labCaGenerator, acmeCheck] },
   { id: 'email', components: [mxLookup, spfChecker, spfFlattener, dmarcChecker, dmarcGenerator, dkimChecker, dkimGenerator, emailHeaderAnalyzer, blacklistCheck, mtaStsChecker, mtaStsGenerator, openRelayTest, dmarcReportViewer, smtpBannerCheck, tlsRptViewer, emailDeliverabilityReport, m365DomainCheck, emailProviderDetector, emailValidator] },
   { id: 'bgp', components: [ipToAsn, whoisLookup, rdapLookup, domainExpiry, asnInfo, prefixStatus, rpkiValidator, lookingGlass, peeringdbLookup, cloudIpLookup, irrExpansion, asPathVisualizer, bgpRouteHistory, asnNeighbourGraph, commonIxps, roaCoverage, prefixListTester, bgpCommunityDecoder] },
   { id: 'reputation', components: [ipGeolocation, passiveExposure, ipReputation, torExitCheck, urlReputation] },

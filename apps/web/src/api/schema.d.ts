@@ -480,6 +480,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/tls/acme": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ACME readiness (CAA, HTTP-01 challenge path, DNS-01 delegation) for a certificate name */
+        get: operations["tlsAcme"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/tls/inspect": {
         parameters: {
             query?: never;
@@ -2573,6 +2590,29 @@ export interface components {
                 mx: string[];
                 error: string;
             }[];
+        };
+        TlsAcme: {
+            name: string;
+            ca: string;
+            wildcard: boolean;
+            resolver: string;
+            a: string[];
+            aaaa: string[];
+            caaName: string;
+            caaIssue: string[];
+            caaWild: string[];
+            caaAllowed: boolean;
+            httpChecked: boolean;
+            httpHops: {
+                url: string;
+                status: number;
+                error: string;
+            }[];
+            httpResult: string;
+            challengeCname: string;
+            challengeTxt: string[];
+            problems: string[];
+            warnings: string[];
         };
         DcLocator: {
             domain: string;
@@ -4857,6 +4897,34 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["Cors"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    tlsAcme: {
+        parameters: {
+            query: {
+                /** @description Host name; prefix *. for a wildcard */
+                name: string;
+                ca?: "letsencrypt" | "zerossl" | "google" | "buypass" | "sslcom";
+                resolver?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["TlsAcme"];
                     };
                 };
             };

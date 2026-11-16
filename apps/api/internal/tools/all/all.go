@@ -3,6 +3,7 @@ package all
 
 import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools"
+	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/acmecheck"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/asnlookup"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/cloudranges"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/cloudstatus"
@@ -108,6 +109,7 @@ func Tools() []tools.Tool {
 		&dclocator.Tool{},
 		&takeover.Tool{},
 		&lookalike.Tool{},
+		&acmecheck.Tool{},
 		&email.DMARCTool{},
 		&email.DKIMTool{},
 		&email.MTASTSTool{},

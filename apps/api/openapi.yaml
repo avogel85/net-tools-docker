@@ -559,6 +559,29 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/Cors" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/tls/acme:
+    get:
+      operationId: tlsAcme
+      summary: ACME readiness (CAA, HTTP-01 challenge path, DNS-01 delegation) for a certificate name
+      tags: [tls]
+      x-capability: tls.acme
+      parameters:
+        - { name: name, in: query, required: true, schema: { type: string }, description: "Host name; prefix *. for a wildcard" }
+        - { name: ca, in: query, schema: { type: string, enum: [letsencrypt, zerossl, google, buypass, sslcom], default: letsencrypt } }
+        - { name: resolver, in: query, schema: { type: string, default: system } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/TlsAcme" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/tls/inspect:
     get:
       operationId: tlsInspect
@@ -3138,6 +3161,35 @@ components:
               a: { type: array, items: { type: string } }
               mx: { type: array, items: { type: string } }
               error: { type: string }
+    TlsAcme:
+      type: object
+      required: [name, ca, wildcard, resolver, a, aaaa, caaName, caaIssue, caaWild, caaAllowed, httpChecked, httpHops, httpResult, challengeCname, challengeTxt, problems, warnings]
+      properties:
+        name: { type: string }
+        ca: { type: string }
+        wildcard: { type: boolean }
+        resolver: { type: string }
+        a: { type: array, items: { type: string } }
+        aaaa: { type: array, items: { type: string } }
+        caaName: { type: string }
+        caaIssue: { type: array, items: { type: string } }
+        caaWild: { type: array, items: { type: string } }
+        caaAllowed: { type: boolean }
+        httpChecked: { type: boolean }
+        httpHops:
+          type: array
+          items:
+            type: object
+            required: [url, status, error]
+            properties:
+              url: { type: string }
+              status: { type: integer }
+              error: { type: string }
+        httpResult: { type: string }
+        challengeCname: { type: string }
+        challengeTxt: { type: array, items: { type: string } }
+        problems: { type: array, items: { type: string } }
+        warnings: { type: array, items: { type: string } }
     DcLocator:
       type: object
       required: [domain, site, resolver, lookups, dcs, problems, warnings]

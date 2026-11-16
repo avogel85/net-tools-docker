@@ -1605,6 +1605,42 @@ tools:
       rsa-2048: 2048-bit RSA is acceptabel; voor nieuwe sleutels wordt 3072 bits of Ed25519 aanbevolen.
     sshfp: SSHFP-records
     sshfpHint: Met SSHFP controleren clients hostsleutels via DNS ("VerifyHostKeyDNS yes"), maar alleen als de zone met DNSSEC is ondertekend en de resolver van de client die valideert.
+  acme-check:
+    title: ACME-gereedheidscontrole
+    description: Controleer voordat je een Let's Encrypt-certificaat (of ander ACME-certificaat) aanvraagt of CAA de CA toestaat, het HTTP-01-challengepad op poort 80 bereikbaar is en de DNS-01-delegatie klopt.
+    name: Certificaatnaam
+    invalidName: Vul een hostnaam in zoals www.example.com, of *.example.com voor een wildcard.
+    ca: Certificaatautoriteit
+    cas:
+      letsencrypt: Let's Encrypt
+      zerossl: ZeroSSL (Sectigo)
+      google: Google Trust Services
+      buypass: Buypass
+      sslcom: SSL.com
+    run: Gereedheid controleren
+    verdict:
+      ready: Klaar voor een certificaat
+      warnings: Werkt waarschijnlijk — bekijk de opmerkingen
+      blocked: Uitgifte zal mislukken
+    details: Details
+    addresses: Adressen
+    allowed: Toegestaan
+    denied: Niet toegestaan
+    noCaa: Geen CAA-records — elke CA mag uitgeven.
+    httpSkipped: Niet gecontroleerd (wildcards vereisen DNS-01, of de naam heeft geen adres).
+    findings:
+      caa-denies: CAA-records noemen {ca} niet; de CA moet uitgifte weigeren. Voeg er een issue- (of issuewild-)record voor toe.
+      caa-servfail: De CAA-lookup is mislukt (SERVFAIL); de meeste CA's weigeren uitgifte tot die lukt.
+      no-address: De naam heeft geen A- of AAAA-record, dus HTTP-01 kan niet werken (DNS-01 wel).
+      http-unreachable: Poort 80 antwoordt niet. HTTP-01 vereist dat poort 80 open is naar het internet, ook als de site alleen HTTPS gebruikt.
+      http-server-error: De webserver beantwoordt het challengepad met een serverfout.
+      http-bad-redirect: Het challengepad stuurt door naar een andere poort dan 80/443 of een ongeldige URL, wat ACME-validators niet volgen.
+      http-too-many-redirects: Het challengepad stuurt te vaak door.
+      http-answers-200: Het challengepad antwoordt 200 op een onbekend token — een catch-all-regel kan het echte challengebestand verbergen.
+      http-status: 'Het challengepad antwoordt HTTP {status}; de validator moet het tokenbestand kunnen ophalen (normaal een 404 voor onbekende tokens).'
+      stale-txt: _acme-challenge heeft oude TXT-records; ruim restanten op zodat DNS-01-validatie niet in de war raakt.
+      wildcard-dns01: Wildcardcertificaten kunnen alleen met DNS-01 worden gevalideerd.
+      ipv6-used: De naam heeft een AAAA-record; Let's Encrypt geeft de voorkeur aan IPv6, dus de challenge moet ook via IPv6 werken (er is maar één adresfamilie getest).
   ip-to-asn:
     title: IP → ASN
     description: Vind het autonome systeem (ASN), de aangekondigde prefix, AS-naam, land en register bij een IP-adres.

@@ -1605,6 +1605,42 @@ tools:
       rsa-2048: 2048-bit RSA is acceptable; 3072 bits or Ed25519 is recommended for new keys.
     sshfp: SSHFP records
     sshfpHint: SSHFP lets clients verify host keys through DNS ("VerifyHostKeyDNS yes"), but only when the zone is signed with DNSSEC and the client's resolver validates it.
+  acme-check:
+    title: ACME readiness check
+    description: Before requesting a Let's Encrypt (or other ACME) certificate, check that CAA allows the CA, the HTTP-01 challenge path is reachable on port 80 and the DNS-01 delegation is in place.
+    name: Certificate name
+    invalidName: Enter a host name such as www.example.com, or *.example.com for a wildcard.
+    ca: Certificate authority
+    cas:
+      letsencrypt: Let's Encrypt
+      zerossl: ZeroSSL (Sectigo)
+      google: Google Trust Services
+      buypass: Buypass
+      sslcom: SSL.com
+    run: Check readiness
+    verdict:
+      ready: Ready for a certificate
+      warnings: Probably works — check the notes
+      blocked: Issuance will fail
+    details: Details
+    addresses: Addresses
+    allowed: Allowed
+    denied: Not allowed
+    noCaa: No CAA records — any CA may issue.
+    httpSkipped: Not checked (wildcards need DNS-01, or the name has no address).
+    findings:
+      caa-denies: CAA records do not list {ca}; the CA must refuse to issue. Add an issue (or issuewild) record for it.
+      caa-servfail: The CAA lookup failed (SERVFAIL); most CAs refuse to issue until it succeeds.
+      no-address: The name has no A or AAAA record, so HTTP-01 cannot work (DNS-01 still can).
+      http-unreachable: Port 80 does not answer. HTTP-01 needs port 80 open to the internet, even if the site only uses HTTPS.
+      http-server-error: The web server answers the challenge path with a server error.
+      http-bad-redirect: The challenge path redirects to a port other than 80/443 or an invalid URL, which ACME validators do not follow.
+      http-too-many-redirects: The challenge path redirects too many times.
+      http-answers-200: The challenge path answers 200 for an unknown token — a catch-all rule may hide the real challenge file.
+      http-status: 'The challenge path answers HTTP {status}; the validator needs to receive the token file (normally a 404 for unknown tokens).'
+      stale-txt: _acme-challenge has old TXT records; remove leftovers so DNS-01 validation is not confused.
+      wildcard-dns01: Wildcard certificates can only be validated with DNS-01.
+      ipv6-used: The name has an AAAA record; Let's Encrypt prefers IPv6, so the challenge must work over IPv6 too (only one address family was tested).
   ip-to-asn:
     title: IP → ASN
     description: Find the autonomous system (ASN), announced prefix, AS name, country and registry for an IP address.
