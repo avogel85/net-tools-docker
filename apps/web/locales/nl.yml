@@ -1707,6 +1707,17 @@ tools:
       unexpected: Antwoord (ander protocol)
       error: Fout
     statesHint: Gesloten betekent dat de host antwoordde met ICMP "port unreachable"; open of gefilterd betekent dat er niets terugkwam, wat ook gebeurt als een firewall het pakket weggooit.
+  reverse-traceroute:
+    title: Reverse traceroute
+    description: Volg het pad van Globalping-probes over de hele wereld terug naar je eigen publieke IP — de terugweg van je verkeer, die vaak anders is dan de heenweg.
+    intro: Routering op internet is vaak asymmetrisch. Dit voert een traceroute uit vanaf probes op de locaties die je kiest naar je publieke IP, zodat je ziet hoe andere netwerken jou bereiken.
+    yourIp: 'Traceren naar:'
+    noIp: Je publieke IP kon niet worden bepaald (ipify is niet bereikbaar).
+    locations: Probelocaties (maximaal 5)
+    privacy: Je publieke IP wordt naar Globalping gestuurd, een openbaar meetnetwerk, en de meting is daar openbaar.
+    run: Terug naar mij traceren
+    paths: Netwerken op weg naar jou
+    pathsHint: De autonome systemen die het pad van elke probe doorkruist; verschillende paden vanaf nabije locaties wijzen op andere upstreams of peering.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

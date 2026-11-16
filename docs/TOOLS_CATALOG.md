@@ -107,7 +107,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | CON-21 | SIP server check | SIP OPTIONS over UDP/TCP/TLS, NAPTR/SRV discovery, response code and server header | S | custom SIP over `target.Resolve` | — | 11 | ✅ |
 | CON-22 | LDAP / LDAPS check | Anonymous rootDSE read, StartTLS/LDAPS certificate, naming contexts and SASL mechanisms | S | minimal LDAP BER client | — | 11 | ✅ |
 | CON-23 | Remote access check | RDP (TLS certificate, NLA/CredSSP), VNC (RFB version, security types) and SSH summary with warnings | S | custom handshakes | — | 11 | ✅ |
-| CON-24 | Reverse traceroute | Traceroute from Globalping probes back to the visitor, next to the outbound path (asymmetry) | P | — | Globalping (keyless) | 11 | ⬜ |
+| CON-24 | Reverse traceroute | MTR from Globalping probes in chosen locations back to the visitor's public IP (from ipify), with the AS path per probe — the return path, often different from the way out | P | composed in the browser: ipify + `/remote/stream` (mtr) | Globalping (keyless) | 11 | ✅ |
 
 ## 4. HTTP & Web
 

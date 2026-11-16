@@ -1707,6 +1707,17 @@ tools:
       unexpected: Answered (other protocol)
       error: Error
     statesHint: Closed means the host answered with ICMP "port unreachable"; open or filtered means nothing came back, which also happens when a firewall drops the packet.
+  reverse-traceroute:
+    title: Reverse traceroute
+    description: Trace the path from Globalping probes around the world back to your own public IP — the return path your traffic takes, which is often different from the way out.
+    intro: Internet routing is often asymmetric. This runs a traceroute from probes in the locations you choose towards your public IP, so you can see how other networks reach you.
+    yourIp: 'Trace to:'
+    noIp: Your public IP could not be determined (ipify is unreachable).
+    locations: Probe locations (up to 5)
+    privacy: Your public IP is sent to Globalping, a public measurement network, and the measurement is public there.
+    run: Trace back to me
+    paths: Networks on the way to you
+    pathsHint: The autonomous systems each probe's path crosses; different paths from nearby locations point to different upstreams or peering.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.
