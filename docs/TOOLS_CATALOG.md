@@ -271,7 +271,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | CAL-26 | Cabling & transceiver reference | Copper categories, fiber types and SFP/QSFP standards with speeds, reach and connectors | B | static data | — | 13 | ⬜ |
 | CAL-27 | IP list → firewall objects | Convert IPs/CIDRs/ranges into Cisco, FortiGate, pfSense, MikroTik, iptables/nftables and Palo Alto objects | B | custom | — | 13 | ✅ |
 | CAL-28 | Capture filter builder | Build tcpdump/BPF capture filters and Wireshark display filters with explanations | B | custom | — | 13 | ✅ |
-| CAL-29 | Log line parser | Recognise syslog (RFC 3164/5424), FortiGate, Cisco ASA, nginx/Apache lines and split them into fields | B | custom | — | 13 | ⬜ |
+| CAL-29 | Log line parser | Recognise syslog (RFC 3164/5424), FortiGate, Cisco ASA, nginx/Apache lines and split them into fields | B | custom | — | 13 | ✅ |
 
 ## 11. Client Diagnostics (runs in the user's browser)
 

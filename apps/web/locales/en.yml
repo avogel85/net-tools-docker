@@ -1929,6 +1929,28 @@ tools:
       display: Wireshark display filter
       tshark: tshark command
     hint: Capture filters (BPF) decide what is recorded; display filters only hide packets in Wireshark. Host names in a capture filter are resolved once, when the capture starts. Use "any" as the interface to capture on all interfaces (Linux).
+  log-parser:
+    title: Log line parser
+    description: Paste log lines and see them split into fields — syslog (RFC 5424 and 3164, with facility and severity), Cisco ASA, FortiGate and other key=value logs, iptables/UFW, Apache/nginx access logs and JSON.
+    input: Log lines
+    placeholder: Paste up to 500 lines. They are parsed in your browser and not sent anywhere.
+    example: Load examples
+    hint: Formats are detected per line.
+    overview: 'Lines ({n})'
+    fields: Fields per line
+    format: Format
+    time: Time
+    source: Source
+    severity: Severity / status
+    text: Message
+    formats:
+      syslog5424: Syslog (RFC 5424)
+      syslog3164: Syslog (RFC 3164)
+      cisco-asa: Cisco ASA
+      keyvalue: key=value
+      access-log: Access log
+      json: JSON
+      unknown: Not recognised
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

@@ -1929,6 +1929,28 @@ tools:
       display: Wireshark-weergavefilter
       tshark: tshark-commando
     hint: Capturefilters (BPF) bepalen wat wordt opgenomen; weergavefilters verbergen alleen pakketten in Wireshark. Hostnamen in een capturefilter worden één keer opgezocht, bij de start van de capture. Gebruik "any" als interface om op alle interfaces op te nemen (Linux).
+  log-parser:
+    title: Logregelparser
+    description: Plak logregels en zie ze opgesplitst in velden — syslog (RFC 5424 en 3164, met facility en severity), Cisco ASA, FortiGate en andere key=value-logs, iptables/UFW, Apache/nginx-accesslogs en JSON.
+    input: Logregels
+    placeholder: Plak maximaal 500 regels. Ze worden in je browser verwerkt en nergens heen gestuurd.
+    example: Voorbeelden laden
+    hint: Het formaat wordt per regel herkend.
+    overview: 'Regels ({n})'
+    fields: Velden per regel
+    format: Formaat
+    time: Tijd
+    source: Bron
+    severity: Severity / status
+    text: Bericht
+    formats:
+      syslog5424: Syslog (RFC 5424)
+      syslog3164: Syslog (RFC 3164)
+      cisco-asa: Cisco ASA
+      keyvalue: key=value
+      access-log: Accesslog
+      json: JSON
+      unknown: Niet herkend
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
