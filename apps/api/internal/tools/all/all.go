@@ -106,6 +106,7 @@ func Tools() []tools.Tool {
 		&email.SPFFlattenTool{},
 		&email.ProviderTool{},
 		&email.ValidateTool{},
+		&email.DKIMVerifyTool{},
 		&dclocator.Tool{},
 		&takeover.Tool{},
 		&lookalike.Tool{},

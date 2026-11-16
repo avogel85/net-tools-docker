@@ -1509,6 +1509,43 @@ tools:
       disposable: Een wegwerp-maildienst.
       role: Een rol-adres (gedeelde mailbox) in plaats van een persoon.
       typo: Bedoelde je {suggestion}?
+  dkim-verifier:
+    title: DKIM-handtekeningcontrole
+    description: Plak een ruw bericht (of open een .eml-bestand) om elke DKIM-handtekening te controleren — bodyhash en handtekening tegen de gepubliceerde sleutel — en zie of die overeenkomt met het From-domein.
+    message: Ruw bericht
+    placeholder: Plak de volledige berichtbron, inclusief headers ("Origineel weergeven" / "Bron bekijken" in je mailprogramma).
+    hint: Plak de originele bron; als je de zichtbare tekst kopieert, gaan de headers verloren. Het bericht wordt alleen voor de controle naar de server gestuurd, niet opgeslagen en staat niet in de URL.
+    notRaw: Dit lijkt geen ruw bericht — het hoort te beginnen met headerregels zoals "Received:" of "DKIM-Signature:".
+    tooBig: Het bericht is groter dan 900 KB.
+    run: Handtekeningen controleren
+    open: .eml-bestand openen
+    ok: Minstens één geldige handtekening hoort bij het From-domein — DKIM slaagt voor DMARC.
+    problems:
+      not-a-message: Dit kon niet als e-mailbericht worden gelezen.
+      no-signature: Het bericht heeft geen DKIM-Signature-header.
+      too-many-signatures: Meer dan 10 handtekeningen; alleen de eerste 10 zijn gecontroleerd.
+      no-aligned-pass: Geen geldige handtekening van het From-domein, dus DKIM telt niet mee voor DMARC.
+    signature: 'Handtekening {n} — {domain}'
+    results:
+      pass: Geldig
+      fail: Ongeldig
+      permerror: Permanente fout
+      temperror: Tijdelijke fout
+    aligned: Hoort bij From
+    notAligned: Hoort niet bij From
+    selector: Sleutelrecord
+    algorithm: Algoritme
+    headers: Ondertekende headers
+    signed: Ondertekend / verloopt
+    error: Fout
+    key: Gepubliceerde sleutel
+    warnings:
+      body-changed: De body is na ondertekening gewijzigd (vaak een footer van een mailinglijst of gateway).
+      body-length: De handtekening dekt maar een deel van de body (l=-tag); er kan inhoud worden toegevoegd zonder dat die breekt.
+      sha1: RSA-SHA1 is verouderd en wordt door veel ontvangers geweigerd.
+      from-not-signed: De From-header is niet ondertekend, dus de handtekening zegt niets over de afzender.
+    receivers: Wat de ontvangende servers concludeerden
+    receiversHint: Authentication-Results- en ARC-headers die onderweg zijn toegevoegd (ARC-seals worden getoond, niet gecontroleerd).
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.

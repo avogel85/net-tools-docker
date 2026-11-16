@@ -756,6 +756,35 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/EmailValidate" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/email/dkim-verify:
+    post:
+      operationId: emailDkimVerify
+      summary: Verify the DKIM signatures of a raw message (body hash and signature) and summarise ARC
+      description: POST so the message stays out of URLs and access logs; it is not stored.
+      tags: [email]
+      x-capability: email.dkimverify
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: { type: string, maxLength: 921600 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/EmailDkimVerify" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/email/dmarc:
     get:
       operationId: emailDmarc
@@ -3272,6 +3301,44 @@ components:
               free: { type: boolean }
               smtputf8: { type: boolean }
               suggestion: { type: string }
+    EmailDkimVerify:
+      type: object
+      required: [from, subject, signatures, authResults, arc, problems]
+      properties:
+        from: { type: string }
+        subject: { type: string }
+        signatures:
+          type: array
+          items:
+            type: object
+            required: [domain, selector, algorithm, canon, identifier, headers, bodyLength, signed, expires, result, error, keyRecord, fromAligned, warnings]
+            properties:
+              domain: { type: string }
+              selector: { type: string }
+              algorithm: { type: string }
+              canon: { type: string }
+              identifier: { type: string }
+              headers: { type: array, items: { type: string } }
+              bodyLength: { type: boolean }
+              signed: { type: string }
+              expires: { type: string }
+              result: { type: string, enum: [pass, fail, temperror, permerror] }
+              error: { type: string }
+              keyRecord: { type: string }
+              fromAligned: { type: boolean }
+              warnings: { type: array, items: { type: string } }
+        authResults: { type: array, items: { type: string } }
+        arc:
+          type: array
+          items:
+            type: object
+            required: [instance, cv, domain, results]
+            properties:
+              instance: { type: string }
+              cv: { type: string }
+              domain: { type: string }
+              results: { type: string }
+        problems: { type: array, items: { type: string } }
     EmailSpfFlatten:
       type: object
       required: [domain, original, originalLookups, lookups, records, sources, ip4, ip6, queries, problems, warnings]

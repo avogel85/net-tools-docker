@@ -1509,6 +1509,43 @@ tools:
       disposable: A disposable (throw-away) mail service.
       role: A role address (shared mailbox) rather than a person.
       typo: Did you mean {suggestion}?
+  dkim-verifier:
+    title: DKIM signature verifier
+    description: Paste a raw message (or open an .eml file) to verify each DKIM signature — body hash and signature against the published key — and see whether it aligns with the From domain.
+    message: Raw message
+    placeholder: Paste the full message source, headers included ("Show original" / "View source" in your mail client).
+    hint: Paste the original source; copying the visible text loses the headers. The message is sent to the server only to verify it, is not stored and does not appear in the URL.
+    notRaw: This does not look like a raw message — it should start with header lines such as "Received:" or "DKIM-Signature:".
+    tooBig: The message is larger than 900 KB.
+    run: Verify signatures
+    open: Open .eml file
+    ok: At least one valid signature aligns with the From domain — DKIM passes for DMARC.
+    problems:
+      not-a-message: This could not be read as an e-mail message.
+      no-signature: The message has no DKIM-Signature header.
+      too-many-signatures: More than 10 signatures; only the first 10 were checked.
+      no-aligned-pass: No valid signature from the From domain, so DKIM does not count for DMARC.
+    signature: 'Signature {n} — {domain}'
+    results:
+      pass: Valid
+      fail: Invalid
+      permerror: Permanent error
+      temperror: Temporary error
+    aligned: Aligned with From
+    notAligned: Not aligned with From
+    selector: Key record
+    algorithm: Algorithm
+    headers: Signed headers
+    signed: Signed / expires
+    error: Error
+    key: Published key
+    warnings:
+      body-changed: The body was changed after signing (often a footer added by a list or gateway).
+      body-length: The signature covers only part of the body (l= tag); content can be appended without breaking it.
+      sha1: RSA-SHA1 is deprecated and rejected by many receivers.
+      from-not-signed: The From header is not signed, so the signature says nothing about the sender.
+    receivers: What the receiving servers concluded
+    receiversHint: Authentication-Results and ARC headers added along the way (ARC seals are shown, not verified).
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

@@ -619,6 +619,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/email/dkim-verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify the DKIM signatures of a raw message (body hash and signature) and summarise ARC
+         * @description POST so the message stays out of URLs and access logs; it is not stored.
+         */
+        post: operations["emailDkimVerify"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/email/dmarc": {
         parameters: {
             query?: never;
@@ -2671,6 +2691,35 @@ export interface components {
                 smtputf8: boolean;
                 suggestion: string;
             }[];
+        };
+        EmailDkimVerify: {
+            from: string;
+            subject: string;
+            signatures: {
+                domain: string;
+                selector: string;
+                algorithm: string;
+                canon: string;
+                identifier: string;
+                headers: string[];
+                bodyLength: boolean;
+                signed: string;
+                expires: string;
+                /** @enum {string} */
+                result: "pass" | "fail" | "temperror" | "permerror";
+                error: string;
+                keyRecord: string;
+                fromAligned: boolean;
+                warnings: string[];
+            }[];
+            authResults: string[];
+            arc: {
+                instance: string;
+                cv: string;
+                domain: string;
+                results: string;
+            }[];
+            problems: string[];
         };
         EmailSpfFlatten: {
             domain: string;
@@ -5119,6 +5168,35 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["EmailValidate"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    emailDkimVerify: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    message: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["EmailDkimVerify"];
                     };
                 };
             };
