@@ -44,6 +44,25 @@ instructions are on the [GitHub releases page](https://github.com/digibaro/net-t
   - Reverse traceroute: MTR from Globalping probes back to your public IP, with AS paths.
   - RADIUS tester (LAN profile): Status-Server or a test Access-Request, verified with the
     shared secret.
+- Web and client tools:
+  - Webhook / request inspector: a temporary URL that captures incoming requests for a short time.
+  - Social preview checker: Open Graph and Twitter cards, favicons, manifest, preview image size.
+  - Broken link checker: a small same-site crawl (30 pages, depth 2) that reports broken links,
+    assets and redirect loops.
+  - Origin vs CDN compare: the same request through the CDN and directly to an origin IP, side by side.
+  - Reverse proxy config generator for nginx, Caddy, Traefik and HAProxy.
+  - Expiry watchlist: certificate and domain expiry for a list kept in the browser.
+  - The speed test is now also found as the bufferbloat test.
+- BGP tools and calculators:
+  - Prefix-list generator: IRR (bgpq4) prefix filters for Cisco IOS/IOS-XR, Juniper, Arista,
+    FRR, MikroTik, BIRD and OpenBGPD.
+  - Prefix watch: a browser-kept list of prefixes with expected origins, checked for unexpected
+    origins, foreign more-specifics and RPKI status.
+  - ROA & ASPA helper: a minimal ROA plan (Krill delta or CSV) from what an AS announces, and an
+    ASPA record builder with AS-path verification.
+  - Fiber link budget, Wi-Fi throughput estimator (Wi-Fi 4–7 MCS tables), Wi-Fi channel planner
+    (2.4, 5 and 6 GHz, EU/US) and a cabling & transceiver reference.
+  - Firewall object converter, capture filter builder (tcpdump/BPF and Wireshark) and log parser.
 - DNS lookup accepts the NSEC3PARAM record type.
 
 ### Fixed
