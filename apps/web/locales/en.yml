@@ -1993,6 +1993,20 @@ tools:
       powerBudget: Power budget (Tx − Rx sensitivity)
       margin: Remaining margin
       rxPower: Expected received power
+  wifi-throughput:
+    title: Wi-Fi throughput estimator
+    description: PHY rate for any Wi-Fi 4, 5, 6/6E or 7 combination of channel width, spatial streams, guard interval and MCS, the full MCS table, and what to expect in practice.
+    standard: Standard
+    width: Channel width
+    streams: Spatial streams
+    gi: Guard interval
+    phy: PHY rate
+    real: Realistic TCP throughput
+    notDefined: not defined
+    modulation: Modulation
+    coding: Coding
+    table: 'MCS table — {width} MHz, {streams} stream(s), {gi} µs GI'
+    hint: 'The PHY rate is the raw link rate; one client close to the access point typically gets about {pct}% of it as TCP throughput, and airtime is shared by all clients on the channel. Clients rarely reach the highest MCS beyond a few metres, and most phones and laptops have only two streams.'
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

@@ -1993,6 +1993,20 @@ tools:
       powerBudget: Vermogensbudget (Tx − Rx-gevoeligheid)
       margin: Resterende marge
       rxPower: Verwacht ontvangen vermogen
+  wifi-throughput:
+    title: Wifi-doorvoerschatter
+    description: PHY-snelheid voor elke Wi-Fi 4-, 5-, 6/6E- of 7-combinatie van kanaalbreedte, spatial streams, guard interval en MCS, de volledige MCS-tabel, en wat je in de praktijk kunt verwachten.
+    standard: Standaard
+    width: Kanaalbreedte
+    streams: Spatial streams
+    gi: Guard interval
+    phy: PHY-snelheid
+    real: Realistische TCP-doorvoer
+    notDefined: niet gedefinieerd
+    modulation: Modulatie
+    coding: Codering
+    table: 'MCS-tabel — {width} MHz, {streams} stream(s), {gi} µs GI'
+    hint: 'De PHY-snelheid is de ruwe linksnelheid; één client dicht bij het access point haalt daarvan meestal zo''n {pct}% als TCP-doorvoer, en de zendtijd wordt gedeeld door alle clients op het kanaal. Clients halen de hoogste MCS zelden verder dan een paar meter, en de meeste telefoons en laptops hebben maar twee streams.'
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
