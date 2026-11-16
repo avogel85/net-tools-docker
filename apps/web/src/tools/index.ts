@@ -50,6 +50,7 @@ import { tool as dnsLookup } from './dns-lookup'
 import { tool as dnsPropagation } from './dns-propagation'
 import { tool as dnsProxyCheck } from './dns-proxy-check'
 import { tool as dnsRecordTypes } from './dns-record-types'
+import { tool as dnsSnapshot } from './dns-snapshot'
 import { tool as dnsTrace } from './dns-trace'
 import { tool as dnsTtlPlanner } from './dns-ttl-planner'
 import { tool as dnssecValidator } from './dnssec-validator'
@@ -189,7 +190,7 @@ import { tool as zoneTransferTest } from './zone-transfer-test'
 // Category order matches docs/TOOLS_CATALOG.md. Empty categories are hidden.
 const categories: { id: string, components: Tool[] }[] = [
   { id: 'ip', components: [ipv4SubnetCalculator, ipv6SubnetCalculator, cidrRangeConverter, cidrAggregator, subnetSplitter, ipInSubnet, ipv4FormatConverter, ipv6ExpandCompress, ipv6UlaGenerator, ipSpecialCheck, wildcardMaskCalculator, reverseDnsName, macAddressLookup, macFormatter, eui64Calculator, whatIsMyIp, vlsmPlanner, ipv4InIpv6, randomIpGenerator, ipv6AddressAnalyzer, ipamSheet, nat64Dns64Check, countryIpBlocks, subnetOverlapChecker] },
-  { id: 'dns', components: [punycodeConverter, domainParser, dnsLookup, reverseDns, caaChecker, dnsConsistency, dnsPropagation, dnsTrace, encryptedDnsTester, zoneBuilder, zoneLinter, nsupdateBuilder, zoneTransferTest, wildcardDetector, dnsBenchmark, dnssecValidator, dsDnskey, nsec3Hash, openResolverTest, ptrCoverage, svcbHttpsViewer, ednsCompliance, dnsTtlPlanner, dnsHealthReport, bulkLookup, dcLocator] },
+  { id: 'dns', components: [punycodeConverter, domainParser, dnsLookup, reverseDns, caaChecker, dnsConsistency, dnsPropagation, dnsTrace, encryptedDnsTester, zoneBuilder, zoneLinter, nsupdateBuilder, zoneTransferTest, wildcardDetector, dnsBenchmark, dnssecValidator, dsDnskey, nsec3Hash, openResolverTest, ptrCoverage, svcbHttpsViewer, ednsCompliance, dnsTtlPlanner, dnsHealthReport, bulkLookup, dcLocator, dnsSnapshot] },
   { id: 'connectivity', components: [ping, tcpPing, traceroute, mtr, portCheck, ntpCheck, serverNetworkInfo, isItDown, latencyMatrix, pathMtu, ipv6Readiness, portScanner, iperf, snmp, latencyMonitor] },
   { id: 'web', components: [urlParser, userAgentParser, httpStatusCodes, httpRequest, redirectTracer, httpTiming, securityHeaders, corsTester, hstsPreload, compressionCheck, cookieInspector, wellKnownFiles, httpProtocols, curlBuilder, websocketTester, cdnWafDetector, cacheHeaderAnalyzer, mixedContentChecker, cspBuilder, domainScorecard] },
   { id: 'tls', components: [certificateDecoder, tlsInspector, tlsExpiry, csrTool, certKeyMatcher, ctSearch, starttlsCheck, revocationCheck, tlsScanner, sshAudit, sshKeyTool, keyConverter, daneChecker, certChainValidator, pkcs12Inspector, labCaGenerator] },

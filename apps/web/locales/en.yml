@@ -2406,6 +2406,37 @@ tools:
       missing-gc: No global catalog record; logons in multi-domain forests and Exchange need one.
       dc-kerberos-mismatch: The DCs listed for LDAP and for Kerberos differ — usually a stale record of a removed DC (check Netlogon registration).
       too-many-targets: More than 20 targets; only the first 20 were resolved.
+  dns-snapshot:
+    title: DNS snapshot & diff
+    description: Save the DNS records of a domain and compare snapshots later — before and after a migration, or to see what changed.
+    extra: Extra names (up to {max})
+    resolver: Resolver
+    take: Take snapshot
+    import: Import snapshot file
+    importError: That file is not a NET-TOOLS DNS snapshot.
+    progress: Lookups done
+    storageFailed: The snapshot could not be saved in this browser (private window or storage full). Export it to keep it.
+    compare: Compare snapshots
+    before: Before
+    after: After
+    compareTtl: Compare TTLs
+    compareSerial: Compare the SOA serial
+    noChanges: No changes ({n} record sets compared).
+    added: Added
+    removed: Removed
+    changed: Changed
+    snapshotOf: Snapshot of {date}
+    summary: '{n} records via {resolver}.'
+    errors: 'Some lookups failed: {list}'
+    records: Records
+    name: Name
+    type: Type
+    data: Data
+    recordCount: '{n} records'
+    saved: Saved snapshots ({n})
+    savedHint: Snapshots are kept in this browser only (at most 30). Export one to keep it elsewhere or to compare on another device.
+    export: Export
+    delete: Delete
   dnssec-validator:
     title: DNSSEC validator
     description: Validate the DNSSEC chain of trust from the root down to a name, and see exactly where it breaks — missing DS, mismatched keys, expired or invalid signatures.

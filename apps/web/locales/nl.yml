@@ -2406,6 +2406,37 @@ tools:
       missing-gc: Geen global catalog-record; aanmelden in forests met meerdere domeinen en Exchange hebben er een nodig.
       dc-kerberos-mismatch: De DC's voor LDAP en voor Kerberos verschillen — meestal een verouderd record van een verwijderde DC (controleer de Netlogon-registratie).
       too-many-targets: Meer dan 20 doelen; alleen de eerste 20 zijn opgezocht.
+  dns-snapshot:
+    title: DNS-snapshot & diff
+    description: Bewaar de DNS-records van een domein en vergelijk snapshots later — voor en na een migratie, of om te zien wat er veranderd is.
+    extra: Extra namen (maximaal {max})
+    resolver: Resolver
+    take: Snapshot maken
+    import: Snapshotbestand importeren
+    importError: Dat bestand is geen DNS-snapshot van NET-TOOLS.
+    progress: Uitgevoerde lookups
+    storageFailed: De snapshot kon niet in deze browser worden opgeslagen (privévenster of opslag vol). Exporteer hem om hem te bewaren.
+    compare: Snapshots vergelijken
+    before: Voor
+    after: Na
+    compareTtl: TTL's vergelijken
+    compareSerial: SOA-serial vergelijken
+    noChanges: Geen wijzigingen ({n} recordsets vergeleken).
+    added: Toegevoegd
+    removed: Verwijderd
+    changed: Gewijzigd
+    snapshotOf: Snapshot van {date}
+    summary: '{n} records via {resolver}.'
+    errors: 'Sommige lookups zijn mislukt: {list}'
+    records: Records
+    name: Naam
+    type: Type
+    data: Data
+    recordCount: '{n} records'
+    saved: Opgeslagen snapshots ({n})
+    savedHint: Snapshots worden alleen in deze browser bewaard (maximaal 30). Exporteer er een om hem elders te bewaren of op een ander apparaat te vergelijken.
+    export: Exporteren
+    delete: Verwijderen
   dnssec-validator:
     title: DNSSEC-validator
     description: Valideer de DNSSEC-vertrouwensketen van de root tot een naam, en zie precies waar die breekt — ontbrekende DS, niet-passende sleutels, verlopen of ongeldige handtekeningen.
