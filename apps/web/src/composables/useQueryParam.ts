@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import type { LocationQuery, Router } from 'vue-router'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useQueryScope } from './queryScope'
@@ -23,6 +24,23 @@ interface Options<T> {
   defaultValue: T
 }
 
+// Writes in the same tick are merged into one navigation: router.replace is async, so a second
+// write that copied route.query would otherwise undo the first ("load" filling several fields).
+const pending = new WeakMap<Router, LocationQuery>()
+
+function writeQuery(router: Router, current: LocationQuery, update: (q: LocationQuery) => void) {
+  const queued = pending.get(router)
+  const query = queued ?? { ...current }
+  update(query)
+  if (queued)
+    return
+  pending.set(router, query)
+  queueMicrotask(() => {
+    pending.delete(router)
+    void router.replace({ query })
+  })
+}
+
 /**
  * Two-way binds a value to a URL query parameter so tool inputs are shareable.
  * The parameter is removed from the URL while the value equals its default.
@@ -36,14 +54,14 @@ export function useQueryParam({ name: own, defaultValue }: Options<Primitive>): 
   const router = useRouter()
 
   return computed<Primitive>({
-    get: () => parseQueryValue(route.query[name], defaultValue),
+    get: () => parseQueryValue((pending.get(router) ?? route.query)[name], defaultValue),
     set: (value) => {
-      const query = { ...route.query }
-      if (value === defaultValue || value === '')
-        delete query[name]
-      else
-        query[name] = String(value)
-      void router.replace({ query })
+      writeQuery(router, route.query, (query) => {
+        if (value === defaultValue || value === '')
+          delete query[name]
+        else
+          query[name] = String(value)
+      })
     },
   })
 }
