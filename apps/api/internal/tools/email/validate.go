@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"regexp"
 	"slices"
@@ -18,7 +19,6 @@ import (
 	"github.com/digibaro/net-tools-docker/apps/api/internal/target"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools"
 	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/dnslookup"
-	"github.com/digibaro/net-tools-docker/apps/api/internal/tools/params"
 )
 
 // Validator limits: addresses per request and distinct domains looked up.
@@ -42,7 +42,8 @@ func (t *ValidateTool) Mount(r chi.Router, d tools.Deps) {
 	if t.res == nil {
 		t.res = sysResolver{}
 	}
-	r.With(d.RateLimit(limits.Light), d.Slot, d.Timeout(30*time.Second)).Get("/email/validate", t.handle)
+	// POST: addresses are personal data and must not end up in URLs or access logs.
+	r.With(d.RateLimit(limits.Light), d.Slot, d.Timeout(30*time.Second)).Post("/email/validate", t.handle)
 }
 
 // AddressCheck is the verdict for one address.
@@ -294,15 +295,16 @@ func ValidateAddresses(ctx context.Context, res resolver, inputs []string) []Add
 }
 
 func (t *ValidateTool) handle(w http.ResponseWriter, r *http.Request) {
-	q := params.New(r.URL.Query())
-	raw := q.String("addresses", "", true, 16384)
-	if err := q.Err(); err != nil {
-		httpapi.Error(w, r, err)
+	var in struct {
+		Addresses []string `json:"addresses"`
+	}
+	if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 16<<10)).Decode(&in); err != nil {
+		httpapi.Error(w, r, httpapi.InvalidInput("addresses", `expected JSON {"addresses": [...]}`))
 		return
 	}
 	var inputs []string
-	for _, s := range strings.FieldsFunc(raw, func(c rune) bool { return c == '\n' || c == ',' || c == ';' || c == '\r' }) {
-		if s = strings.TrimSpace(s); s != "" {
+	for _, s := range in.Addresses {
+		if s = strings.TrimSpace(s); s != "" && len(s) <= 512 {
 			inputs = append(inputs, s)
 		}
 	}

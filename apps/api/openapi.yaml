@@ -705,17 +705,21 @@ paths:
                       data: { $ref: "#/components/schemas/EmailProviders" }
         default: { $ref: "#/components/responses/Error" }
   /v1/email/validate:
-    get:
+    post:
       operationId: emailValidate
       summary: Check e-mail address syntax and whether the domains accept mail (no mail is sent)
+      description: POST so addresses (personal data) stay out of URLs and access logs.
       tags: [email]
       x-capability: email.validate
-      parameters:
-        - name: addresses
-          in: query
-          required: true
-          description: Up to 50 addresses, separated by newlines, commas or semicolons
-          schema: { type: string, maxLength: 16384 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [addresses]
+              properties:
+                addresses: { type: array, items: { type: string, maxLength: 512 }, minItems: 1, maxItems: 50 }
       responses:
         "200":
           description: OK

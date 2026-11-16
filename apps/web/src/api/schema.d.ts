@@ -589,10 +589,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Check e-mail address syntax and whether the domains accept mail (no mail is sent) */
-        get: operations["emailValidate"];
+        get?: never;
         put?: never;
-        post?: never;
+        /**
+         * Check e-mail address syntax and whether the domains accept mail (no mail is sent)
+         * @description POST so addresses (personal data) stay out of URLs and access logs.
+         */
+        post: operations["emailValidate"];
         delete?: never;
         options?: never;
         head?: never;
@@ -4963,15 +4966,18 @@ export interface operations {
     };
     emailValidate: {
         parameters: {
-            query: {
-                /** @description Up to 50 addresses, separated by newlines, commas or semicolons */
-                addresses: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": {
+                    addresses: string[];
+                };
+            };
+        };
         responses: {
             /** @description OK */
             200: {

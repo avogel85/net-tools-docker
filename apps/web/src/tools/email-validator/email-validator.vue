@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { EmailValidate } from './email-validator.service'
 import { NAlert, NButton, NFormItem, NInput, NTag } from 'naive-ui'
-import { computed, ref } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { ApiError as ApiErr, apiPost } from '@/api/client'
 import ApiError from '@/components/ApiError.vue'
 import ResultTable from '@/components/ResultTable.vue'
-import { useApi } from '@/composables/useApi'
 import CCard from '@/ui/c-card.vue'
 import { counts, MAX_ADDRESSES, splitAddresses } from './email-validator.service'
 
@@ -14,8 +14,26 @@ const { t } = useI18n()
 const text = ref('')
 const list = computed(() => splitAddresses(text.value))
 const tooMany = computed(() => list.value.length > MAX_ADDRESSES)
-const { data, error, loading, run } = useApi<EmailValidate>('/v1/email/validate')
-const submit = () => list.value.length && !tooMany.value && run({ addresses: list.value.join('\n') })
+// POST: addresses must not appear in URLs or access logs.
+const data = shallowRef<EmailValidate>()
+const error = shallowRef<ApiErr>()
+const loading = ref(false)
+async function submit() {
+  if (!list.value.length || tooMany.value)
+    return
+  loading.value = true
+  error.value = undefined
+  try {
+    data.value = await apiPost<EmailValidate>('/v1/email/validate', { addresses: list.value })
+  }
+  catch (e) {
+    data.value = undefined
+    error.value = e instanceof ApiErr ? e : new ApiErr('NETWORK_ERROR', String(e))
+  }
+  finally {
+    loading.value = false
+  }
+}
 const summary = computed(() => (data.value ? counts(data.value.results) : undefined))
 const verdictType = { valid: 'success', risky: 'warning', invalid: 'error' } as const
 const note = (code: string, suggestion: string) => t(`tools.email-validator.findings.${code}`, { suggestion })

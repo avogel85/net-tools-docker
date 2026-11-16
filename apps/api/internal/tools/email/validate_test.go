@@ -2,6 +2,7 @@ package email
 
 import (
 	"context"
+	"net/http"
 	"slices"
 	"strings"
 	"testing"
@@ -67,10 +68,15 @@ func TestSuggest(t *testing.T) {
 func TestValidateHandler(t *testing.T) {
 	env := tooltest.New(t, &ValidateTool{res: validateZone()}, tooltest.Options{})
 	var r ValidateResult
-	env.Get("/api/v1/email/validate?addresses=alice%40example.com%0Abad").Must(t).Decode(t, &r)
+	env.Post("/api/v1/email/validate", map[string]any{"addresses": []string{"alice@example.com", "bad"}}).Must(t).Decode(t, &r)
 	if len(r.Results) != 2 || r.Results[0].Verdict != "valid" || r.Results[1].Verdict != "invalid" {
 		t.Errorf("results = %+v", r.Results)
 	}
-	env.Get("/api/v1/email/validate?addresses=").ExpectError(t, "INVALID_INPUT")
-	env.Get("/api/v1/email/validate?addresses="+strings.Repeat("a%40b.com,", 51)).ExpectError(t, "INVALID_INPUT")
+	env.Post("/api/v1/email/validate", map[string]any{"addresses": []string{}}).ExpectError(t, "INVALID_INPUT")
+	env.Post("/api/v1/email/validate", "not json").ExpectError(t, "INVALID_INPUT")
+	env.Post("/api/v1/email/validate", map[string]any{"addresses": slices.Repeat([]string{"a@b.com"}, 51)}).ExpectError(t, "INVALID_INPUT")
+	// GET is not offered: addresses must not appear in URLs.
+	if resp := env.Get("/api/v1/email/validate?addresses=a%40b.com"); resp.Status != http.StatusMethodNotAllowed {
+		t.Errorf("GET status = %d", resp.Status)
+	}
 }
