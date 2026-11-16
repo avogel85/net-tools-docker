@@ -1546,6 +1546,167 @@ tools:
       from-not-signed: The From header is not signed, so the signature says nothing about the sender.
     receivers: What the receiving servers concluded
     receiversHint: Authentication-Results and ARC headers added along the way (ARC seals are shown, not verified).
+  sip-check:
+    title: SIP server check
+    description: Find a domain's SIP servers (NAPTR and SRV) and send a SIP OPTIONS request over UDP, TCP and TLS to see whether the server answers, which software it runs and what it allows.
+    host: SIP domain or server
+    transport: Transport
+    transports:
+      all: UDP, TCP and TLS
+      udp: UDP
+      tcp: TCP
+      tls: TLS
+    hint: With a domain, the first SRV target is probed on the ports from DNS; otherwise 5060 (UDP/TCP) and 5061 (TLS). OPTIONS does not place a call.
+    run: Check
+    probes: OPTIONS to {host}
+    server: Server
+    allow: Allowed methods
+    cert: Certificate
+    expires: '{days} days left'
+    untrusted: not trusted
+    statusHint: Any SIP reply means the server is reachable; 401, 403 or 404 are normal for servers that only accept known peers.
+    discovery: Discovery
+    service: Service
+    priority: Priority
+    weight: Weight
+    target: Target
+    errors:
+      no-reply: No reply (filtered, or no SIP server)
+      refused: Connection refused
+      timeout: Timed out
+      tls-failed: TLS handshake failed
+      not-sip: Replied, but not with SIP
+      dial-failed: Could not open a socket
+      send-failed: Sending failed
+  ldap-check:
+    title: LDAP / LDAPS check
+    description: Read the rootDSE of an LDAP server anonymously (naming contexts, versions, SASL mechanisms, AD functional levels) and check StartTLS and the LDAPS certificate. No bind is made.
+    host: LDAP server
+    mode: Check
+    modes:
+      both: LDAP (389) and LDAPS (636)
+      ldap: LDAP with StartTLS
+      ldaps: LDAPS only
+    hint: Domain controllers are usually internal; private addresses need the LAN profile or ALLOW_PRIVATE_TARGETS. host:port selects another port.
+    run: Check
+    answered: rootDSE read
+    startTls: StartTLS supported
+    noStartTls: No StartTLS
+    trusted: trusted certificate
+    untrusted: untrusted certificate
+    cert: Certificate
+    daysLeft: '{n} days left'
+    warnings:
+      no-starttls: Plain LDAP without StartTLS — directory traffic, including passwords on simple binds, can only travel unencrypted on port 389.
+      cert-untrusted: The certificate is not trusted (self-signed, internal CA or wrong name); clients must trust that CA explicitly.
+      cert-expiring: The certificate expires within 30 days.
+    errors:
+      refused: Connection refused
+      timeout: Timed out
+      tls-failed: TLS handshake failed
+      closed: The server closed the connection
+      search-refused: The server refused the anonymous rootDSE search
+      protocol-error: No valid LDAP response
+  remote-access-check:
+    title: Remote access check
+    description: See whether RDP, VNC or SSH is reachable on a host and how it is protected — RDP network level authentication and certificate, VNC security types, SSH version. No credentials are sent.
+    host: Host
+    service: Services
+    services:
+      all: RDP, VNC and SSH
+      rdp: RDP (3389)
+      vnc: VNC (5900)
+      ssh: SSH (22)
+    hint: Use it to check what your own hosts expose. host:port checks another port (with a single service). For a full SSH audit, use the SSH server audit tool.
+    run: Check
+    exposed: At least one remote access service is reachable from this server. Remote desktop services should normally sit behind a VPN or gateway.
+    open: Reachable
+    protocol: Security
+    protocols:
+      rdp: Standard RDP security (no TLS)
+      tls: TLS
+      credssp: CredSSP / NLA
+      credssp-ex: CredSSP / NLA (extended)
+      rdstls: RDSTLS
+      unknown: Unknown
+    required: required
+    optional: not required
+    cert: Certificate
+    untrusted: not trusted
+    findings:
+      rdp-nla-not-required: NLA is not required — anyone can reach the Windows login screen without authenticating first, which exposes the host to pre-authentication attacks.
+      rdp-legacy-security: The server uses standard RDP security without TLS, which is weak and open to man-in-the-middle attacks.
+      vnc-no-auth: VNC accepts connections without any authentication — anyone can take over the screen.
+      vnc-unencrypted: VNC only offers unencrypted security types; the session (and password challenge) is not protected.
+      ssh-v1: The server only speaks SSH protocol 1, which is broken.
+    errors:
+      refused: Closed (connection refused)
+      timeout: No answer (filtered)
+      closed: The server closed the connection
+      protocol-error: Something else answers on this port
+      negotiation-failed: RDP negotiation failed
+  ike-probe:
+    title: IPsec / IKE probe
+    description: Probe an IPsec VPN gateway with an IKEv2 and an IKEv1 handshake request to see which versions, proposals and Diffie-Hellman groups it accepts, whether it supports IKE fragmentation and which vendor IDs it sends. No authentication is attempted.
+    host: VPN gateway
+    port: Port
+    hint: Gateways often answer only peers they know, or rate-limit; no answer does not prove that nothing listens. Common modern proposals (AES-GCM, AES-CBC with SHA-2, X25519/ECP/MODP-2048) are offered.
+    run: Probe
+    verdict:
+      ikev2: IKEv2 accepted
+      ikev1-only: Only IKEv1 accepted
+      answers: The gateway answers but accepted no offered proposal
+      silent: No IKE answer
+    findings:
+      no-answer: Nothing answered on this port (filtered, no IPsec, or the gateway only answers known peers).
+      ikev1-enabled: IKEv1 is enabled. It is deprecated (RFC 9395); use IKEv2 only where possible.
+      ikev1-weak: The IKEv1 proposal it chose uses SHA-1, MD5 or (3)DES.
+      weak-group: A weak Diffie-Hellman group (MODP-768/1024/1536) is accepted.
+      weak-cipher: IKEv2 chose 3DES.
+    accepted: Proposal accepted
+    noProposal: No proposal chosen
+    answered: Answered
+    silent: No answer
+    fragmentation: IKE fragmentation
+    cookie: Cookie (DoS protection)
+    encryption: Encryption
+    hash: Hash
+    group: DH group
+    weak: weak
+    vendorIds: Vendor IDs
+  udp-probe:
+    title: UDP service probe
+    description: Check UDP services the way their clients do — DNS, NTP, SNMPv3, SIP, STUN, IKE, QUIC, OpenVPN, NetBIOS and TFTP — to tell an open service from a filtered port.
+    host: Host
+    service: Service
+    port: Port
+    default: default
+    services:
+      all: All known services
+      custom: Custom port (empty packet)
+      dns: DNS (53)
+      ntp: NTP (123)
+      snmp: SNMPv3 (161)
+      sip: SIP (5060)
+      stun: STUN (3478)
+      ike: IKE (500)
+      quic: QUIC (443)
+      openvpn: OpenVPN (1194)
+      netbios: NetBIOS name service (137)
+      tftp: TFTP (69)
+    hint: Each service gets a real request (SNMPv3 engine discovery without a community or user; TFTP asks for a random file name). A UDP port with no answer can be open or filtered — only an answer or an ICMP "port unreachable" is conclusive.
+    run: Probe
+    results: '{host} ({address})'
+    openCount: '{n} of {total} open'
+    state: State
+    detail: Details
+    states:
+      open: Open
+      closed: Closed
+      open|filtered: Open or filtered
+      unexpected: Answered (other protocol)
+      error: Error
+    statesHint: Closed means the host answered with ICMP "port unreachable"; open or filtered means nothing came back, which also happens when a firewall drops the packet.
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.
@@ -1678,6 +1839,31 @@ tools:
       stale-txt: _acme-challenge has old TXT records; remove leftovers so DNS-01 validation is not confused.
       wildcard-dns01: Wildcard certificates can only be validated with DNS-01.
       ipv6-used: The name has an AAAA record; Let's Encrypt prefers IPv6, so the challenge must work over IPv6 too (only one address family was tested).
+  pq-tls-check:
+    title: Post-quantum TLS check
+    description: Check whether a server negotiates hybrid post-quantum key exchange (ML-KEM, as current browsers offer) and which key-exchange groups it accepts.
+    host: Host
+    port: Port
+    run: Check
+    groups: Key-exchange groups
+    supported: Supported
+    notSupported: Not supported
+    hybrid: hybrid post-quantum
+    classical: classical
+    hint: 'Each group was offered on its own in a separate TLS 1.3/1.2 handshake to {address}.'
+    verdict:
+      pq: Post-quantum key exchange is used
+      pq-available: Post-quantum supported, but not chosen
+      classic: No post-quantum key exchange
+      unreachable: No TLS connection
+    explain:
+      pq: 'A client offering what current browsers offer gets {group} ({version}): traffic recorded today cannot be decrypted later with a quantum computer.'
+      pq-available: 'The server accepts a hybrid group when it is the only one offered, but picks {group} when a browser offers several — check the server''s group order.'
+      classic: 'The server uses {group} ({version}). Recorded traffic could be decrypted later by a large quantum computer ("harvest now, decrypt later"). Current OpenSSL, BoringSSL and Go support X25519MLKEM768.'
+    errors:
+      timeout: The connection timed out.
+      refused: The port refused the connection.
+      handshake-failed: The TLS handshake failed (no TLS on this port, or no common settings).
   ip-to-asn:
     title: IP → ASN
     description: Find the autonomous system (ASN), announced prefix, AS name, country and registry for an IP address.

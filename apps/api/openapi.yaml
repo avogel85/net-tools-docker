@@ -559,6 +559,142 @@ paths:
                     properties:
                       data: { $ref: "#/components/schemas/Cors" }
         default: { $ref: "#/components/responses/Error" }
+  /v1/ike/probe:
+    get:
+      operationId: ikeProbe
+      summary: IPsec/IKE probe (IKEv2 IKE_SA_INIT and IKEv1 Main Mode); no authentication attempted
+      tags: [connectivity]
+      x-capability: con.ike
+      parameters:
+        - { name: host, in: query, required: true, schema: { type: string } }
+        - { name: port, in: query, schema: { type: string, enum: ["500", "4500"], default: "500" } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/IkeProbe" }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/ldap/check:
+    get:
+      operationId: ldapCheck
+      summary: LDAP / LDAPS check (anonymous rootDSE, StartTLS, certificate); no bind is made
+      tags: [connectivity]
+      x-capability: con.ldap
+      parameters:
+        - { name: host, in: query, required: true, schema: { type: string } }
+        - { name: mode, in: query, schema: { type: string, enum: [both, ldap, ldaps], default: both } }
+        - { name: port, in: query, schema: { type: integer, minimum: 0, maximum: 65535, default: 0 }, description: "0 = 389 / 636 (used only with a single mode)" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/LdapCheck" }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/remote-access/check:
+    get:
+      operationId: remoteAccessCheck
+      summary: RDP (NLA, certificate), VNC (security types) and SSH (banner) check; no credentials sent
+      tags: [connectivity]
+      x-capability: con.remoteaccess
+      parameters:
+        - { name: host, in: query, required: true, schema: { type: string } }
+        - { name: service, in: query, schema: { type: string, enum: [all, rdp, vnc, ssh], default: all } }
+        - { name: port, in: query, schema: { type: integer, minimum: 0, maximum: 65535, default: 0 }, description: "0 = 3389 / 5900 / 22 (a port is used only with a single service)" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/RemoteAccess" }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/sip/check:
+    get:
+      operationId: sipCheck
+      summary: SIP server discovery (NAPTR/SRV) and OPTIONS over UDP, TCP and TLS
+      tags: [connectivity]
+      x-capability: con.sip
+      parameters:
+        - { name: host, in: query, required: true, schema: { type: string }, description: "SIP domain or server (host[:port])" }
+        - { name: transport, in: query, schema: { type: string, enum: [all, udp, tcp, tls], default: all } }
+        - { name: port, in: query, schema: { type: integer, minimum: 0, maximum: 65535, default: 0 }, description: "0 = from SRV, else 5060/5061" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/SipCheck" }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/udp/probe:
+    get:
+      operationId: udpProbe
+      summary: Service-aware UDP probes (DNS, NTP, SNMPv3 discovery, SIP, STUN, IKE, QUIC, OpenVPN, NetBIOS, TFTP)
+      tags: [connectivity]
+      x-capability: con.udpprobe
+      parameters:
+        - { name: host, in: query, required: true, schema: { type: string } }
+        - { name: service, in: query, schema: { type: string, enum: [all, custom, dns, ntp, snmp, sip, stun, ike, quic, openvpn, netbios, tftp], default: all } }
+        - { name: port, in: query, schema: { type: integer, minimum: 0, maximum: 65535, default: 0 }, description: "Overrides the service port (single service); required for custom" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/UdpProbe" }
+        default: { $ref: "#/components/responses/Error" }
+  /v1/tls/pq:
+    get:
+      operationId: tlsPq
+      summary: Post-quantum TLS check (hybrid ML-KEM key exchange support)
+      tags: [tls]
+      x-capability: tls.pq
+      parameters:
+        - { name: host, in: query, required: true, schema: { type: string } }
+        - { name: port, in: query, schema: { type: integer, default: 443, minimum: 1, maximum: 65535 } }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/OkEnvelope"
+                  - type: object
+                    required: [data]
+                    properties:
+                      data: { $ref: "#/components/schemas/TlsPq" }
+        default: { $ref: "#/components/responses/Error" }
   /v1/tls/acme:
     get:
       operationId: tlsAcme
@@ -3190,6 +3326,154 @@ components:
               a: { type: array, items: { type: string } }
               mx: { type: array, items: { type: string } }
               error: { type: string }
+    IkeProbe:
+      type: object
+      required: [host, address, ikev2, ikev1, findings]
+      properties:
+        host: { type: string }
+        address: { type: string }
+        ikev2:
+          type: object
+          required: [answered, accepted, encryption, prf, integrity, group, groupWeak, noProposal, cookie, fragmentation, sigHash, vendorIds]
+          properties:
+            answered: { type: boolean }
+            accepted: { type: boolean }
+            encryption: { type: string }
+            prf: { type: string }
+            integrity: { type: string }
+            group: { type: string }
+            groupWeak: { type: boolean }
+            noProposal: { type: boolean }
+            cookie: { type: boolean }
+            fragmentation: { type: boolean }
+            sigHash: { type: boolean }
+            vendorIds: { type: array, items: { type: string } }
+        ikev1:
+          type: object
+          required: [answered, accepted, encryption, hash, group, groupWeak, noProposal, vendorIds]
+          properties:
+            answered: { type: boolean }
+            accepted: { type: boolean }
+            encryption: { type: string }
+            hash: { type: string }
+            group: { type: string }
+            groupWeak: { type: boolean }
+            noProposal: { type: boolean }
+            vendorIds: { type: array, items: { type: string } }
+        findings: { type: array, items: { type: string } }
+    LdapCheck:
+      type: object
+      required: [host, endpoints, warnings]
+      properties:
+        host: { type: string }
+        endpoints:
+          type: array
+          items:
+            type: object
+            required: [mode, address, reachable, startTls, rootDse, error, resultMessage]
+            properties:
+              mode: { type: string, enum: [ldap, ldaps] }
+              address: { type: string }
+              reachable: { type: boolean }
+              startTls: { type: boolean }
+              tls: { $ref: "#/components/schemas/TlsSession" }
+              rootDse: { type: object, additionalProperties: { type: array, items: { type: string } } }
+              error: { type: string }
+              resultMessage: { type: string }
+        warnings: { type: array, items: { type: string } }
+    RemoteAccess:
+      type: object
+      required: [host, services]
+      properties:
+        host: { type: string }
+        services:
+          type: array
+          items:
+            type: object
+            required: [service, address, open, error, protocol, certError, rfbVersion, securityTypes, banner, findings]
+            properties:
+              service: { type: string, enum: [rdp, vnc, ssh] }
+              address: { type: string }
+              open: { type: boolean }
+              error: { type: string }
+              protocol: { type: string }
+              nlaRequired: { type: boolean }
+              cert: { $ref: "#/components/schemas/TlsCert" }
+              certError: { type: string }
+              rfbVersion: { type: string }
+              securityTypes: { type: array, items: { type: string } }
+              banner: { type: string }
+              findings: { type: array, items: { type: string } }
+    SipCheck:
+      type: object
+      required: [host, naptr, srv, probes]
+      properties:
+        host: { type: string }
+        naptr: { type: array, items: { type: string } }
+        srv:
+          type: array
+          items:
+            type: object
+            required: [service, priority, weight, port, target]
+            properties:
+              service: { type: string }
+              priority: { type: integer }
+              weight: { type: integer }
+              port: { type: integer }
+              target: { type: string }
+        probes:
+          type: array
+          items:
+            type: object
+            required: [transport, address, reachable, status, reason, server, allow, rttMs, certError, error]
+            properties:
+              transport: { type: string, enum: [udp, tcp, tls] }
+              address: { type: string }
+              reachable: { type: boolean }
+              status: { type: integer }
+              reason: { type: string }
+              server: { type: string }
+              allow: { type: array, items: { type: string } }
+              rttMs: { type: number }
+              cert: { $ref: "#/components/schemas/TlsCert" }
+              certError: { type: string }
+              error: { type: string }
+    UdpProbe:
+      type: object
+      required: [host, address, results]
+      properties:
+        host: { type: string }
+        address: { type: string }
+        results:
+          type: array
+          items:
+            type: object
+            required: [service, port, state, detail, rttMs]
+            properties:
+              service: { type: string }
+              port: { type: integer }
+              state: { type: string, enum: [open, closed, open|filtered, unexpected, error] }
+              detail: { type: string }
+              rttMs: { type: number }
+    TlsPq:
+      type: object
+      required: [host, address, negotiated, negotiatedPq, version, groups, error]
+      properties:
+        host: { type: string }
+        address: { type: string }
+        negotiated: { type: string }
+        negotiatedPq: { type: boolean }
+        version: { type: string }
+        groups:
+          type: array
+          items:
+            type: object
+            required: [name, pq, supported]
+            properties:
+              name: { type: string }
+              pq: { type: boolean }
+              supported: { type: boolean }
+        error: { type: string, description: "timeout, refused or handshake-failed" }
     TlsAcme:
       type: object
       required: [name, ca, wildcard, resolver, a, aaaa, caaName, caaIssue, caaWild, caaAllowed, httpChecked, httpHops, httpResult, challengeCname, challengeTxt, problems, warnings]

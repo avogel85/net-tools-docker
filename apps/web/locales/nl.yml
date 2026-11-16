@@ -1546,6 +1546,167 @@ tools:
       from-not-signed: De From-header is niet ondertekend, dus de handtekening zegt niets over de afzender.
     receivers: Wat de ontvangende servers concludeerden
     receiversHint: Authentication-Results- en ARC-headers die onderweg zijn toegevoegd (ARC-seals worden getoond, niet gecontroleerd).
+  sip-check:
+    title: SIP-servercontrole
+    description: Vind de SIP-servers van een domein (NAPTR en SRV) en stuur een SIP OPTIONS-verzoek via UDP, TCP en TLS om te zien of de server antwoordt, welke software hij draait en wat hij toestaat.
+    host: SIP-domein of -server
+    transport: Transport
+    transports:
+      all: UDP, TCP en TLS
+      udp: UDP
+      tcp: TCP
+      tls: TLS
+    hint: Bij een domein wordt het eerste SRV-doel getest op de poorten uit DNS; anders 5060 (UDP/TCP) en 5061 (TLS). OPTIONS zet geen gesprek op.
+    run: Controleren
+    probes: OPTIONS naar {host}
+    server: Server
+    allow: Toegestane methoden
+    cert: Certificaat
+    expires: 'nog {days} dagen geldig'
+    untrusted: niet vertrouwd
+    statusHint: Elk SIP-antwoord betekent dat de server bereikbaar is; 401, 403 of 404 is normaal bij servers die alleen bekende peers accepteren.
+    discovery: Detectie
+    service: Dienst
+    priority: Prioriteit
+    weight: Gewicht
+    target: Doel
+    errors:
+      no-reply: Geen antwoord (gefilterd, of geen SIP-server)
+      refused: Verbinding geweigerd
+      timeout: Time-out
+      tls-failed: TLS-handshake mislukt
+      not-sip: Antwoord ontvangen, maar geen SIP
+      dial-failed: Kon geen socket openen
+      send-failed: Versturen mislukt
+  ldap-check:
+    title: LDAP/LDAPS-controle
+    description: Lees de rootDSE van een LDAP-server anoniem (naming contexts, versies, SASL-mechanismen, AD-functionele niveaus) en controleer StartTLS en het LDAPS-certificaat. Er wordt niet ingelogd.
+    host: LDAP-server
+    mode: Controle
+    modes:
+      both: LDAP (389) en LDAPS (636)
+      ldap: LDAP met StartTLS
+      ldaps: Alleen LDAPS
+    hint: Domeincontrollers zijn meestal intern; privé-adressen vereisen het LAN-profiel of ALLOW_PRIVATE_TARGETS. Met host:poort kies je een andere poort.
+    run: Controleren
+    answered: rootDSE gelezen
+    startTls: StartTLS ondersteund
+    noStartTls: Geen StartTLS
+    trusted: vertrouwd certificaat
+    untrusted: niet-vertrouwd certificaat
+    cert: Certificaat
+    daysLeft: 'nog {n} dagen geldig'
+    warnings:
+      no-starttls: Plain LDAP zonder StartTLS — directoryverkeer, inclusief wachtwoorden bij simple binds, kan op poort 389 alleen onversleuteld.
+      cert-untrusted: Het certificaat wordt niet vertrouwd (self-signed, interne CA of verkeerde naam); clients moeten die CA expliciet vertrouwen.
+      cert-expiring: Het certificaat verloopt binnen 30 dagen.
+    errors:
+      refused: Verbinding geweigerd
+      timeout: Time-out
+      tls-failed: TLS-handshake mislukt
+      closed: De server sloot de verbinding
+      search-refused: De server weigerde de anonieme rootDSE-zoekopdracht
+      protocol-error: Geen geldig LDAP-antwoord
+  remote-access-check:
+    title: Controle remote access
+    description: Zie of RDP, VNC of SSH op een host bereikbaar is en hoe het beveiligd is — RDP network level authentication en certificaat, VNC-beveiligingstypen, SSH-versie. Er worden geen inloggegevens verstuurd.
+    host: Host
+    service: Diensten
+    services:
+      all: RDP, VNC en SSH
+      rdp: RDP (3389)
+      vnc: VNC (5900)
+      ssh: SSH (22)
+    hint: Gebruik dit om te controleren wat je eigen hosts blootstellen. Met host:poort controleer je een andere poort (bij één dienst). Gebruik voor een volledige SSH-audit de SSH-serveraudit.
+    run: Controleren
+    exposed: Minstens één remote-access-dienst is vanaf deze server bereikbaar. Remote-desktopdiensten horen normaal achter een VPN of gateway.
+    open: Bereikbaar
+    protocol: Beveiliging
+    protocols:
+      rdp: Standaard RDP-beveiliging (geen TLS)
+      tls: TLS
+      credssp: CredSSP / NLA
+      credssp-ex: CredSSP / NLA (uitgebreid)
+      rdstls: RDSTLS
+      unknown: Onbekend
+    required: verplicht
+    optional: niet verplicht
+    cert: Certificaat
+    untrusted: niet vertrouwd
+    findings:
+      rdp-nla-not-required: NLA is niet verplicht — iedereen kan het Windows-aanmeldscherm bereiken zonder eerst te authenticeren, wat de host blootstelt aan aanvallen vóór authenticatie.
+      rdp-legacy-security: De server gebruikt standaard RDP-beveiliging zonder TLS, wat zwak is en gevoelig voor man-in-the-middle-aanvallen.
+      vnc-no-auth: VNC accepteert verbindingen zonder enige authenticatie — iedereen kan het scherm overnemen.
+      vnc-unencrypted: VNC biedt alleen onversleutelde beveiligingstypen; de sessie (en de wachtwoordchallenge) is niet beschermd.
+      ssh-v1: De server spreekt alleen SSH-protocol 1, dat gebroken is.
+    errors:
+      refused: Gesloten (verbinding geweigerd)
+      timeout: Geen antwoord (gefilterd)
+      closed: De server sloot de verbinding
+      protocol-error: Er antwoordt iets anders op deze poort
+      negotiation-failed: RDP-onderhandeling mislukt
+  ike-probe:
+    title: IPsec/IKE-probe
+    description: Test een IPsec-VPN-gateway met een IKEv2- en een IKEv1-handshakeverzoek om te zien welke versies, voorstellen en Diffie-Hellman-groepen hij accepteert, of hij IKE-fragmentatie ondersteunt en welke vendor-ID's hij stuurt. Er wordt niet geauthenticeerd.
+    host: VPN-gateway
+    port: Poort
+    hint: Gateways antwoorden vaak alleen bekende peers, of beperken het aantal verzoeken; geen antwoord bewijst niet dat er niets luistert. Gangbare moderne voorstellen (AES-GCM, AES-CBC met SHA-2, X25519/ECP/MODP-2048) worden aangeboden.
+    run: Testen
+    verdict:
+      ikev2: IKEv2 geaccepteerd
+      ikev1-only: Alleen IKEv1 geaccepteerd
+      answers: De gateway antwoordt maar accepteerde geen aangeboden voorstel
+      silent: Geen IKE-antwoord
+    findings:
+      no-answer: Niets antwoordde op deze poort (gefilterd, geen IPsec, of de gateway antwoordt alleen bekende peers).
+      ikev1-enabled: IKEv1 staat aan. Het is verouderd (RFC 9395); gebruik waar mogelijk alleen IKEv2.
+      ikev1-weak: Het gekozen IKEv1-voorstel gebruikt SHA-1, MD5 of (3)DES.
+      weak-group: Een zwakke Diffie-Hellman-groep (MODP-768/1024/1536) wordt geaccepteerd.
+      weak-cipher: IKEv2 koos 3DES.
+    accepted: Voorstel geaccepteerd
+    noProposal: Geen voorstel gekozen
+    answered: Antwoordde
+    silent: Geen antwoord
+    fragmentation: IKE-fragmentatie
+    cookie: Cookie (DoS-bescherming)
+    encryption: Versleuteling
+    hash: Hash
+    group: DH-groep
+    weak: zwak
+    vendorIds: Vendor-ID's
+  udp-probe:
+    title: UDP-dienstprobe
+    description: Controleer UDP-diensten zoals hun clients dat doen — DNS, NTP, SNMPv3, SIP, STUN, IKE, QUIC, OpenVPN, NetBIOS en TFTP — om een open dienst te onderscheiden van een gefilterde poort.
+    host: Host
+    service: Dienst
+    port: Poort
+    default: standaard
+    services:
+      all: Alle bekende diensten
+      custom: Eigen poort (leeg pakket)
+      dns: DNS (53)
+      ntp: NTP (123)
+      snmp: SNMPv3 (161)
+      sip: SIP (5060)
+      stun: STUN (3478)
+      ike: IKE (500)
+      quic: QUIC (443)
+      openvpn: OpenVPN (1194)
+      netbios: NetBIOS-naamdienst (137)
+      tftp: TFTP (69)
+    hint: Elke dienst krijgt een echt verzoek (SNMPv3-engine-discovery zonder community of gebruiker; TFTP vraagt een willekeurige bestandsnaam op). Een UDP-poort zonder antwoord kan open of gefilterd zijn — alleen een antwoord of een ICMP "port unreachable" is doorslaggevend.
+    run: Testen
+    results: '{host} ({address})'
+    openCount: '{n} van {total} open'
+    state: Status
+    detail: Details
+    states:
+      open: Open
+      closed: Gesloten
+      open|filtered: Open of gefilterd
+      unexpected: Antwoord (ander protocol)
+      error: Fout
+    statesHint: Gesloten betekent dat de host antwoordde met ICMP "port unreachable"; open of gefilterd betekent dat er niets terugkwam, wat ook gebeurt als een firewall het pakket weggooit.
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
@@ -1678,6 +1839,31 @@ tools:
       stale-txt: _acme-challenge heeft oude TXT-records; ruim restanten op zodat DNS-01-validatie niet in de war raakt.
       wildcard-dns01: Wildcardcertificaten kunnen alleen met DNS-01 worden gevalideerd.
       ipv6-used: De naam heeft een AAAA-record; Let's Encrypt geeft de voorkeur aan IPv6, dus de challenge moet ook via IPv6 werken (er is maar één adresfamilie getest).
+  pq-tls-check:
+    title: Post-quantum-TLS-controle
+    description: Controleer of een server hybride post-quantum-sleuteluitwisseling gebruikt (ML-KEM, zoals huidige browsers aanbieden) en welke key-exchange-groepen hij accepteert.
+    host: Host
+    port: Poort
+    run: Controleren
+    groups: Key-exchange-groepen
+    supported: Ondersteund
+    notSupported: Niet ondersteund
+    hybrid: hybride post-quantum
+    classical: klassiek
+    hint: 'Elke groep is apart aangeboden in een eigen TLS 1.3/1.2-handshake naar {address}.'
+    verdict:
+      pq: Post-quantum-sleuteluitwisseling wordt gebruikt
+      pq-available: Post-quantum ondersteund, maar niet gekozen
+      classic: Geen post-quantum-sleuteluitwisseling
+      unreachable: Geen TLS-verbinding
+    explain:
+      pq: 'Een client die aanbiedt wat huidige browsers aanbieden krijgt {group} ({version}): verkeer dat nu wordt opgeslagen kan later niet met een quantumcomputer worden ontsleuteld.'
+      pq-available: 'De server accepteert een hybride groep als die als enige wordt aangeboden, maar kiest {group} als een browser er meerdere aanbiedt — controleer de groepsvolgorde van de server.'
+      classic: 'De server gebruikt {group} ({version}). Opgeslagen verkeer kan later door een grote quantumcomputer worden ontsleuteld ("harvest now, decrypt later"). Huidige OpenSSL, BoringSSL en Go ondersteunen X25519MLKEM768.'
+    errors:
+      timeout: De verbinding verliep.
+      refused: De poort weigerde de verbinding.
+      handshake-failed: De TLS-handshake is mislukt (geen TLS op deze poort, of geen gemeenschappelijke instellingen).
   ip-to-asn:
     title: IP → ASN
     description: Vind het autonome systeem (ASN), de aangekondigde prefix, AS-naam, land en register bij een IP-adres.

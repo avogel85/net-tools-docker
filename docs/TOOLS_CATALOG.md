@@ -102,11 +102,11 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | CON-14 | IPv6 readiness | Does target have AAAA, is it reachable over v6 from server | S | DNS + dial | Globalping | 3 | ✅ |
 | CON-15 | Latency matrix | Ping multiple targets in parallel, compare | S | `pro-bing` fan-out | Globalping | 3 | ✅ |
 | CON-18 | Latency monitor | Smokeping-style ping up to MONITOR_MAX_MINUTES, per-minute loss / latency / jitter | S | `pro-bing` | — | 7 | ✅ |
-| CON-19 | UDP service probe | Service-aware UDP probes (DNS, NTP, SNMP, SIP, STUN, IKE, …) that tell open from open|filtered | S | per-protocol probe packets via `target.Resolve` | — | 11 | ⬜ |
-| CON-20 | IPsec / IKE probe | IKEv2 (and IKEv1) SA_INIT: accepted proposals, vendor IDs, NAT-T, fragmentation support | S | custom IKE packets | — | 11 | ⬜ |
-| CON-21 | SIP server check | SIP OPTIONS over UDP/TCP/TLS, NAPTR/SRV discovery, response code and server header | S | custom SIP over `target.Resolve` | — | 11 | ⬜ |
-| CON-22 | LDAP / LDAPS check | Anonymous rootDSE read, StartTLS/LDAPS certificate, naming contexts and SASL mechanisms | S | minimal LDAP BER client | — | 11 | ⬜ |
-| CON-23 | Remote access check | RDP (TLS certificate, NLA/CredSSP), VNC (RFB version, security types) and SSH summary with warnings | S | custom handshakes | — | 11 | ⬜ |
+| CON-19 | UDP service probe | Service-aware UDP probes (DNS, NTP, SNMP, SIP, STUN, IKE, …) that tell open from open|filtered | S | per-protocol probe packets via `target.Resolve` | — | 11 | ✅ |
+| CON-20 | IPsec / IKE probe | IKEv2 (and IKEv1) SA_INIT: accepted proposals, vendor IDs, NAT-T, fragmentation support | S | custom IKE packets | — | 11 | ✅ |
+| CON-21 | SIP server check | SIP OPTIONS over UDP/TCP/TLS, NAPTR/SRV discovery, response code and server header | S | custom SIP over `target.Resolve` | — | 11 | ✅ |
+| CON-22 | LDAP / LDAPS check | Anonymous rootDSE read, StartTLS/LDAPS certificate, naming contexts and SASL mechanisms | S | minimal LDAP BER client | — | 11 | ✅ |
+| CON-23 | Remote access check | RDP (TLS certificate, NLA/CredSSP), VNC (RFB version, security types) and SSH summary with warnings | S | custom handshakes | — | 11 | ✅ |
 | CON-24 | Reverse traceroute | Traceroute from Globalping probes back to the visitor, next to the outbound path (asymmetry) | P | — | Globalping (keyless) | 11 | ⬜ |
 
 ## 4. HTTP & Web
@@ -160,7 +160,7 @@ Phases 9–13 are the 2026-11 extension (see `docs/IMPLEMENTATION_PLAN.md`).
 | TLS-15 | Lab CA & certificate generator | Root CA (or reuse one) + server certificate with SANs, WebCrypto in the browser | B | `@peculiar/x509` | — | 6 | ✅ |
 | TLS-16 | SSH key & SSHFP tool | Fingerprints (SHA256/MD5) of SSH public keys, SSHFP records, `known_hosts` parsing | B | WebCrypto | — | 9 | ✅ |
 | TLS-17 | ACME readiness check | Before requesting a certificate: CAA, port 80 reachability, `/.well-known/acme-challenge/` handling, `_acme-challenge` CNAME/TXT | S | `miekg/dns` + `httpcore` | — | 10 | ✅ |
-| TLS-18 | Post-quantum TLS check | Whether a server negotiates hybrid post-quantum key exchange (X25519MLKEM768) and which groups it accepts | S | `crypto/tls` CurvePreferences | — | 11 | ⬜ |
+| TLS-18 | Post-quantum TLS check | Whether a server negotiates hybrid post-quantum key exchange (X25519MLKEM768) and which groups it accepts | S | `crypto/tls` CurvePreferences | — | 11 | ✅ |
 | TLS-19 | Expiry watchlist | Watchlist of hosts and domains kept in the browser; checks certificate and registration expiry when opened | S | TLS-02 + BGP-08 endpoints; list in browser storage | — | 12 | ⬜ |
 
 ## 6. Email

@@ -480,6 +480,108 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/ike/probe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** IPsec/IKE probe (IKEv2 IKE_SA_INIT and IKEv1 Main Mode); no authentication attempted */
+        get: operations["ikeProbe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ldap/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** LDAP / LDAPS check (anonymous rootDSE, StartTLS, certificate); no bind is made */
+        get: operations["ldapCheck"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/remote-access/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** RDP (NLA, certificate), VNC (security types) and SSH (banner) check; no credentials sent */
+        get: operations["remoteAccessCheck"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/sip/check": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** SIP server discovery (NAPTR/SRV) and OPTIONS over UDP, TCP and TLS */
+        get: operations["sipCheck"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/udp/probe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Service-aware UDP probes (DNS, NTP, SNMPv3 discovery, SIP, STUN, IKE, QUIC, OpenVPN, NetBIOS, TFTP) */
+        get: operations["udpProbe"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/tls/pq": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Post-quantum TLS check (hybrid ML-KEM key exchange support) */
+        get: operations["tlsPq"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/tls/acme": {
         parameters: {
             query?: never;
@@ -2610,6 +2712,121 @@ export interface components {
                 mx: string[];
                 error: string;
             }[];
+        };
+        IkeProbe: {
+            host: string;
+            address: string;
+            ikev2: {
+                answered: boolean;
+                accepted: boolean;
+                encryption: string;
+                prf: string;
+                integrity: string;
+                group: string;
+                groupWeak: boolean;
+                noProposal: boolean;
+                cookie: boolean;
+                fragmentation: boolean;
+                sigHash: boolean;
+                vendorIds: string[];
+            };
+            ikev1: {
+                answered: boolean;
+                accepted: boolean;
+                encryption: string;
+                hash: string;
+                group: string;
+                groupWeak: boolean;
+                noProposal: boolean;
+                vendorIds: string[];
+            };
+            findings: string[];
+        };
+        LdapCheck: {
+            host: string;
+            endpoints: {
+                /** @enum {string} */
+                mode: "ldap" | "ldaps";
+                address: string;
+                reachable: boolean;
+                startTls: boolean;
+                tls?: components["schemas"]["TlsSession"];
+                rootDse: {
+                    [key: string]: string[];
+                };
+                error: string;
+                resultMessage: string;
+            }[];
+            warnings: string[];
+        };
+        RemoteAccess: {
+            host: string;
+            services: {
+                /** @enum {string} */
+                service: "rdp" | "vnc" | "ssh";
+                address: string;
+                open: boolean;
+                error: string;
+                protocol: string;
+                nlaRequired?: boolean;
+                cert?: components["schemas"]["TlsCert"];
+                certError: string;
+                rfbVersion: string;
+                securityTypes: string[];
+                banner: string;
+                findings: string[];
+            }[];
+        };
+        SipCheck: {
+            host: string;
+            naptr: string[];
+            srv: {
+                service: string;
+                priority: number;
+                weight: number;
+                port: number;
+                target: string;
+            }[];
+            probes: {
+                /** @enum {string} */
+                transport: "udp" | "tcp" | "tls";
+                address: string;
+                reachable: boolean;
+                status: number;
+                reason: string;
+                server: string;
+                allow: string[];
+                rttMs: number;
+                cert?: components["schemas"]["TlsCert"];
+                certError: string;
+                error: string;
+            }[];
+        };
+        UdpProbe: {
+            host: string;
+            address: string;
+            results: {
+                service: string;
+                port: number;
+                /** @enum {string} */
+                state: "open" | "closed" | "open|filtered" | "unexpected" | "error";
+                detail: string;
+                rttMs: number;
+            }[];
+        };
+        TlsPq: {
+            host: string;
+            address: string;
+            negotiated: string;
+            negotiatedPq: boolean;
+            version: string;
+            groups: {
+                name: string;
+                pq: boolean;
+                supported: boolean;
+            }[];
+            /** @description timeout, refused or handshake-failed */
+            error: string;
         };
         TlsAcme: {
             name: string;
@@ -4946,6 +5163,171 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["OkEnvelope"] & {
                         data: components["schemas"]["Cors"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    ikeProbe: {
+        parameters: {
+            query: {
+                host: string;
+                port?: "500" | "4500";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["IkeProbe"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    ldapCheck: {
+        parameters: {
+            query: {
+                host: string;
+                mode?: "both" | "ldap" | "ldaps";
+                /** @description 0 = 389 / 636 (used only with a single mode) */
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["LdapCheck"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    remoteAccessCheck: {
+        parameters: {
+            query: {
+                host: string;
+                service?: "all" | "rdp" | "vnc" | "ssh";
+                /** @description 0 = 3389 / 5900 / 22 (a port is used only with a single service) */
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["RemoteAccess"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    sipCheck: {
+        parameters: {
+            query: {
+                /** @description SIP domain or server (host[:port]) */
+                host: string;
+                transport?: "all" | "udp" | "tcp" | "tls";
+                /** @description 0 = from SRV, else 5060/5061 */
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["SipCheck"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    udpProbe: {
+        parameters: {
+            query: {
+                host: string;
+                service?: "all" | "custom" | "dns" | "ntp" | "snmp" | "sip" | "stun" | "ike" | "quic" | "openvpn" | "netbios" | "tftp";
+                /** @description Overrides the service port (single service); required for custom */
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["UdpProbe"];
+                    };
+                };
+            };
+            default: components["responses"]["Error"];
+        };
+    };
+    tlsPq: {
+        parameters: {
+            query: {
+                host: string;
+                port?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OkEnvelope"] & {
+                        data: components["schemas"]["TlsPq"];
                     };
                 };
             };
