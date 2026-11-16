@@ -1889,6 +1889,46 @@ tools:
       pfsense: pfSense / OPNsense alias
       ipset: ipset
       nftables: nftables set
+  capture-filter:
+    title: Capture filter builder
+    description: Build tcpdump / BPF capture filters and the matching Wireshark display filter from hosts, ports, protocol, direction, TCP flags and exclusions — with ready-to-run tcpdump and tshark commands.
+    hosts: Hosts or networks
+    direction: Direction
+    directions:
+      any: Either
+      src: From
+      dst: To
+    ports: Ports or ranges
+    proto: Protocol
+    anyProto: Any
+    excludeHosts: Exclude hosts
+    excludePorts: Exclude ports (e.g. your SSH session)
+    tcpFlags: TCP flags
+    flags:
+      none: Any
+      syn: SYN only (new connections)
+      synack: SYN-ACK
+      rst: RST (resets)
+    vlan: VLAN ID
+    minSize: Min. frame size (bytes)
+    iface: Interface
+    file: Write to file (optional)
+    fix: Correct the highlighted fields.
+    errors:
+      hosts: Enter IP addresses, networks (CIDR) or host names.
+      excludeHosts: Enter IP addresses, networks (CIDR) or host names.
+      ports: Enter ports (0–65535) or ranges such as 8000-8080.
+      excludePorts: Enter ports (0–65535) or ranges such as 8000-8080.
+      vlan: Enter a VLAN ID (0–4095).
+      iface: Letters, digits, ., :, - and _ only.
+      file: Letters, digits, ., /, - and _ only.
+    result: Filters
+    outputs:
+      tcpdump: tcpdump command
+      bpf: Capture filter (BPF)
+      display: Wireshark display filter
+      tshark: tshark command
+    hint: Capture filters (BPF) decide what is recorded; display filters only hide packets in Wireshark. Host names in a capture filter are resolved once, when the capture starts. Use "any" as the interface to capture on all interfaces (Linux).
   dmarc-checker:
     title: DMARC checker
     description: Parse a domain's DMARC policy, alignment and report addresses, including authorization of external report destinations.

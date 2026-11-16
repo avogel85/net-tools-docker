@@ -1889,6 +1889,46 @@ tools:
       pfsense: pfSense/OPNsense-alias
       ipset: ipset
       nftables: nftables-set
+  capture-filter:
+    title: Capturefilterbouwer
+    description: Bouw tcpdump/BPF-capturefilters en het bijbehorende Wireshark-weergavefilter uit hosts, poorten, protocol, richting, TCP-flags en uitsluitingen — met kant-en-klare tcpdump- en tshark-commando's.
+    hosts: Hosts of netwerken
+    direction: Richting
+    directions:
+      any: Beide
+      src: Van
+      dst: Naar
+    ports: Poorten of reeksen
+    proto: Protocol
+    anyProto: Alle
+    excludeHosts: Hosts uitsluiten
+    excludePorts: Poorten uitsluiten (bijv. je SSH-sessie)
+    tcpFlags: TCP-flags
+    flags:
+      none: Alle
+      syn: Alleen SYN (nieuwe verbindingen)
+      synack: SYN-ACK
+      rst: RST (resets)
+    vlan: VLAN-ID
+    minSize: Min. framegrootte (bytes)
+    iface: Interface
+    file: Naar bestand schrijven (optioneel)
+    fix: Corrigeer de gemarkeerde velden.
+    errors:
+      hosts: Vul IP-adressen, netwerken (CIDR) of hostnamen in.
+      excludeHosts: Vul IP-adressen, netwerken (CIDR) of hostnamen in.
+      ports: Vul poorten (0–65535) of reeksen zoals 8000-8080 in.
+      excludePorts: Vul poorten (0–65535) of reeksen zoals 8000-8080 in.
+      vlan: Vul een VLAN-ID (0–4095) in.
+      iface: Alleen letters, cijfers, ., :, - en _.
+      file: Alleen letters, cijfers, ., /, - en _.
+    result: Filters
+    outputs:
+      tcpdump: tcpdump-commando
+      bpf: Capturefilter (BPF)
+      display: Wireshark-weergavefilter
+      tshark: tshark-commando
+    hint: Capturefilters (BPF) bepalen wat wordt opgenomen; weergavefilters verbergen alleen pakketten in Wireshark. Hostnamen in een capturefilter worden één keer opgezocht, bij de start van de capture. Gebruik "any" als interface om op alle interfaces op te nemen (Linux).
   dmarc-checker:
     title: DMARC-controle
     description: Lees het DMARC-beleid, de alignment en de rapportadressen van een domein, inclusief toestemming van externe rapportbestemmingen.
